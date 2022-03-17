@@ -592,7 +592,6 @@ rule token = parse
  | “free” {FREE}
  
  (* function *)
- | "=>" { MATCH_ARM }  
  | "return" { RETURN }
  
  (* Other *)
@@ -692,9 +691,6 @@ rule token = parse
 												{ For($3, $5, $7, $9)}
 		| RETURN SEMI								{ Return Noexpr}
 		| RETURN expr SEMI							{ Return $2}
-		| MATCH ID LBRACE stmt_rule RBRACE					{ Match($2, $4)}
-		| expr_rule MATCH_ARM stmt_rule					{ If($1, $2, Block([])}
-		| UNDERSCORE MATCH_ARM stmt_rule					{ If(True, $2, Block([])}
  
 	expr_rule: 
 		| INT_LITERAL					{ IntLit($1) }
