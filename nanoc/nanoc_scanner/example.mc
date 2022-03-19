@@ -33,4 +33,7 @@ int main() {
   print(gcd(a,b));
   [1,2,3]
   return 0;
+  a = b * c / d % e;
+  a = !true;
+  b == e.length();
 }

@@ -25,18 +25,37 @@ rule token = parse
 | ']'      { RBRACK }
 | ';'      { SEMI }
 | ','      { COMMA }
+
+(* Operators *)
 | '+'      { PLUS }
 | '-'      { MINUS }
 | '='      { ASSIGN }
+| '*'      { MULTIPLY }
+| '/'      { DIVIDE }
+| '%'      { MODULO }
+| '!'      { NOT }
+| '.'      { DOT }
 | "=="     { EQ }
 | "!="     { NEQ }
 | '<'      { LT }
 | "&&"     { AND }
 | "||"     { OR }
+| "++" { PLUSPLUS }
+| "--" { MINUSMINUS }
+| "+=" { PLUSEQUAL }
+| "-=" { MINUSEQUAL }
+| "*=" { MULTEQUAL }
+| "/=" { DIVEQUAL }
+| "%=" { MODEQUAL }
+
+(* Flow Control *)
 | "if"     { IF }
 | "else"   { ELSE }
 | "while"  { WHILE }
+| "for"    { FOR }
 | "return" { RETURN }
+
+(* types *)
 | "int"    { INT }
 | "float"  { FLOAT }
 | "char"   { CHAR }
@@ -44,6 +63,7 @@ rule token = parse
 | "bool"   { BOOL }
 | "true"   { BLIT(true)  }
 | "false"  { BLIT(false) }
+| "struct" { STRUCT } 
 | digit+ as lem  { LITERAL(int_of_string lem) }
 | letter (digit | letter | '_')* as lem { ID(lem) }
 | ''' { read_char (Buffer.create 1) lexbuf} 
