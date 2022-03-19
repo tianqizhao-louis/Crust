@@ -538,7 +538,6 @@ rule token = parse
 | ',' { COMMA }
 | '[' { LBRACK }
 | ']' { RBRACK }
-| ‘_’ { UNDERSCORE }
 
 (* Operators *)
 | '+' { PLUS }
