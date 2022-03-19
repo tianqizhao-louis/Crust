@@ -510,109 +510,122 @@ match arr {
 ### `Scanner.mll`
 
 ```ocaml
-let alpha = ['a'-'z' 'A'-'Z']
-let escape = '\\' ['\\' ''' '"' 'n' 't'] 
-let escape_char = ''' (escape) '''	
-let ascii = ([' '-'!' '#'-'[' ']'-'~']) 
+(* Ocamllex scanner for Crust *)
+
+{ open Nanocparse 
+  open Lexing
+  exception SyntaxError of string 
+}
+
 let digit = ['0'-'9']
-let id = alpha (alpha | digit | '_')* 
-let string = '"' ( (ascii | escape)* ) '"'
-let char = ''' ( ascii | digit | escape ) '''  
-let double = (digit+) ['.'] digit+
-let int = digit+
+let letter = ['a'-'z' 'A'-'Z']
 let whitespace = [' ' '\t' '\r' '\n']
-let newline = '\n'
+let ascii = [' '-'~'] 
+let end_of_line = '\n'
 
 rule token = parse
 
 (* Separators *)
- whitespace { token lexbuf }
-| newline { incr lineno; token lexbuf}
-| "/*" { incr depth; multi_line_comment lexbuf }
-| "//" { single_line_comment lexbuf }
-| '(' { LPAREN }
-| ')' { RPAREN }
-| '{' { LBRACE }
-| '}' { RBRACE }
-| ';' { SEMI }
-| ',' { COMMA }
-| '[' { LBRACK }
-| ']' { RBRACK }
+  whitespace { token lexbuf } (* Whitespace *)
+| "/*"     { comment lexbuf }           (* Comments *)
+| "//"     { single_line_comment lexbuf }
+| '('      { LPAREN }
+| ')'      { RPAREN }
+| '{'      { LBRACE }
+| '}'      { RBRACE }
+| '['      { LBRACK }
+| ']'      { RBRACK }
+| ';'      { SEMI }
+| ','      { COMMA }
 
 (* Operators *)
-| '+' { PLUS }
-| '-' { MINUS }
-| '*' { TIMES }
-| '/' { DIVIDE }
-| '%' { MODULO }
-| '=' { ASSIGN }
-| "==" { EQ }
-| "!=" { NEQ }
-| '<' { LT }
-| "<=" { LEQ }
-| ">" { GT }
-| ">=" { GEQ }
-| "&&" { AND }
-| “++” { PLUSPLUS }
-| “--” { MINUSMINUS }
-| “+=” { PLUSEQUAL }
-| “-=” { MINUSEQUAL }
-| “*=” { MULTEQUAL }
-| “/=” { DIVEQUAL }
-| “%=” { MODEQUAL }
-| "||" { OR }
-| "!" { NOT }
-| '.' { DOT }		
-| "&" { REFERENCE }	
+| '+'      { PLUS }
+| '-'      { MINUS }
+| '='      { ASSIGN }
+| '*'      { MULTIPLY }
+| '/'      { DIVIDE }
+| '%'      { MODULO }
+| '!'      { NOT }
+| '.'      { DOT }
+| "=="     { EQ }
+| "!="     { NEQ }
+| '<'      { LT }
+| "&&"     { AND }
+| "||"     { OR }
+| "++" { PLUSPLUS }
+| "--" { MINUSMINUS }
+| "+=" { PLUSEQUAL }
+| "-=" { MINUSEQUAL }
+| "*=" { MULTEQUAL }
+| "/=" { DIVEQUAL }
+| "%=" { MODEQUAL }
 
-(* Ownership *)
- (* Branch Control *)
- | "if" { IF }
- | "else" { ELSE }
- | "for" { FOR }
- | "while" { WHILE }  
- (* Data Types *)
- | "int" { INT }
- | “int*” { INT_PTR }
- | "double" { DOUBLE }	
- | “double*” { DOUBLE_PTR} 
- | "char" { CHAR }
- | "char*" { CHAR_PTR }
- | "struct" { STRUCT }
- | "struct*" { STRUCT_PTR }
- | “string” { STRING }  
- | “string*” { STRING_PTR }
- | "void" { VOID }
- | "void*" { VOID_PTR }
- | “NULL” { NULL}
- 
- (* Memory *) 
- | “malloc” {MALLOC}
- | “free” {FREE}
- 
- (* function *)
- | "return" { RETURN }
- 
- (* Other *)
- | int as lxm { INT_LITERAL(int_of_string lxm) }
- | double as lxm { DOUBLE_LITERAL(double_of_string lxm) }
- | char as lxm { CHAR_LITERAL( String.get lxm 1 ) }
- | escape_char as lxm{ CHAR_LITERAL( String.get (unescape lxm) 1) }
- | string as s { STRING_LITERAL(unescape s) }   
- | id as lxm { ID(lxm) }
- | eof { EOF }
- | '"' { raise (Exceptions.UnmatchedQuotation(!lineno)) }
- | _ as illegal { raise (Exceptions.IllegalCharacter(!filename, illegal,  !lineno)) }
- 
- and multi_line_comment = parse   
-    newline { incr lineno; comment lexbuf }
- | "*/" { decr depth; if !depth > 0 then comment lexbuf else token lexbuf }
- | "/*" { incr depth; comment lexbuf }
- | _ { comment lexbuf }
- 
- and single_line_comment = parse
-   newline {token lexbuf}
- | _ {comment lexbuf}
+(* Flow Control *)
+| "if"     { IF }
+| "else"   { ELSE }
+| "while"  { WHILE }
+| "for"    { FOR }
+| "return" { RETURN }
+
+(* types *)
+| "int"    { INT }
+| "float"  { FLOAT }
+| "char"   { CHAR }
+| "string" { STRING }
+| "bool"   { BOOL }
+| "true"   { BLIT(true)  }
+| "false"  { BLIT(false) }
+| "struct" { STRUCT } 
+| digit+ as lem  { LITERAL(int_of_string lem) }
+| letter (digit | letter | '_')* as lem { ID(lem) }
+| ''' { read_char (Buffer.create 1) lexbuf} 
+| '"'      { read_string (Buffer.create 256) lexbuf } 
+| (digit+) (['.'] digit+)? as lem {FLOATING_POINT(float_of_string lem)}
+| eof { EOF }
+| _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
+
+
+and read_char buf =
+  parse
+  | '\\' '/'  { Buffer.add_char buf '/'; end_char buf lexbuf }
+  | '\\' '\\' { Buffer.add_char buf '\\'; end_char buf lexbuf }
+  | '\\' 'n'  { Buffer.add_char buf '\n'; end_char buf lexbuf }
+  | '\\' 'r'  { Buffer.add_char buf '\r'; end_char buf lexbuf }
+  | '\\' 't'  { Buffer.add_char buf '\t'; end_char buf lexbuf }
+  | [^ ''' '\\']+
+    { Buffer.add_string buf (Lexing.lexeme lexbuf);
+      end_char buf lexbuf
+    }
+  | _ { raise (SyntaxError ("Illegal char character: " ^ Lexing.lexeme lexbuf)) }
+  | eof { raise (SyntaxError ("Char is not terminated")) }
+
+and end_char buf = parse 
+  ''' { CHAR_LITERAL (Buffer.contents buf) }
+| _ { raise (SyntaxError ("char with more than one character " ^ Lexing.lexeme lexbuf)) }
+| eof { raise (SyntaxError ("Char is not terminated")) }
+
+and read_string buf =
+  parse
+  | '"'       { STRING_LITERAL (Buffer.contents buf) }
+  | '\\' '/'  { Buffer.add_char buf '/'; read_string buf lexbuf }
+  | '\\' '\\' { Buffer.add_char buf '\\'; read_string buf lexbuf }
+  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string buf lexbuf }
+  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string buf lexbuf }
+  | '\\' 't'  { Buffer.add_char buf '\t'; read_string buf lexbuf }
+  | [^ '"' '\\']+
+    { Buffer.add_string buf (Lexing.lexeme lexbuf);
+      read_string buf lexbuf
+    }
+  | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
+  | eof { raise (SyntaxError ("String is not terminated")) }
+
+and comment = parse
+  "*/" { token lexbuf }
+| _    { comment lexbuf }
+
+and single_line_comment = parse
+  end_of_line { token lexbuf }
+| _           { single_line_comment lexbuf}
 ```
 
 ### `Parser.mly`
