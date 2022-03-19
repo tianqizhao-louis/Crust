@@ -6,10 +6,11 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
 %token EQ NEQ LT AND OR
-%token IF ELSE WHILE INT BOOL
+%token IF ELSE WHILE INT BOOL FLOAT
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
+%token <float> FLOATING_POINT
 %token <string> ID
 %token EOF
 
@@ -43,9 +44,11 @@ one_token:
   | IF { "IF" }
   | ELSE { "ELSE" }
   | WHILE { "WHILE" }
+  | FLOAT { "FLOAT" }
   | RETURN { "RETURN" }
   | INT { "INT" }
   | BOOL { "BOOL" }
   | BLIT { "BOOL: " ^ string_of_bool $1 }
   | LITERAL { "LITERAL: " ^ string_of_int $1 }
+  | FLOATING_POINT { "FLOATING_POINT: " ^ string_of_float $1}
   | ID { "ID: " ^ $1 }

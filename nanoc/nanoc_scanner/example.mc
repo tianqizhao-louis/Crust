@@ -1,6 +1,7 @@
 /* The GCD algorithm in MicroC */
 int a;
 int b;
+float c;
 
 int gcd(int a, int b) {
   while (a != b) {
@@ -17,6 +18,7 @@ int main() {
   b = 9;
   x = 2;
   y = 14;
+  c = 3.1415926;
   print(gcd(x,y));
   print(gcd(3,15));
   print(gcd(99,121));
