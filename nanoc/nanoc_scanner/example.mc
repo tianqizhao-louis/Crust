@@ -1,5 +1,6 @@
 /* The GCD algorithm in MicroC */
 int a;
+// THis is a single line comment 
 int b;
 float c;
 char d;

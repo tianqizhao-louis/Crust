@@ -6,10 +6,12 @@ let digit = ['0'-'9']
 let letter = ['a'-'z' 'A'-'Z']
 let whitespace = [' ' '\t' '\r' '\n']
 let ascii = [' '-'~'] 
+let end_of_line = '\n'
 
 rule token = parse
   whitespace { token lexbuf } (* Whitespace *)
 | "/*"     { comment lexbuf }           (* Comments *)
+| "//"     { single_line_comment lexbuf }
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | '{'      { LBRACE }
@@ -44,3 +46,7 @@ rule token = parse
 and comment = parse
   "*/" { token lexbuf }
 | _    { comment lexbuf }
+
+and single_line_comment = parse
+  end_of_line { token lexbuf }
+| _           { single_line_comment lexbuf}
