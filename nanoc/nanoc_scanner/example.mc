@@ -22,7 +22,6 @@ int main() {
   x = 2;
   y = 14;
   d = 'a';
-  d = ' ';
   d = '\n';
   c = 3.1415926;
   c = 5;
@@ -32,5 +31,6 @@ int main() {
   print(gcd(3,15));
   print(gcd(99,121));
   print(gcd(a,b));
+  [1,2,3]
   return 0;
 }
