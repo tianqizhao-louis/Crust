@@ -2,6 +2,7 @@
 int a;
 int b;
 float c;
+char d;
 
 int gcd(int a, int b) {
   while (a != b) {
@@ -18,6 +19,9 @@ int main() {
   b = 9;
   x = 2;
   y = 14;
+  d = 'a';
+  d = ' ';
+  d = '&';
   c = 3.1415926;
   print(gcd(x,y));
   print(gcd(3,15));
