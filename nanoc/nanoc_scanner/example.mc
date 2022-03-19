@@ -4,6 +4,7 @@ int a;
 int b;
 float c;
 char d;
+string e;
 
 int gcd(int a, int b) {
   while (a != b) {
@@ -22,8 +23,11 @@ int main() {
   y = 14;
   d = 'a';
   d = ' ';
-  d = '&';
+  d = '\n';
   c = 3.1415926;
+  c = 5;
+  e = "";
+  e = "123\t456";
   print(gcd(x,y));
   print(gcd(3,15));
   print(gcd(99,121));
