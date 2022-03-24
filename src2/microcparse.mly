@@ -4,14 +4,22 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
-%token EQ NEQ LT AND OR
+(* Mainly copied from Luo's parser*)
+%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN MULTIPLY DIVIDE MODULO
+%token PLUSPLUS MINUSMINUS
+%token ASSIGN PLUSEQUAL MINUSEQUAL MULTEQUAL DIVEQUAL MODEQUAL
+%token EQ NEQ LT GT LEQ GEQ AND OR NOT
 %token IF ELSE WHILE INT BOOL
-/* return, COMMA token */
+%token INT BOOL FLOAT CHAR STRING STRUCT VOID
+%token DOT
+
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
+%token <float> FLOATING_POINT
 %token <string> ID
+%token <string> CHAR_LITERAL
+%token <string> STRING_LITERAL
 %token EOF
 
 %start program
