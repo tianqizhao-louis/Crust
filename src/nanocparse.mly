@@ -4,13 +4,13 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK PLUS MINUS MULTIPLY DIVIDE MODULO 
+%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK PLUS MINUS MULTIPLY DIVIDE MODULO
 %token PLUSPLUS MINUSMINUS
 %token ASSIGN PLUSEQUAL MINUSEQUAL MULTEQUAL DIVEQUAL MODEQUAL
-%token EQ NEQ LT GT LEQ GEQ AND OR NOT 
-%token IF ELSE WHILE FOR 
+%token EQ NEQ LT GT LEQ GEQ AND OR NOT
+%token IF ELSE WHILE FOR
 %token INT BOOL FLOAT CHAR STRING STRUCT VOID
-%token DOT 
+%token DOT
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
@@ -24,13 +24,13 @@ open Ast
 %type <Ast.program> program_rule
 
 %right ASSIGN PLUSEQUAL MINUSEQUAL MULTEQUAL DIVEQUAL MODEQUAL
-%left OR 
+%left OR
 %left AND
 %left EQ NEQ
-%left LT LEQ GT GEQ 
-%left PLUS MINUS 
+%left LT LEQ GT GEQ
+%left PLUS MINUS
 %left MULTIPLY DIVIDE MODULO
-%left NOT 
+%left NOT
 %right DOT
 
 
@@ -44,7 +44,7 @@ program_rule:
 		/* Nothing */ { [] }
 		| var_decl_rule var_decl_list_rule {$1::$2}
 
- var_decl_rule: 
+ var_decl_rule:
 	typ_rule ID SEMI { ($1, $2, NULL) } /* int i; */
 	| typ_rule ID ASSIGN expr_rule SEMI { ($1, $2, $4) }  /* int i = 1 + 2; */
 	| typ_rule ID LBRACK LITERAL RBRACK SEMI { array($1, $2, $4, Null) }  /* int arr[3]; */
@@ -57,15 +57,15 @@ program_rule:
 func_decl_rule:  /* int max(int a, int b) {return true} */
  		typ_rule ID LPAREN arg_list_optional RPAREN LBRACE function_body_rule RPAREN {outputType=$1, functionName=$2, arguments=$4, functionBody=$7}
 
- arg_list_optional: 
+ arg_list_optional:
 		/* Nothing */ { [] }
 		| arg_list 	{ $1 }
 
 arg_list:
 		typ_rule ID { [($1, $2)] }
-		| typ_rule ID COMMA arg_list { ($1, $2)::$4 } 
+		| typ_rule ID COMMA arg_list { ($1, $2)::$4 }
 
-expr_list: 
+expr_list:
   /* Nothing */ 		{[]}
   | expr_rule 			{[$1]}
   | expr_rule COMMA expr_list {$1::$3}
@@ -91,9 +91,9 @@ stmt_list_rule:
 stmt_rule:
   SEMI { [] } // ;;
   | expr_rule SEMI                                                              { Expr $1         } /* print("hellow"); */
-  | LBRACE function_body_rule RBRACE                                          { Block $2        } 
-  | IF LPAREN expr_rule RPAREN function_body_rule                             { If ($3, $5, Noexpr) }  // 
-  | IF LPAREN expr_rule RPAREN function_body_rule ELSE function_body_rule     { If ($3, $5, $7) } 
+  | LBRACE function_body_rule RBRACE                                          { Block $2        }
+  | IF LPAREN expr_rule RPAREN function_body_rule                             { If ($3, $5, Noexpr) }  //
+  | IF LPAREN expr_rule RPAREN function_body_rule ELSE function_body_rule     { If ($3, $5, $7) }
   | WHILE LPAREN expr_rule RPAREN function_body_rule                          { While ($3,$5)   }
   | FOR LPAREN expr_rule SEMI expr_rule SEMI expr_rule RPAREN function_body_rule { For($3, $5, $7, $9) }
   | RETURN SEMI                                                               { Return Noexpr } // void function
@@ -123,7 +123,7 @@ expr_rule:
   | NOT expr_rule                 { Uniop (Not $2)        }
   | MINUS expr_rule 				          	{ Uniop(Neg, $2)}
 
-  | ID ASSIGN expr_rule           { Assign ($1, $3)       } 
+  | ID ASSIGN expr_rule           { Assign ($1, $3)       }
   | ID PLUSEQUAL expr_rule      	{ Binop ($1, Addeq, $3)   }
   | ID MINUSEQUAL expr_rule       { Binop ($1, Subeq, $3)   }
   | ID MULTEQUAL expr_rule      	{ Binop ($1, Multeq, $3)   }
