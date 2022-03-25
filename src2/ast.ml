@@ -22,15 +22,24 @@ type stmt =
   | Return of expr
 
 (* int x: name binding *)
-type bind = typ * string
+(* type bind = typ * string * expr *)
+type bind ={
+  vtyp: typ;
+  vname: string;
+  vexpr: expr
+}
 
-(* func_def: ret_typ fname formals locals body *)
+
+type local_or_body=
+    | Locals of bind
+    | Bodies of stmt
+
+(* func_def: ret_typ fname formals fbody *)
 type func_def = {
   rtyp: typ;
   fname: string;
-  formals: bind list;
-  locals: bind list;
-  body: stmt list;
+  formals: (typ * string) list;
+  fbody: local_or_body list
 }
 
 type program = bind list * func_def list
@@ -71,13 +80,24 @@ let string_of_typ = function
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
+let string_of_local_or_body = function
+  (* trying to use pattern matching to know if current line is a local variable or a statement *)
+  | Locals(lvs) -> string_of_typ lvs.vtyp ^ " " ^ lvs.vname ^ "=" ^ (string_of_expr lvs.vexpr) ^ ";\n"
+  | Bodies(stmts) -> string_of_stmt stmts
+
+
 let string_of_fdecl fdecl =
   string_of_typ fdecl.rtyp ^ " " ^
   fdecl.fname ^ "(" ^ String.concat ", " (List.map snd fdecl.formals) ^
   ")\n{\n" ^
-  String.concat "" (List.map string_of_vdecl fdecl.locals) ^
-  String.concat "" (List.map string_of_stmt fdecl.body) ^
-  "}\n"
+  String.concat "" (List.map string_of_local_or_body (fdecl.fbody)  ) ^
+"}\n"
+
+(*  String.concat "" (List.map string_of_vdecl (fst ((fdecl.body).vtyp * (fdecl.body).vname ))) ^
+  String.concat "" (List.map string_of_stmt (snd fdecl.body)) ^ *)
+
+
+
 
 let string_of_program (vars, funcs) =
   "\n\nParsed program: \n\n" ^
