@@ -36,8 +36,15 @@ decls:
  | fdecl decls { (fst $2, ($1 :: snd $2)) }
 
 vdecl_list:
-  /*nothing*/ { [] }
-  | vdecl SEMI vdecl_list  {  $1 :: $3 }
+  /*nothing*/ { ([] , []) }
+  | vdecl SEMI vdecl_list  {($1:: fst $3, snd $3)}
+  | vdef SEMI vdecl_list { ( fst  $1::fst $3, snd $1 ::snd $3)}
+
+
+vdef:
+  /* int x = 10;*/
+  typ ID ASSIGN expr { ( ($1,$2) , (Expr (Assign($2, $4)) )) } 
+
 
 /* int x */
 vdecl:
@@ -55,8 +62,8 @@ fdecl:
       rtyp=fst $1;
       fname=snd $1;
       formals=$3;
-      locals=$6;
-      body=$7
+      locals=fst $6;
+      body=snd $6 @ $7
     }
   }
 

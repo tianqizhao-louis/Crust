@@ -28,7 +28,7 @@ type bind ={
   vname: string;
   vexpr: expr
 }
-
+(* forced assignment*)
 
 type local_or_body=
     | Locals of bind
