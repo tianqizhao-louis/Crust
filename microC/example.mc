@@ -10,17 +10,19 @@ int gcd(int a, int b) {
   return a;
 }
 
+
 int main() {
   int x;
   int y;
-  int z = 8;
+  int z;
   a = 18;
   b = 9;
   x = 2;
   y = 14;
-  int u;
   print(gcd(x,y));
   print(gcd(3,15));
+  int fuck= 10;
+  bool u=true;
   print(gcd(99,121));
   print(gcd(a,b));
   return 0;
