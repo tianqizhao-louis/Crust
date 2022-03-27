@@ -1,5 +1,7 @@
-all : 
-	echo "implement this"
+all : crust
+
+crust :
+	ocamlbuild -pkgs llvm crust.native
 
 spcli :
 	ocamlbuild -pkgs llvm spcli.native
