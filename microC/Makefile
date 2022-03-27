@@ -1,3 +1,9 @@
+all : 
+	echo "implement this"
+
+spcli :
+	ocamlbuild -pkgs llvm spcli.native
+
 %.cmo : %.ml
 	ocamlc -w A -c $<
 
@@ -10,15 +16,17 @@ scanner.ml : scanner.mll
 crustparser.ml crustparser.mli : crustparser.mly
 	ocamlyacc $^
 
-# Depedencies from ocamldep
-# parser.cmo : ast.cmi parser.cmi
-# parser.cmx : ast.cmi parser.cmi
-# scanner.cmo : parser.cmi
-# scanner.cmx : parser.cmx
-
 ##############################
+crustparser.cmo : ast.cmi crustparser.cmi
+crustparser.cmx : ast.cmi crustparser.cmi
+scanner.cmo : crustparser.cmi
+scanner.cmx : crustparser.cmx
 
 
 .PHONY : clean
 clean :
-	rm -rf *.cmi *.cmo crustparser.ml crustparser.mli scanner.ml
+	rm -rf *.cmi *.cmo crustparser.ml crustparser.mli scanner.ml *.native
+
+.PHONY : realclean
+realclean: clean
+	rm -rf _build/
