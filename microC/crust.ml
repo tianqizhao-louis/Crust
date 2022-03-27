@@ -18,7 +18,7 @@ let () =
 
   let lexbuf = Lexing.from_channel !channel in
 
-  let ast = Crustparse.program Scanner.token lexbuf in
+  let ast = Crustparser.program Scanner.token lexbuf in
   match !action with
     Ast -> print_string (Ast.string_of_program ast)
   | _ -> let sast = Semant.check ast in
