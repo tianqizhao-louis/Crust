@@ -4,25 +4,32 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
-%token EQ NEQ LT AND OR
-%token IF ELSE WHILE INT BOOL
+%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN TIMES DIV MOD
+%token EQ NE LT GT LE GE AND OR
+%token IF ELSE WHILE INT BOOL CHAR DOUBLE
+%token INC DEC NOT ADDR DEREF
+
 /* return, COMMA token */
 %token RETURN COMMA
-%token <int> LITERAL
+%token <int> ILIT
 %token <bool> BLIT
+%token <char> CLIT
+%token <float> DLIT
 %token <string> ID
 %token EOF
 
 %start program
 %type <Ast.program> program
 
+/* https://en.cppreference.com/w/c/language/operator_precedence */
 %right ASSIGN
 %left OR
 %left AND
-%left EQ NEQ
-%left LT
+%left EQ NE
+%left LT GT LE GE
 %left PLUS MINUS
+%left TIMES DIV MOD
+%right INC DEC NOT ADDR DEREF
 
 %%
 
@@ -84,16 +91,23 @@ stmt:
   | RETURN expr SEMI                        { Return $2      }
 
 expr:
-    LITERAL          { Literal($1)            }
+    ILIT             { IntLit($1)            }
   | BLIT             { BoolLit($1)            }
+  | CLIT             { CharLit($1)            }
+  | DLIT             { DoubleLit($1)          }
   | ID               { Id($1)                 }
+
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
-  | expr EQ     expr { Binop($1, Equal, $3)   }
-  | expr NEQ    expr { Binop($1, Neq, $3)     }
-  | expr LT     expr { Binop($1, Less,  $3)   }
+  | expr EQ     expr { Binop($1, Eq, $3)      }
+  | expr NE     expr { Binop($1, Neq, $3)     }
+  | expr LT     expr { Binop($1, Lt,  $3)     }
+  | expr GT
   | expr AND    expr { Binop($1, And,   $3)   }
   | expr OR     expr { Binop($1, Or,    $3)   }
+
+  |
+
   | ID ASSIGN expr   { Assign($1, $3)         }
   | LPAREN expr RPAREN { $2                   }
   /* call */

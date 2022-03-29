@@ -4,10 +4,13 @@ open Ast
 
 type sexpr = typ * sx
 and sx =
-    SLiteral of int
+    SIntLit of int
+  | SCharLit of char
   | SBoolLit of bool
+  | SDoubleLit of float
   | SId of string
   | SBinop of sexpr * op * sexpr
+  | SUnop of unop * sexpr
   | SAssign of string * sexpr
   (* call *)
   | SCall of string * sexpr list
@@ -36,12 +39,15 @@ type sprogram = bind list * sfunc_def list
 (* Pretty-printing functions *)
 let rec string_of_sexpr (t, e) =
   "(" ^ string_of_typ t ^ " : " ^ (match e with
-        SLiteral(l) -> string_of_int l
+        SIntLit(l) -> string_of_int l
       | SBoolLit(true) -> "true"
       | SBoolLit(false) -> "false"
+      | SCharLit c -> Char.escaped c
+      | SDoubleLit f -> string_of_float f
       | SId(s) -> s
       | SBinop(e1, o, e2) ->
         string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
+      | SUnop (u, e) -> string_of_unop u ^ " " ^ string_of_sexpr e
       | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
       | SCall(f, el) ->
           f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
