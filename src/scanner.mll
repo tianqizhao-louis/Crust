@@ -1,6 +1,13 @@
-(* Ocamllex scanner for MicroC *)
+(* 
 
-{ open Microcparse }
+Crust Scanner scanner.mll
+
+This is the Scanner file for Crust. 
+It translates a program into tokens.
+
+*)
+
+{ open Crustparse }
 
 let digit = ['0'-'9']
 let letter = ['a'-'z' 'A'-'Z']

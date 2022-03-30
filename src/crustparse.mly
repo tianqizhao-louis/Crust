@@ -1,7 +1,7 @@
 /* Ocamlyacc parser for MicroC */
 
 %{
-open Ast
+  open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
