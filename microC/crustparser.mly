@@ -35,9 +35,17 @@ decls:
  | vdecl SEMI decls { (($1 :: fst $3), snd $3) }
  | fdecl decls { (fst $2, ($1 :: snd $2)) }
 
+/*
 vdecl_list:
-  /*nothing*/ { [] }
-  | vdecl SEMI vdecl_list  {  $1 :: $3 }
+    { ([] , []) }
+  | vdecl SEMI vdecl_list  {($1:: fst $3, snd $3)}
+  | vdef SEMI vdecl_list { ( fst  $1::fst $3, snd $1 ::snd $3)}
+*/
+
+vdef:
+  /* int x = 10;*/
+  typ ID ASSIGN expr { ( ($1,$2) , (Expr (Assign($2, $4)) )) }
+
 
 /* int x */
 vdecl:
@@ -48,6 +56,7 @@ typ:
   | BOOL  { Bool  }
 
 /* fdecl */
+/*
 fdecl:
   vdecl LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
   {
@@ -55,10 +64,36 @@ fdecl:
       rtyp=fst $1;
       fname=snd $1;
       formals=$3;
-      locals=$6;
-      body=$7
+      locals=fst $6;
+      body=snd $6 @ $7
     }
   }
+*/
+/*
+int b=10;-> bind , stmt
+*/
+
+vdec_or_stmt_list:
+  /*nothing*/ { ([] , []) }
+  | vdecl SEMI vdec_or_stmt_list  {($1:: fst $3, snd $3)}
+  | vdef SEMI vdec_or_stmt_list  {( fst  $1::fst $3, snd $1 ::snd $3)}
+  | stmt vdec_or_stmt_list { (fst $2, $1 :: snd $2) }
+
+fdecl:
+  vdecl LPAREN formals_opt RPAREN LBRACE vdec_or_stmt_list RBRACE
+  {
+    {
+      rtyp=fst $1;
+      fname=snd $1;
+      formals=$3;
+      locals=fst $6;
+      body= snd $6
+    }
+  }
+
+
+
+
 
 /* formals_opt */
 formals_opt:
@@ -69,9 +104,12 @@ formals_list:
   vdecl { [$1] }
   | vdecl COMMA formals_list { $1::$3 }
 
+
 stmt_list:
   /* nothing */ { [] }
   | stmt stmt_list  { $1::$2 }
+
+
 
 stmt:
     expr SEMI                               { Expr $1      }

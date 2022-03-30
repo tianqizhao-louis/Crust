@@ -20,8 +20,8 @@ open Ast
 %token <string> STRING_LITERAL
 %token EOF
 
-%start program_rule
-%type <Ast.program> program_rule
+%start program
+%type <Ast.program> program
 
 %right ASSIGN PLUSEQUAL MINUSEQUAL MULTEQUAL DIVEQUAL MODEQUAL
 %left OR
@@ -37,25 +37,62 @@ open Ast
 
 %%
 
-program_rule:
-  var_decl_list_rule func_decl_list_rule EOF { {globals=$1; functions=$2} }
+program:
+  decls EOF { $1 }
 
- var_decl_list_rule:
-		/* Nothing */ { [] }
-		| var_decl_rule var_decl_list_rule {$1::$2}
+decls:
+   /* nothing */ { ([], [])               }
+ | var_decl_rule SEMI decls { (($1 :: fst $3), snd $3) }
+ | fdecl decls { (fst $2, ($1 :: snd $2)) }
+
+/* formals_opt */
+formals_opt:
+  /*nothing*/ { [] }
+  | formals_list { $1 }
+
+vdecl:
+  typ_rule ID { ($1, $2) }
+
+formals_list:
+  vdecl { [$1] }
+  | vdecl COMMA formals_list { $1::$3 }
+
+stmt_list:
+  /* nothing */ { [] }
+  | stmt_rule stmt_list  { $1::$2 }
+
+
+/* args_opt*/
+args_opt:
+  /*nothing*/ { [] }
+  | args { $1 }
+
+args:
+  expr_rule  { [$1] }
+  | expr_rule COMMA args { $1::$3 }
+
+fdecl:
+  var_decl_rule LPAREN formals_opt RPAREN LBRACE func_body_rule RBRACE
+  {
+    {
+      rtyp=fst $1;
+      fname=snd $1;
+      formals=$3;
+      body=$6
+    }
+  }
 
  var_decl_rule:
-	typ_rule ID SEMI { ($1, $2, NULL) } /* int i; */
-	| typ_rule ID ASSIGN expr_rule SEMI { ($1, $2, $4) }  /* int i = 1 + 2; */
-	| typ_rule ID LBRACK LITERAL RBRACK SEMI { array($1, $2, $4, Null) }  /* int arr[3]; */
-	| typ_rule ID LBRACK LITERAL RBRACK ASSIGN LBRACE expr_list RBRACE SEMI { array($1, $2, $4, $8) } /* int arr[3] = {1,2,3}; */
+	typ_rule ID { ($1, $2, Noexpr) } /* int i; */
+	| typ_rule ID ASSIGN expr_rule  { ($1, $2, $4) }  /* int i = 1 + 2; */
+	| typ_rule ID LBRACK LITERAL RBRACK  { array($1, $2, $4, Noexpr) }  /* int arr[3]; */
+	| typ_rule ID LBRACK LITERAL RBRACK ASSIGN LBRACE expr_list RBRACE  { array($1, $2, $4, $8) } /* int arr[3] = {1,2,3}; */
 
- func_decl_list_rule:
-		/* Nothing */ { [] }
-		| func_decl_rule func_decl_list_rule { $1::$2 }
 
-func_decl_rule:  /* int max(int a, int b) {return true} */
- 		typ_rule ID LPAREN arg_list_optional RPAREN LBRACE function_body_rule RPAREN {outputType=$1, functionName=$2, arguments=$4, functionBody=$7}
+func_body_rule:
+  /* nothing */ { ([], [])               }
+  | var_decl_rule SEMI func_body_rule { (($1 :: fst $3), snd $3) }
+  | stmt_rule func_body_rule { (fst $2, ($1 :: snd $2)) }
 
  arg_list_optional:
 		/* Nothing */ { [] }
@@ -66,8 +103,7 @@ arg_list:
 		| typ_rule ID COMMA arg_list { ($1, $2)::$4 }
 
 expr_list:
-  /* Nothing */ 		{[]}
-  | expr_rule 			{[$1]}
+    expr_rule 			{[$1]}
   | expr_rule COMMA expr_list {$1::$3}
 
 typ_rule:
@@ -79,23 +115,16 @@ typ_rule:
   | STRING  { String }
   | STRUCT  { Struct }
 
- function_body_rule:    // 混合 declaration + statement
-		/* Nothing */ { [] }
-		| var_decl_rule function_body_rule { $1::$2 }
-		| stmt_rule function_body_rule { $1::$2 }
 
-stmt_list_rule:
-    /* nothing */               { []     }
-    | stmt_rule stmt_list_rule  { $1::$2 }
 
 stmt_rule:
   SEMI { [] } // ;;
   | expr_rule SEMI                                                              { Expr $1         } /* print("hellow"); */
-  | LBRACE function_body_rule RBRACE                                          { Block $2        }
-  | IF LPAREN expr_rule RPAREN function_body_rule                             { If ($3, $5, Noexpr) }  //
-  | IF LPAREN expr_rule RPAREN function_body_rule ELSE function_body_rule     { If ($3, $5, $7) }
-  | WHILE LPAREN expr_rule RPAREN function_body_rule                          { While ($3,$5)   }
-  | FOR LPAREN expr_rule SEMI expr_rule SEMI expr_rule RPAREN function_body_rule { For($3, $5, $7, $9) }
+  | LBRACE func_body_rule RBRACE                                          { Block $2        }
+  | IF LPAREN expr_rule RPAREN func_body_rule                             { If ($3, $5, Noexpr) }  //
+  | IF LPAREN expr_rule RPAREN func_body_rule ELSE func_body_rule     { If ($3, $5, $7) }
+  | WHILE LPAREN expr_rule RPAREN func_body_rule                          { While ($3,$5)   }
+  | FOR LPAREN expr_rule SEMI expr_rule SEMI expr_rule RPAREN func_body_rule { For($3, $5, $7, $9) }
   | RETURN SEMI                                                               { Return Noexpr } // void function
   | RETURN expr_rule SEMI							                                            { Return $2 }
 
