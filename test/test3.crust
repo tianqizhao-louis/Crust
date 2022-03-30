@@ -2,7 +2,7 @@
     This is a test file
     For Crust
 
-    It should compile with no error
+    It should compile with errors
  */
 
 int m;
@@ -12,13 +12,7 @@ int n;
     The test is specifically created for helloworld
 */
 
-int print_helloword(int m, int n) {
-    if(m < n) {
-        return m;
-    }else {
-        return n;
-    }
-}
+
 
 // single-line comment, should be ignored
 

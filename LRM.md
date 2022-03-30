@@ -2,8 +2,8 @@
 
 ```
 Team Manager:       Tianqi Zhao
-Language Guru:      Annie Song
-System Architect:   Shaun Luo, Ruiyang Hu
+Language Guru:      Shaun Luo
+System Architect:   Ruiyang Hu
 Tester:             Frank Zhang
 ```
 

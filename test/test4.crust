@@ -32,6 +32,10 @@ int main() {
   x = 2;
   y = 14;
 
+  while (m < n) {
+      m = m + 1;
+  }
+
   print(print_helloword(x,y));
   print(print_helloword(3,15));
 
