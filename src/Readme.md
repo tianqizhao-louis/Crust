@@ -1,21 +1,24 @@
-### Build the NanoC parser
+### Build the MicroC compiler
 
 ```
-ocamlbuild test.native
+ocamlbuild test2.native
 ```
 
-### Run the NanoC parser
+### Run the MicroC compiler and generate llvm code
 ```
-./test.native
+./test2.native
 ```
 
 ### Compiler files
--  `ast.ml`: abstract syntax tree (AST)
+-  `ast.ml`: abstract syntax tree (AST) definition
 -  `scanner.mll`: scanner
--  `nanocparse.mly`: parser
+-  `microcparse.mly`: parser
+-  `sast.ml`: definition of the semantically-checked AST
+-  `semant.ml`: semantic checking
 
 ### Other files
 
-- `test.ml`: top-level file to test and run the scanner
-- `example.mc`: a sample NanoC source code
-- `example.out`: a sample parsed code of example.mc
+- `test1.ml`: the file to test the scanner and parser
+- `test2.ml`: the file to test the semantic checker
+- `example.mc`: a sample microc source code
+- `example.out`: a sample checked code of example.mc
