@@ -1,4 +1,9 @@
-(* Semantic checking for the MicroC compiler *)
+(*
+
+  Crust Semantics Checking
+  semant.ml 
+  
+*)
 
 open Ast
 open Sast

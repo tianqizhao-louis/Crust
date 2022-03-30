@@ -1,0 +1,38 @@
+/* 
+    This is a test file
+    For Crust
+
+    It should compile with errors
+ */
+
+int m;
+int n;
+
+/*
+    The test is specifically created for helloworld
+*/
+
+
+
+// single-line comment, should be ignored
+
+int main() {
+  int x;
+  int y;
+  int z;
+
+  m = 18;
+  n = 9;
+  x = 2;
+  y = 14;
+
+  print(print_helloword(x,y));
+  print(print_helloword(3,15));
+
+  int this_variable = 10;
+  bool u = true;
+
+  print(print_helloword(99, 121));
+  print(print_helloword(m, n));
+  return 0;
+}
