@@ -1,22 +1,31 @@
-/* Ocamlyacc parser for MicroC */
+/* 
 
+Crust Ocamlyacc parser
+crustparse.mly 
+
+*/
+
+
+/* Use Ast */
 %{
   open Ast
 %}
 
+/* Support token */
 %token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
 %token EQ NEQ LT AND OR
 %token IF ELSE WHILE INT BOOL
-/* return, COMMA token */
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
 %token EOF
 
+/* Start of the program */
 %start program
 %type <Ast.program> program
 
+/* precedence */
 %right ASSIGN
 %left OR
 %left AND
@@ -26,59 +35,19 @@
 
 %%
 
-/* add function declarations*/
+/* program CFG */
 program:
   decls EOF { $1}
 
+
+/* declarations */
 decls:
    /* nothing */ { ([], [])               }
  | vdecl SEMI decls { (($1 :: fst $3), snd $3) }
  | fdecl decls { (fst $2, ($1 :: snd $2)) }
 
-/*
-vdecl_list:
-    { ([] , []) }
-  | vdecl SEMI vdecl_list  {($1:: fst $3, snd $3)}
-  | vdef SEMI vdecl_list { ( fst  $1::fst $3, snd $1 ::snd $3)}
-*/
 
-vdef:
-  /* int x = 10;*/
-  typ ID ASSIGN expr { ( ($1,$2) , (Expr (Assign($2, $4)) )) }
-
-
-/* int x */
-vdecl:
-  typ ID { ($1, $2) }
-
-typ:
-    INT   { Int   }
-  | BOOL  { Bool  }
-
-/* fdecl */
-/*
-fdecl:
-  vdecl LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
-  {
-    {
-      rtyp=fst $1;
-      fname=snd $1;
-      formals=$3;
-      locals=fst $6;
-      body=snd $6 @ $7
-    }
-  }
-*/
-/*
-int b=10;-> bind , stmt
-*/
-
-vdec_or_stmt_list:
-  /*nothing*/ { ([] , []) }
-  | vdecl SEMI vdec_or_stmt_list  {($1:: fst $3, snd $3)}
-  | vdef SEMI vdec_or_stmt_list  {( fst  $1::fst $3, snd $1 ::snd $3)}
-  | stmt vdec_or_stmt_list { (fst $2, $1 :: snd $2) }
-
+/* function declarations */
 fdecl:
   vdecl LPAREN formals_opt RPAREN LBRACE vdec_or_stmt_list RBRACE
   {
@@ -87,30 +56,68 @@ fdecl:
       fname=snd $1;
       formals=$3;
       locals=fst $6;
-      body= snd $6
+      body=snd $6
     }
   }
 
 
+/* 
+  Variable declaration 
+  Example: int x = 10
+*/
+vdecl:
+  typ ID { ($1, $2) }
+
+/*
+  types
+*/
+typ:
+    INT   { Int   }
+  | BOOL  { Bool  }
+
+/*
+  Variable or statement;
+  We can mixed it up right now.
+*/
+vdec_or_stmt_list:
+  /*nothing*/ { ([] , []) }
+  | vdecl SEMI vdec_or_stmt_list  {($1:: fst $3, snd $3)}
+  | vdef SEMI vdec_or_stmt_list  {( fst  $1::fst $3, snd $1 ::snd $3)}
+  | stmt vdec_or_stmt_list { (fst $2, $1 :: snd $2) }
 
 
+/*
+  Variable definition
+*/
+vdef:
+  /* int x = 10;*/
+  typ ID ASSIGN expr { ( ($1,$2) , (Expr (Assign($2, $4)) )) }
 
-/* formals_opt */
+
+/* 
+  formals_opt 
+  function arguments
+*/
 formals_opt:
   /*nothing*/ { [] }
   | formals_list { $1 }
 
+/*
+  list of function arguments
+*/
 formals_list:
   vdecl { [$1] }
   | vdecl COMMA formals_list { $1::$3 }
 
-
+/* a list of statements */
 stmt_list:
   /* nothing */ { [] }
   | stmt stmt_list  { $1::$2 }
 
 
-
+/*
+  statement rule
+*/
 stmt:
     expr SEMI                               { Expr $1      }
   | LBRACE stmt_list RBRACE                 { Block $2 }
@@ -121,6 +128,10 @@ stmt:
   /* return */
   | RETURN expr SEMI                        { Return $2      }
 
+
+/*
+  Expression rule
+*/
 expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
@@ -137,11 +148,17 @@ expr:
   /* call */
   | ID LPAREN args_opt RPAREN { Call ($1, $3)  }
 
-/* args_opt*/
+/* 
+  args_opt
+*/
 args_opt:
   /*nothing*/ { [] }
   | args { $1 }
 
+
+/*
+  args
+*/
 args:
   expr  { [$1] }
   | expr COMMA args { $1::$3 }

@@ -1,4 +1,9 @@
-(* Abstract Syntax Tree and functions for printing it *)
+(* 
+
+  Crust Abstract Syntax Tree
+  ast.ml
+
+*)
 
 type op = Add | Sub | Equal | Neq | Less | And | Or
 
@@ -27,7 +32,10 @@ type bind = typ * string
 (* func_def: ret_typ fname formals locals body *)
 type func_def = {
   rtyp: typ;
+  (* function name *)
   fname: string;
+  (* parameters 
+  a list of bind *)
   formals: bind list;
   locals: bind list;
   body: stmt list;
