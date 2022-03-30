@@ -1,24 +1,30 @@
-Parsed program:
+Sementically checked program:
 
 int a;
 int b;
-bool c;
-bool d;
-a = 18;
-b = 9;
-while (a != b) {
-if (b < a)
-a = a - b;
-else
-b = b - a;
-}
-a = a;
-c = true;
-d = true;
-if (c && d == c || d)
+
+int gcd(a, b)
 {
-a = a + b;
-b = 1;
-}
+while ((bool : (int : a) != (int : b))) {
+if ((bool : (int : b) < (int : a)))
+(int : a = (int : (int : a) - (int : b)));
 else
-a = 1;
+(int : b = (int : (int : b) - (int : a)));
+}
+return (int : a);
+}
+
+int main()
+{
+int x;
+int y;
+(int : a = (int : 18));
+(int : b = (int : 9));
+(int : x = (int : 2));
+(int : y = (int : 14));
+(int : print((int : gcd((int : x), (int : y)))));
+(int : print((int : gcd((int : 3), (int : 15)))));
+(int : print((int : gcd((int : 99), (int : 121)))));
+(int : print((int : gcd((int : a), (int : b)))));
+return (int : 0);
+}

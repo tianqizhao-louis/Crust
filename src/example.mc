@@ -1,25 +1,29 @@
+/* The GCD algorithm in NanoC */
 int a;
 int b;
-bool c;
-bool d;
 
-a = 18;
-b = 9;
-
-/*
-loop body
-*/
-while (a != b) {
-  if (b < a) a = a - b;
-  else b = b - a;
+int gcd(int a, int b) {
+  while (a != b) {
+    if (b < a) a = a - b;
+    else b = b - a;
+  }
+  return a;
 }
 
-a = a;
 
-c = true;
-d = true;
-if (c && d == c || d) {
-  a = a + b;
-  b = 1;
-} else
-  a = 1;
+int main() {
+  int x;
+  int y;
+  int z;
+  a = 18;
+  b = 9;
+  x = 2;
+  y = 14;
+  print(gcd(x,y));
+  print(gcd(3,15));
+  int fuck= 10;
+  bool u=true;
+  print(gcd(99,121));
+  print(gcd(a,b));
+  return 0;
+}
