@@ -1,0 +1,43 @@
+/* 
+
+    This is a test file
+    For Crust
+ */
+
+int m;
+int n;
+
+/*
+    The test is specifically created for helloworld
+*/
+
+int print_helloword(int m, int n) {
+    if(m < n) {
+        return m;
+    }else {
+        return n;
+    }
+}
+
+// single-line comment, should be ignored
+
+int main() {
+  int x;
+  int y;
+  int z;
+
+  m = 18;
+  m = 9;
+  x = 2;
+  y = 14;
+
+  print(print_helloword(x,y));
+  print(print_helloword(3,15));
+
+  int this_variable = 10;
+  bool u = true;
+
+  print(print_helloword(99, 121));
+  print(print_helloword(m, n));
+  return 0;
+}

@@ -1,7 +1,7 @@
 /* 
 
-Crust Ocamlyacc parser
-crustparse.mly 
+  Crust Ocamlyacc parser
+  crustparse.mly 
 
 */
 
