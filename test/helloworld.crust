@@ -1,0 +1,44 @@
+/* 
+    This is the test file that tests all the features
+    support by Crust hello world program
+
+ */
+
+
+// single-line comment
+
+// two variables
+int m;
+int n;
+
+// print_helloworld function
+int print_helloworld(int m, int n) {
+    if(m < n) {
+        return m;
+    }else {
+        return n;
+    }
+}
+
+int main() {
+    m = 6;
+    n = 8;
+    print_helloworld(m, n);
+
+    m = 9;
+    n = 10;
+
+    print(print_helloworld(m, n));
+
+    while (m < 10) {
+        m = m + 1;
+    }
+
+    char a = 'q';
+    a = 'g';
+
+    string k = "bbd";
+    k = "abc";
+
+    return 0;
+}
