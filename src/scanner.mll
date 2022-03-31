@@ -71,7 +71,7 @@ and read_char buf =
   | '\\' 'n'  { Buffer.add_char buf '\n'; end_char buf lexbuf }
   | '\\' 'r'  { Buffer.add_char buf '\r'; end_char buf lexbuf }
   | '\\' 't'  { Buffer.add_char buf '\t'; end_char buf lexbuf }
-  | [^ ''' '\\']+
+  | [^ ''' '\\']
     { Buffer.add_string buf (Lexing.lexeme lexbuf);
       end_char buf lexbuf
     }
