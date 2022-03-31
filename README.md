@@ -9,8 +9,9 @@ You need to have ocaml installed.
 ## Run the Test Helloworld program
 
 ```bash
+mkdir out
 cd src
 ocamlbuild crust.native
-./crust.native < ../test/test1.crust > ../test/test1.out
-cat ../test/test1.out
+./crust.native < ../test/helloworld.crust > ../out/helloworld.out
+cat ../out/helloworld.out
 ```

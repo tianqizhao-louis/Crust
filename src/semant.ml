@@ -90,6 +90,7 @@ let check (globals, functions) =
         Literal l -> (Int, SLiteral l)
       | BoolLit l -> (Bool, SBoolLit l)
       | CharLit s -> (Char, SCharLit s)
+      | StringLit s -> (String, SStringLit s)
       | Id var -> (type_of_identifier var, SId var)
       | Assign(var, e) as ex ->
         let lt = type_of_identifier var

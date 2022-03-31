@@ -14,12 +14,13 @@
 /* Support token */
 %token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
 %token EQ NEQ LT AND OR
-%token IF ELSE WHILE INT BOOL CHAR 
+%token IF ELSE WHILE INT BOOL CHAR STRING
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
 %token <string> CHAR_LITERAL
+%token <string> STRING_LITERAL
 %token EOF
 
 /* Start of the program */
@@ -73,9 +74,10 @@ vdecl:
   types
 */
 typ:
-    INT   { Int   }
-  | BOOL  { Bool  }
-  | CHAR { Char }
+    INT     { Int   }
+  | BOOL    { Bool  }
+  | CHAR    { Char }
+  | STRING  { String }
 
 /*
   Variable or statement;
@@ -137,7 +139,8 @@ stmt:
 expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
-  | CHAR_LITERAL					        { CharLit($1)           }
+  | CHAR_LITERAL		 { CharLit($1)            }
+  | STRING_LITERAL   { StringLit($1)          }
   | ID               { Id($1)                 }
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
