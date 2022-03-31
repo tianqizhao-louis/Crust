@@ -31,3 +31,5 @@ _opam/
 .DS_Store
 
 *.out 
+
+.vscode/
