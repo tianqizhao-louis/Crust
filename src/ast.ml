@@ -7,11 +7,12 @@
 
 type op = Add | Sub | Equal | Neq | Less | And | Or
 
-type typ = Int | Bool
+type typ = Int | Bool | Char
 
 type expr =
     Literal of int
   | BoolLit of bool
+  | CharLit of string
   | Id of string
   | Binop of expr * op * expr
   | Assign of string * expr
@@ -57,6 +58,7 @@ let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
+  | CharLit(s) -> s
   | Id(s) -> s
   | Binop(e1, o, e2) ->
     string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
@@ -76,6 +78,7 @@ let rec string_of_stmt = function
 let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
+  | Char -> "char"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
