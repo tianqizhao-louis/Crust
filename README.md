@@ -10,7 +10,7 @@ You need to have ocaml installed.
 
 ```bash
 cd src
-ocamlbuild crust_build.native
-./crust_build.native < ../test/test1.crust > ../test/test1.out
+ocamlbuild crust.native
+./crust.native < ../test/test1.crust > ../test/test1.out
 cat ../test/test1.out
 ```
