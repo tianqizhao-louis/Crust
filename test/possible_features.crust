@@ -1,0 +1,53 @@
+/* 
+    This is a test file that the team should aim for
+    For CAWK
+
+    It should compile with errors
+ */
+
+/* 
+    can change to float if needed
+*/
+double a = 10.5; 
+
+/* 
+   modulus %
+   testmodulus should return 1
+*/
+
+int testmodulus() {
+
+int b = 10;
+int c = 3;
+int d = b%c;
+return d
+
+}
+
+/* 
+    file that need to be processed will be stored as a string
+    %n will be considered as a new line the string input
+*/
+
+File students = "Name,Age,UNI%nMike,10,ABC%nLee,11,ABCD%nJames,12,ABE%nMike,12,ABCE";
+File teachers = "Name,Age,UNI,Dept%nMike,40,AB1,Math%nJohn,51,AB3,CS%nCeline,52,AB45,CS";
+
+/* 
+    Create array with given type
+*/
+File Array school = [students,teachers]
+
+
+
+/* 
+    Select method should take three inputs
+    First is File name
+    Second is a list of queries
+    Third is a list of output fields 
+    The following select should return "ABC"
+*/
+
+int find_age = 10
+string find_name = "Mike"
+Select(students,[name = find_name, age = find_age], ["UNI"])
+
