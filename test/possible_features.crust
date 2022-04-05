@@ -20,7 +20,7 @@ int testmodulus() {
 int b = 10;
 int c = 3;
 int d = b%c;
-return d
+return d;
 
 }
 
@@ -35,7 +35,7 @@ File teachers = "Name,Age,UNI,Dept%nMike,40,AB1,Math%nJohn,51,AB3,CS%nCeline,52,
 /* 
     Create array with given type
 */
-File Array school = [students,teachers]
+File Array school = [students,teachers];
 
 
 
@@ -47,7 +47,7 @@ File Array school = [students,teachers]
     The following select should return "ABC"
 */
 
-int find_age = 10
-string find_name = "Mike"
-Select(students,[name = find_name, age = find_age], ["UNI"])
+int find_age = 10;
+string find_name = "Mike";
+Select(students,[name = find_name, age = find_age], ["UNI"]);
 
