@@ -12,6 +12,7 @@ type sexpr = typ * sx
 and sx =
     SLiteral of int
   | SBoolLit of bool
+  | SFloatLit of float
   | SCharLit of string
   | SStringLit of string
   | SId of string
@@ -45,6 +46,7 @@ type sprogram = bind list * sfunc_def list
 let rec string_of_sexpr (t, e) =
   "(" ^ string_of_typ t ^ " : " ^ (match e with
         SLiteral(l) -> string_of_int l
+      | SFloatLit(f) -> string_of_float f
       | SBoolLit(true) -> "true"
       | SBoolLit(false) -> "false"
       | SCharLit(s) -> s

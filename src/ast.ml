@@ -5,14 +5,15 @@
 
 *)
 
-type op = Add | Sub | Equal | Neq | Less | And | Or
+type op = Add | Sub | Equal | Neq | Less | And | Or | Mult | Div | Mod
 
-type typ = Int | Bool | Char | String
+type typ = Int | Bool | Char | String | Float
 
 type expr =
     Literal of int
   | BoolLit of bool
   | CharLit of string
+  | FloatLit of float
   | StringLit of string
   | Id of string
   | Binop of expr * op * expr
@@ -49,6 +50,9 @@ type program = bind list * func_def list
 let string_of_op = function
     Add -> "+"
   | Sub -> "-"
+  | Mult -> "*"
+  | Div -> "/"
+  | Mod -> "%"
   | Equal -> "=="
   | Neq -> "!="
   | Less -> "<"
@@ -57,6 +61,7 @@ let string_of_op = function
 
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
+  | FloatLit(f) -> string_of_float f
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | CharLit(s) -> s
@@ -82,6 +87,7 @@ let string_of_typ = function
   | Bool -> "bool"
   | Char -> "char"
   | String -> "string"
+  | Float -> "float"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

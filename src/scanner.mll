@@ -39,6 +39,9 @@ rule token = parse
 (* operators *)
 | '+'                                     { PLUS }
 | '-'                                     { MINUS }
+| '*'                                     { MULT }
+| '/'                                     { DIV }
+| '%'                                     { MOD }
 | '='                                     { ASSIGN }
 | "=="                                    { EQ }
 | "!="                                    { NEQ }
@@ -54,6 +57,7 @@ rule token = parse
 
 (* types *)
 | "int"                                   { INT }
+| "float"                                 { FLOAT }
 | "bool"                                  { BOOL }
 | "true"                                  { BLIT(true)  }
 | "false"                                 { BLIT(false) }
@@ -62,6 +66,7 @@ rule token = parse
 | '''                                     { read_char (Buffer.create 1) lexbuf} 
 | '"'                                     { read_string (Buffer.create 256) lexbuf } 
 | digit+ as lem                           { LITERAL(int_of_string lem) }
+| (digit+) (['.'] digit+)? as lem         { FLOAT_LITERAL(float_of_string lem) }
 | letter (digit | letter | '_')* as lem   { ID(lem) }
 | eof                                     { EOF }
 | _ as char                               { raise (Failure("illegal character " ^ Char.escaped char)) }

@@ -13,14 +13,16 @@
 
 /* Support token */
 %token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
+%token MULT DIV MOD
 %token EQ NEQ LT AND OR
-%token IF ELSE WHILE INT BOOL CHAR STRING
+%token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
 %token <string> CHAR_LITERAL
 %token <string> STRING_LITERAL
+%token <float> FLOAT_LITERAL
 %token EOF
 
 /* Start of the program */
@@ -34,6 +36,7 @@
 %left EQ NEQ
 %left LT
 %left PLUS MINUS
+%left MOD MULT DIV
 
 %%
 
@@ -78,6 +81,7 @@ typ:
   | BOOL    { Bool  }
   | CHAR    { Char }
   | STRING  { String }
+  | FLOAT   { Float }
 
 /*
   Variable or statement;
@@ -138,12 +142,16 @@ stmt:
 */
 expr:
     LITERAL          { Literal($1)            }
+  | FLOAT_LITERAL    { FloatLit($1)           }
   | BLIT             { BoolLit($1)            }
   | CHAR_LITERAL		 { CharLit($1)            }
   | STRING_LITERAL   { StringLit($1)          }
   | ID               { Id($1)                 }
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
+  | expr MULT   expr { Binop($1, Mult,  $3)   }
+  | expr DIV    expr { Binop($1, Div,   $3)   }
+  | expr MOD    expr { Binop($1, Mod,   $3)   }
   | expr EQ     expr { Binop($1, Equal, $3)   }
   | expr NEQ    expr { Binop($1, Neq, $3)     }
   | expr LT     expr { Binop($1, Less,  $3)   }
