@@ -90,6 +90,7 @@ let check (globals, functions) =
         Literal l -> (Int, SLiteral l)
       | BoolLit l -> (Bool, SBoolLit l)
       | CharLit s -> (Char, SCharLit s)
+      | FloatLit f -> (Float, SFloatLit f)
       | StringLit s -> (String, SStringLit s)
       | Id var -> (type_of_identifier var, SId var)
       | Assign(var, e) as ex ->
@@ -111,7 +112,8 @@ let check (globals, functions) =
         if t1 = t2 then
           (* Determine expression type based on operator and operand types *)
           let t = match op with
-              Add | Sub when t1 = Int -> Int
+              Add | Sub | Mult | Div | Mod when t1 = Int -> Int
+            | Add | Sub | Mult | Div when t1 = Float -> Float
             | Equal | Neq -> Bool
             | Less when t1 = Int -> Bool
             | And | Or when t1 = Bool -> Bool
