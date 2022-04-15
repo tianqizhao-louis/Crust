@@ -59,7 +59,8 @@ let rec string_of_sexpr (t, e) =
           f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
     ) ^ ")"
 
-let rec string_of_sstmt = function
+let rec string_of_sstmt (x: sstmt) =
+  match x with 
     SBlock(stmts) ->
     "{\n" ^ String.concat "" (List.map string_of_sstmt stmts) ^ "}\n"
   | SExpr(expr) -> string_of_sexpr expr ^ ";\n"

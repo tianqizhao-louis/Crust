@@ -52,7 +52,6 @@ decls:
  | fdecl decls { (fst $2, ($1 :: snd $2)) }
 
 
-/* function declarations */
 fdecl:
   vdecl LPAREN formals_opt RPAREN LBRACE vdec_or_stmt_list RBRACE
   {
@@ -60,8 +59,9 @@ fdecl:
       rtyp=fst $1;
       fname=snd $1;
       formals=$3;
-      locals=fst $6;
-      body=snd $6
+      locals = [];
+      body = [];
+      body_locals=$6;
     }
   }
 
@@ -86,12 +86,13 @@ typ:
 /*
   Variable or statement;
   We can mixed it up right now.
+  for real this time
 */
 vdec_or_stmt_list:
-  /*nothing*/ { ([] , []) }
-  | vdecl SEMI vdec_or_stmt_list  {($1:: fst $3, snd $3)}
-  | vdef SEMI vdec_or_stmt_list  {( fst  $1::fst $3, snd $1 ::snd $3)}
-  | stmt vdec_or_stmt_list { (fst $2, $1 :: snd $2) }
+  /*nothing*/ { [] }
+  | vdecl SEMI vdec_or_stmt_list  { LocalVDecl($1) :: $3 }
+  | vdef SEMI vdec_or_stmt_list  { LocalVDecl(fst $1) :: Statement(snd $1) :: $3}
+  | stmt vdec_or_stmt_list { Statement($1) :: $2 }
 
 
 /*
