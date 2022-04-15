@@ -32,6 +32,11 @@ type stmt =
 (* int x: name binding *)
 type bind = typ * string
 
+(* 混合双打 *)
+type hybrid_content = 
+    LocalVDecl of bind
+  | Statement of stmt
+
 (* func_def: ret_typ fname formals locals body *)
 type func_def = {
   rtyp: typ;
@@ -40,8 +45,9 @@ type func_def = {
   (* parameters 
   a list of bind *)
   formals: bind list;
-  locals: bind list;
-  body: stmt list;
+  locals: bind list; 
+  body: stmt list; 
+  body_locals: hybrid_content list;
 }
 
 type program = bind list * func_def list
@@ -73,7 +79,8 @@ let rec string_of_expr = function
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
 
-let rec string_of_stmt = function
+let rec string_of_stmt (x: stmt)  = 
+  match x with 
     Block(stmts) ->
     "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
   | Expr(expr) -> string_of_expr expr ^ ";\n"
@@ -91,12 +98,17 @@ let string_of_typ = function
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
+(* 混合双打 *)
+let rec string_of_hybrid (x:hybrid_content) = 
+  match x with 
+    LocalVDecl(t, id) -> string_of_vdecl (t, id)
+    | Statement(s) -> string_of_stmt s
+
 let string_of_fdecl fdecl =
   string_of_typ fdecl.rtyp ^ " " ^
   fdecl.fname ^ "(" ^ String.concat ", " (List.map snd fdecl.formals) ^
   ")\n{\n" ^
-  String.concat "" (List.map string_of_vdecl fdecl.locals) ^
-  String.concat "" (List.map string_of_stmt fdecl.body) ^
+  String.concat "" (List.map string_of_hybrid fdecl.body_locals) ^
   "}\n"
 
 let string_of_program (vars, funcs) =

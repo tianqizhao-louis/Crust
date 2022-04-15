@@ -36,7 +36,9 @@ let check (globals, functions) =
       rtyp = Int;
       fname = "print";
       formals = [(Int, "x")];
-      locals = []; body = [] } StringMap.empty
+      locals = []; 
+      body = [];
+      body_locals = [] } StringMap.empty
   in
 
   (* Add function name to symbol table *)
@@ -63,10 +65,11 @@ let check (globals, functions) =
 
   let _ = find_func "main" in (* Ensure "main" is defined *)
 
-  let check_func func =
+  let locals_table = Hashtbl.create 420 in
+  
+  let check_func func =    
     (* Make sure no formals or locals are void or duplicates *)
     check_binds "formal" func.formals;
-    check_binds "local" func.locals;
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
@@ -80,9 +83,15 @@ let check (globals, functions) =
     in
 
     (* Return a variable from our local symbol table *)
+    (* 现在symbols里找(globals和formals)，然后再在local_tables里找*)
     let type_of_identifier s =
+      print_string ("checking local: " ^ s ^ "\n");
+      (* raise (Failure ("checking identifier " ^ s)) *)
       try StringMap.find s symbols
-      with Not_found -> raise (Failure ("undeclared identifier " ^ s))
+      with Not_found -> (
+        try Hashtbl.find locals_table s
+        with Not_found -> raise(Failure("undeclared identifier " ^ s))
+      )
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
@@ -149,6 +158,7 @@ let check (globals, functions) =
       | Block sl :: sl'  -> check_stmt_list (sl @ sl') (* Flatten blocks *)
       | s :: sl -> check_stmt s :: check_stmt_list sl
     (* Return a semantically-checked statement i.e. containing sexprs *)
+
     and check_stmt =function
       (* A block is correct if each statement is correct and nothing
          follows any Return statement.  Nested blocks are flattened. *)
@@ -165,11 +175,37 @@ let check (globals, functions) =
             Failure ("return gives " ^ string_of_typ t ^ " expected " ^
                      string_of_typ func.rtyp ^ " in " ^ string_of_expr e))
     in (* body of check_func *)
+  
+
+    (* 如果是declaration，查hashtable，然后加入locals symbol table
+      如果是statement，转换成sstmt for sast
+    *)
+    let rec check_hybrid_list content = 
+      match content with 
+      [] -> ignore(print_string("END\n")); []
+      | head :: tail -> (
+        match head with 
+          LocalVDecl(t, id) -> (
+            ignore(print_string ("@@@ declaration - "));
+            match Hashtbl.find_opt locals_table id with 
+              None -> (
+                ignore(print_string ("adding " ^ id ^ " to local_table\n"));
+                ignore(Hashtbl.add locals_table id t); 
+                check_hybrid_list tail
+              )
+              | _ -> raise (Failure ("duplicate local var " ^ id))
+          )
+        | Statement(s) -> (ignore(print_string ("@@@ statement ")); check_hybrid_list tail @ [check_stmt s])
+      )
+    in 
+
     { srtyp = func.rtyp;
       sfname = func.fname;
       sformals = func.formals;
-      slocals  = func.locals;
-      sbody = check_stmt_list func.body
+      slocals  = List.rev (Hashtbl.fold (fun k v acc -> (v, k) :: acc) locals_table []);
+      sbody = check_hybrid_list (func.body_locals); 
+      (* 感觉microC是从后往前check，没有rev因为它的不在乎顺序，locals先declare完了。
+        现在混合模式顺序有关系了，所以把倒序改回正序 *)            
     }
   in
   (globals, List.map check_func functions)
