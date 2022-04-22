@@ -85,7 +85,6 @@ let check (globals, functions) =
     (* Return a variable from our local symbol table *)
     (* 现在symbols里找(globals和formals)，然后再在local_tables里找*)
     let type_of_identifier s =
-      print_string ("checking local: " ^ s ^ "\n");
       (* raise (Failure ("checking identifier " ^ s)) *)
       try StringMap.find s symbols
       with Not_found -> (
@@ -182,28 +181,26 @@ let check (globals, functions) =
     *)
     let rec check_hybrid_list content = 
       match content with 
-      [] -> ignore(print_string("END\n")); []
+      [] -> []
       | head :: tail -> (
         match head with 
           LocalVDecl(t, id) -> (
-            ignore(print_string ("@@@ declaration - "));
             match Hashtbl.find_opt locals_table id with 
               None -> (
-                ignore(print_string ("adding " ^ id ^ " to local_table\n"));
                 ignore(Hashtbl.add locals_table id t); 
                 check_hybrid_list tail
               )
               | _ -> raise (Failure ("duplicate local var " ^ id))
           )
-        | Statement(s) -> (ignore(print_string ("@@@ statement ")); check_hybrid_list tail @ [check_stmt s])
+        | Statement(s) -> (check_hybrid_list tail @ [check_stmt s])
       )
     in 
 
     { srtyp = func.rtyp;
       sfname = func.fname;
       sformals = func.formals;
-      slocals  = List.rev (Hashtbl.fold (fun k v acc -> (v, k) :: acc) locals_table []);
-      sbody = check_hybrid_list (func.body_locals); 
+      slocals  = (Hashtbl.fold (fun k v acc -> (v, k) :: acc) locals_table []);
+      sbody = List.rev (check_hybrid_list (func.body_locals)); 
       (* 感觉microC是从后往前check，没有rev因为它的不在乎顺序，locals先declare完了。
         现在混合模式顺序有关系了，所以把倒序改回正序 *)            
     }
