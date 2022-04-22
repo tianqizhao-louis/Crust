@@ -1,4 +1,4 @@
-#IR GEN
+# IR GEN
 需要opam install llvm 
 现在compile用 ocamlbuild -pkgs llvm crust.native
 运行用 ./microc.native -l example.mc > example.out
