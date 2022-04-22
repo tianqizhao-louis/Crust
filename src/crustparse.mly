@@ -12,7 +12,7 @@
 %}
 
 /* Support token */
-%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS FPLUS MINUS ASSIGN
+%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
 %token MULT DIV MOD
 %token EQ NEQ LT AND OR
 %token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
@@ -149,7 +149,6 @@ expr:
   | STRING_LITERAL   { StringLit($1)          }
   | ID               { Id($1)                 }
   | expr PLUS   expr { Binop($1, Add,   $3)   }
-  | expr FPLUS  expr { Binop($1, Fadd,  $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr MULT   expr { Binop($1, Mult,  $3)   }
   | expr DIV    expr { Binop($1, Div,   $3)   }

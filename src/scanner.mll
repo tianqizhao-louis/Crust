@@ -38,7 +38,6 @@ rule token = parse
 
 (* operators *)
 | '+'                                     { PLUS }
-| "+."                                    { FPLUS }
 | '-'                                     { MINUS }
 | '*'                                     { MULT }
 | '/'                                     { DIV }

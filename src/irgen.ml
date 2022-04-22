@@ -72,8 +72,9 @@ in
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt_str" builder in
+    let str_format_str = L.build_global_stringptr "%s" "str" builder in
+    let int_format_str = L.build_global_stringptr "%d"  "int" builder in 
+  
 
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -116,9 +117,8 @@ in
       | SBinop (e1, op, e2) ->
         let e1' = build_expr builder e1
         and e2' = build_expr builder e2 in
-        (match op with
+        if (fst e1) = A.Int then (match op with
            A.Add     -> L.build_add
-         | A.Fadd    -> L.build_fadd
          | A.Sub     -> L.build_sub
          | A.Mult    -> L.build_mul
          | A.Div     -> L.build_sdiv
@@ -129,6 +129,19 @@ in
          | A.Neq     -> L.build_icmp L.Icmp.Ne
          | A.Less    -> L.build_icmp L.Icmp.Slt
         ) e1' e2' "tmp" builder
+        
+        else if (fst e1) = A.Float then (match op with 
+            A.Add     -> L.build_fadd
+          | A.Sub     -> L.build_fsub
+          | A.Mult    -> L.build_fmul
+          | A.Div     -> L.build_fdiv
+          | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+          | A.Neq     -> L.build_fcmp L.Fcmp.One
+          | A.Less    -> L.build_fcmp L.Fcmp.Olt
+          | _         -> (raise (Failure("https://comicsandmemes.com/wp-content/uploads/blank-meme-template-094-we-dont-do-that-here-black-panther.jpg")))
+        ) e1' e2' "tmp" builder
+
+        else (raise (Failure("type does not support op")))
       | SCall ("print", [e]) ->
         L.build_call printf_func [| str_format_str ; (build_expr builder e) |]
           "printf" builder

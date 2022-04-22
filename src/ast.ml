@@ -5,7 +5,7 @@
 
 *)
 
-type op = Add | Fadd | Sub | Equal | Neq | Less | And | Or | Mult | Div | Mod
+type op = Add | Sub | Equal | Neq | Less | And | Or | Mult | Div | Mod
 
 type typ = Int | Bool | Char | String | Float
 
@@ -55,7 +55,6 @@ type program = bind list * func_def list
 (* Pretty-printing functions *)
 let string_of_op = function
     Add -> "+"
-  | Fadd -> "+."
   | Sub -> "-"
   | Mult -> "*"
   | Div -> "/"
