@@ -38,6 +38,7 @@ rule token = parse
 
 (* operators *)
 | '+'                                     { PLUS }
+| "+."                                    { FPLUS }
 | '-'                                     { MINUS }
 | '*'                                     { MULT }
 | '/'                                     { DIV }
@@ -88,7 +89,7 @@ and read_char buf =
 
 (* if more than one character *)
 and end_char buf = parse 
-  ''' { CHAR_LITERAL (Buffer.contents buf) }
+  ''' { CHAR_LITERAL (String.get (Buffer.contents buf) 0) }
 | _ { raise (SyntaxError ("char with more than one character " ^ Lexing.lexeme lexbuf)) }
 | eof { raise (SyntaxError ("Char is not terminated")) }
 

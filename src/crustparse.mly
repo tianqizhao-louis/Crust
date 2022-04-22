@@ -12,7 +12,7 @@
 %}
 
 /* Support token */
-%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
+%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS FPLUS MINUS ASSIGN
 %token MULT DIV MOD
 %token EQ NEQ LT AND OR
 %token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
@@ -20,7 +20,7 @@
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
-%token <string> CHAR_LITERAL
+%token <char> CHAR_LITERAL
 %token <string> STRING_LITERAL
 %token <float> FLOAT_LITERAL
 %token EOF
@@ -149,6 +149,7 @@ expr:
   | STRING_LITERAL   { StringLit($1)          }
   | ID               { Id($1)                 }
   | expr PLUS   expr { Binop($1, Add,   $3)   }
+  | expr FPLUS  expr { Binop($1, Fadd,  $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr MULT   expr { Binop($1, Mult,  $3)   }
   | expr DIV    expr { Binop($1, Div,   $3)   }
@@ -161,7 +162,8 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3)         }
   | LPAREN expr RPAREN { $2                   }
   /* call */
-  | ID LPAREN args_opt RPAREN { Call ($1, $3)  }
+  | ID LPAREN args_opt RPAREN { Call ($1, $3) }
+  | MINUS LITERAL    { Literal( - $2)         }
 
 /* 
   args_opt

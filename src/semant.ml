@@ -31,14 +31,24 @@ let check (globals, functions) =
   check_binds "global" globals;
 
   (* Collect function declarations for built-in functions: no bodies *)
-  let built_in_decls =
+  let rec built_in_decls_0 =
     StringMap.add "print" {
       rtyp = Int;
       fname = "print";
-      formals = [(Int, "x")];
+      formals = [(String, "x")];
       locals = []; 
       body = [];
       body_locals = [] } StringMap.empty
+  in
+  
+  let built_in_decls = 
+    StringMap.add "printc" {
+      rtyp = Char;
+      fname = "print";
+      formals = [(Char, "x")];
+      locals = []; 
+      body = [];
+      body_locals = [] } built_in_decls_0
   in
 
   (* Add function name to symbol table *)
@@ -97,7 +107,7 @@ let check (globals, functions) =
     let rec check_expr = function
         Literal l -> (Int, SLiteral l)
       | BoolLit l -> (Bool, SBoolLit l)
-      | CharLit s -> (Char, SCharLit s)
+      | CharLit c -> (Char, SCharLit c)
       | FloatLit f -> (Float, SFloatLit f)
       | StringLit s -> (String, SStringLit s)
       | Id var -> (type_of_identifier var, SId var)
@@ -121,7 +131,7 @@ let check (globals, functions) =
           (* Determine expression type based on operator and operand types *)
           let t = match op with
               Add | Sub | Mult | Div | Mod when t1 = Int -> Int
-            | Add | Sub | Mult | Div when t1 = Float -> Float
+            | Fadd | Sub | Mult | Div when t1 = Float -> Float
             | Equal | Neq -> Bool
             | Less when t1 = Int -> Bool
             | And | Or when t1 = Bool -> Bool

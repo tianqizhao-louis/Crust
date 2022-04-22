@@ -13,7 +13,7 @@ and sx =
     SLiteral of int
   | SBoolLit of bool
   | SFloatLit of float
-  | SCharLit of string
+  | SCharLit of char
   | SStringLit of string
   | SId of string
   | SBinop of sexpr * op * sexpr
@@ -49,7 +49,7 @@ let rec string_of_sexpr (t, e) =
       | SFloatLit(f) -> string_of_float f
       | SBoolLit(true) -> "true"
       | SBoolLit(false) -> "false"
-      | SCharLit(s) -> s
+      | SCharLit(c) -> String.make 1 c
       | SStringLit(s) -> s
       | SId(s) -> s
       | SBinop(e1, o, e2) ->
