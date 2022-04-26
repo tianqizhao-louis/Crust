@@ -31,7 +31,7 @@ let check (globals, functions) =
   check_binds "global" globals;
 
   (* Collect function declarations for built-in functions: no bodies *)
-  let rec built_in_decls =
+  let rec built_in_decls_0 =
     StringMap.add "print" {
       rtyp = Int;
       fname = "print";
@@ -40,7 +40,33 @@ let check (globals, functions) =
       body = [];
       body_locals = [] } StringMap.empty
   in
-
+  let rec built_in_decls_1 =
+    StringMap.add "string_of_float" {
+      rtyp = String;
+      fname = "string_of_float";
+      formals = [(Float, "x")];
+      locals = []; 
+      body = [];
+      body_locals = [] } built_in_decls_0
+  in
+  let rec built_in_decls_2 =
+    StringMap.add "string_of_bool" {
+      rtyp = String;
+      fname = "string_of_bool";
+      formals = [(Bool, "x")];
+      locals = []; 
+      body = [];
+      body_locals = [] } built_in_decls_1
+  in
+  let rec built_in_decls =
+    StringMap.add "string_of_int" {
+      rtyp = String;
+      fname = "string_of_int";
+      formals = [(Int, "x")];
+      locals = []; 
+      body = [];
+      body_locals = [] } built_in_decls_2
+  in
   (* Add function name to symbol table *)
   let add_func map fd =
     let built_in_err = "function " ^ fd.fname ^ " may not be defined"
@@ -136,6 +162,7 @@ let check (globals, functions) =
           raise (Failure ("expecting " ^ string_of_int param_length ^
                           " arguments in " ^ string_of_expr call))
         else let check_call (ft, _) e =
+          (* if function name == printf, e -> string_of_e e *)
                let (et, e') = check_expr e in
                let err = "illegal argument found " ^ string_of_typ et ^
                          " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e

@@ -1,9 +1,10 @@
 
 int main() {
-    char c = 'c';
-    string s = "Hello World\n";
-    int i = 1 + 2;
-    float f = 1.1 + 2.2;
-    print(s);
+    print(string_of_int(123));
+    print("\this is string\n");
+    print(string_of_float(123.456));
+    print("\n");
+    print(string_of_bool(false));
+    print("\n");
     return 0;
 }

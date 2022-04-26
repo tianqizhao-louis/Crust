@@ -30,7 +30,7 @@ let translate (globals, functions) =
   let i32_t      = L.i32_type    context
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context 
-  and float_t    = L.float_type  context
+  and float_t    = L.double_type  context
   and string_t   = L.pointer_type (L.i8_type context)
   (* and arr_t = L.array_type (L.i8_type context) *)
 in
@@ -56,6 +56,21 @@ in
   let printf_func : L.llvalue =
     L.declare_function "printf" printf_t the_module in
 
+  let string_of_int_t : L.lltype = 
+    L.var_arg_function_type string_t [| i32_t |] in 
+  let string_of_int_func : L.llvalue = 
+    L.declare_function "string_of_int_f" string_of_int_t the_module in 
+
+  let string_of_float_t : L.lltype = 
+    L.var_arg_function_type string_t [| float_t |] in 
+  let string_of_float_func : L.llvalue = 
+    L.declare_function "string_of_float_f" string_of_float_t the_module in 
+
+  let string_of_bool_t : L.lltype = 
+    L.var_arg_function_type string_t [| i1_t |] in 
+  let string_of_bool_func : L.llvalue = 
+    L.declare_function "string_of_bool_f" string_of_bool_t the_module in 
+    
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_def) StringMap.t =
@@ -73,7 +88,6 @@ in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
     let str_format_str = L.build_global_stringptr "%s" "str" builder in
-    let int_format_str = L.build_global_stringptr "%d"  "int" builder in 
   
 
     (* Construct the function's "locals": formal arguments and locally
@@ -145,6 +159,15 @@ in
       | SCall ("print", [e]) ->
         L.build_call printf_func [| str_format_str ; (build_expr builder e) |]
           "printf" builder
+      | SCall ("string_of_int", [e]) -> 
+        L.build_call string_of_int_func [| (build_expr builder e) |]
+          "string_of_int_f" builder
+      | SCall ("string_of_float", [e]) -> 
+        L.build_call string_of_float_func [| (build_expr builder e) |]
+          "string_of_float_f" builder
+      | SCall ("string_of_bool", [e]) -> 
+        L.build_call string_of_bool_func [| (build_expr builder e) |]
+          "string_of_bool_f" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
