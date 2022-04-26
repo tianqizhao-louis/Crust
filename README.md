@@ -1,5 +1,8 @@
 # HELPER IN C 
+
+
 make all来compile crust.native和helper.c 
+
 用 sh run.sh example.mc 来link helper的object file 跟crust.native一起
 
 # IR GEN
