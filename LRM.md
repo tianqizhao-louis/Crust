@@ -653,7 +653,7 @@ open Ast
 %token <bool> BLIT
 %token <float> FLOATING_POINT
 %token <string> ID
-%token <string> CHAR_LITERAL
+%token <char> CHAR_LITERAL
 %token <string> STRING_LITERAL
 %token EOF
 

@@ -20,7 +20,7 @@
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
-%token <string> CHAR_LITERAL
+%token <char> CHAR_LITERAL
 %token <string> STRING_LITERAL
 %token <float> FLOAT_LITERAL
 %token EOF
@@ -161,7 +161,8 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3)         }
   | LPAREN expr RPAREN { $2                   }
   /* call */
-  | ID LPAREN args_opt RPAREN { Call ($1, $3)  }
+  | ID LPAREN args_opt RPAREN { Call ($1, $3) }
+  | MINUS LITERAL    { Literal( - $2)         }
 
 /* 
   args_opt

@@ -12,7 +12,7 @@ type typ = Int | Bool | Char | String | Float
 type expr =
     Literal of int
   | BoolLit of bool
-  | CharLit of string
+  | CharLit of char
   | FloatLit of float
   | StringLit of string
   | Id of string
@@ -70,7 +70,7 @@ let rec string_of_expr = function
   | FloatLit(f) -> string_of_float f
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
-  | CharLit(s) -> s
+  | CharLit(c) -> String.make 1 c
   | StringLit(s) -> s
   | Id(s) -> s
   | Binop(e1, o, e2) ->

@@ -29,12 +29,19 @@ let translate (globals, functions) =
   (* Get types from the context *)
   let i32_t      = L.i32_type    context
   and i8_t       = L.i8_type     context
-  and i1_t       = L.i1_type     context in
+  and i1_t       = L.i1_type     context 
+  and float_t    = L.double_type  context
+  and string_t   = L.pointer_type (L.i8_type context)
+  (* and arr_t = L.array_type (L.i8_type context) *)
+in
 
   (* Return the LLVM type for a MicroC type *)
   let ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
+    | A.Float -> float_t
+    | A.Char  -> i8_t
+    | A.String -> string_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -45,10 +52,25 @@ let translate (globals, functions) =
     List.fold_left global_var StringMap.empty globals in
 
   let printf_t : L.lltype =
-    L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+    L.var_arg_function_type i32_t [| string_t |] in
   let printf_func : L.llvalue =
     L.declare_function "printf" printf_t the_module in
 
+  let string_of_int_t : L.lltype = 
+    L.var_arg_function_type string_t [| i32_t |] in 
+  let string_of_int_func : L.llvalue = 
+    L.declare_function "string_of_int_f" string_of_int_t the_module in 
+
+  let string_of_float_t : L.lltype = 
+    L.var_arg_function_type string_t [| float_t |] in 
+  let string_of_float_func : L.llvalue = 
+    L.declare_function "string_of_float_f" string_of_float_t the_module in 
+
+  let string_of_bool_t : L.lltype = 
+    L.var_arg_function_type string_t [| i1_t |] in 
+  let string_of_bool_func : L.llvalue = 
+    L.declare_function "string_of_bool_f" string_of_bool_t the_module in 
+    
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_def) StringMap.t =
@@ -65,7 +87,8 @@ let translate (globals, functions) =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
+    let str_format_str = L.build_global_stringptr "%s" "str" builder in
+  
 
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -99,24 +122,52 @@ let translate (globals, functions) =
     let rec build_expr builder ((_, e) : sexpr) = match e with
         SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
+      | SFloatLit f -> L.const_float float_t f
+      | SCharLit c ->  L.const_int i8_t (int_of_char c)
+      | SStringLit s -> L.build_global_stringptr s "" builder
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = build_expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
       | SBinop (e1, op, e2) ->
         let e1' = build_expr builder e1
         and e2' = build_expr builder e2 in
-        (match op with
+        if (fst e1) = A.Int then (match op with
            A.Add     -> L.build_add
          | A.Sub     -> L.build_sub
+         | A.Mult    -> L.build_mul
+         | A.Div     -> L.build_sdiv
+         | A.Mod     -> L.build_srem
          | A.And     -> L.build_and
          | A.Or      -> L.build_or
          | A.Equal   -> L.build_icmp L.Icmp.Eq
          | A.Neq     -> L.build_icmp L.Icmp.Ne
          | A.Less    -> L.build_icmp L.Icmp.Slt
         ) e1' e2' "tmp" builder
+        
+        else if (fst e1) = A.Float then (match op with 
+            A.Add     -> L.build_fadd
+          | A.Sub     -> L.build_fsub
+          | A.Mult    -> L.build_fmul
+          | A.Div     -> L.build_fdiv
+          | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+          | A.Neq     -> L.build_fcmp L.Fcmp.One
+          | A.Less    -> L.build_fcmp L.Fcmp.Olt
+          | _         -> (raise (Failure("https://comicsandmemes.com/wp-content/uploads/blank-meme-template-094-we-dont-do-that-here-black-panther.jpg")))
+        ) e1' e2' "tmp" builder
+
+        else (raise (Failure("type does not support op")))
       | SCall ("print", [e]) ->
-        L.build_call printf_func [| int_format_str ; (build_expr builder e) |]
+        L.build_call printf_func [| str_format_str ; (build_expr builder e) |]
           "printf" builder
+      | SCall ("string_of_int", [e]) -> 
+        L.build_call string_of_int_func [| (build_expr builder e) |]
+          "string_of_int_f" builder
+      | SCall ("string_of_float", [e]) -> 
+        L.build_call string_of_float_func [| (build_expr builder e) |]
+          "string_of_float_f" builder
+      | SCall ("string_of_bool", [e]) -> 
+        L.build_call string_of_bool_func [| (build_expr builder e) |]
+          "string_of_bool_f" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
