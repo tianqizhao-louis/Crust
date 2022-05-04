@@ -70,6 +70,11 @@ in
     L.var_arg_function_type string_t [| i1_t |] in 
   let string_of_bool_func : L.llvalue = 
     L.declare_function "string_of_bool_f" string_of_bool_t the_module in 
+
+  let awk_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t |] in 
+  let awk_func : L.llvalue = 
+    L.declare_function "awk_f" awk_t the_module in 
     
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
@@ -84,7 +89,7 @@ in
 
   (* Fill in the body of the given function *)
   let build_function_body fdecl =
-    let (the_function, _) = StringMap.find fdecl.sfname function_decls in
+    let (the_function, _) = try StringMap.find fdecl.sfname function_decls with Not_found -> (raise(Failure("error here"))) in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
     let str_format_str = L.build_global_stringptr "%s" "str" builder in
@@ -115,7 +120,7 @@ in
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
     let lookup n = try StringMap.find n local_vars
-      with Not_found -> StringMap.find n global_vars
+      with Not_found -> try StringMap.find n global_vars with Not_found -> raise(Failure("here"))
     in
 
     (* Construct code for an expression; return its value *)
@@ -168,8 +173,11 @@ in
       | SCall ("string_of_bool", [e]) -> 
         L.build_call string_of_bool_func [| (build_expr builder e) |]
           "string_of_bool_f" builder
+      | SCall ("awk", [e1;e2]) -> 
+        L.build_call awk_func [| (build_expr builder e1) ; (build_expr builder e2) |]
+          "awk_f" builder
       | SCall (f, args) ->
-        let (fdef, fdecl) = StringMap.find f function_decls in
+        let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit")) in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
         let result = f ^ "_result" in
         L.build_call fdef (Array.of_list llargs) result builder

@@ -1,10 +1,16 @@
-
 int main() {
-    print(string_of_int(123));
-    print("\this is string\n");
-    print(string_of_float(123.456));
-    print("\n");
-    print(string_of_bool(false));
-    print("\n");
+    string body = 
+    "Guangzhou China Cantonese
+Beijing China Mandarin
+Hongkong China Cantonese
+Singapore Singapore Mandarin
+London UK English
+Sydney Australia English";
+
+    string pattern = "China";
+    string res = awk(body, pattern);
+    print(res);
+    print("---------\n");
+    print(awk(body, "Mandarin"));
     return 0;
 }
