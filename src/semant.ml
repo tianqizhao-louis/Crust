@@ -31,51 +31,50 @@ let check (globals, functions) =
   check_binds "global" globals;
 
   (* Collect function declarations for built-in functions: no bodies *)
-  let rec built_in_decls_0 =
-    StringMap.add "print" {
+  let built_in_decls_list = [
+    ("print", {
       rtyp = Int;
       fname = "print";
       formals = [(String, "x")];
       locals = []; 
       body = [];
-      body_locals = [] } StringMap.empty
-  in
-  let rec built_in_decls_1 =
-    StringMap.add "string_of_float" {
+      body_locals = [] });
+    ("string_of_float", {
       rtyp = String;
       fname = "string_of_float";
       formals = [(Float, "x")];
       locals = []; 
       body = [];
-      body_locals = [] } built_in_decls_0
-  in
-  let rec built_in_decls_2 =
-    StringMap.add "string_of_bool" {
+      body_locals = [] });
+    ("string_of_bool", {
       rtyp = String;
       fname = "string_of_bool";
       formals = [(Bool, "x")];
       locals = []; 
       body = [];
-      body_locals = [] } built_in_decls_1
-  in
-  let rec built_in_decls_3 =
-    StringMap.add "awk" {
+      body_locals = [] });
+    ("awk", {
       rtyp = String;
       fname = "awk";
       formals = [(String, "x"); (String, "y")];
       locals = []; 
       body = [];
-      body_locals = [] } built_in_decls_2
-  in
-  let rec built_in_decls =
-    StringMap.add "string_of_int" {
+      body_locals = [] });
+    ("string_of_int", {
       rtyp = String;
       fname = "string_of_int";
       formals = [(Int, "x")];
       locals = []; 
       body = [];
-      body_locals = [] } built_in_decls_3
+      body_locals = [] })] 
+    in 
+  let add_func_to_map the_map func_thingy = 
+    match func_thingy with 
+      (func_name, func_struct) -> StringMap.add func_name func_struct the_map
   in
+
+  let elegant_build_in_decls = List.fold_left add_func_to_map StringMap.empty built_in_decls_list in 
+
   (* Add function name to symbol table *)
   let add_func map fd =
     let built_in_err = "function " ^ fd.fname ^ " may not be defined"
@@ -83,13 +82,13 @@ let check (globals, functions) =
     and make_err er = raise (Failure er)
     and n = fd.fname (* Name of the function *)
     in match fd with (* No duplicate functions or redefinitions of built-ins *)
-      _ when StringMap.mem n built_in_decls -> make_err built_in_err
+      _ when StringMap.mem n elegant_build_in_decls -> make_err built_in_err
     | _ when StringMap.mem n map -> make_err dup_err
     | _ ->  StringMap.add n fd map
   in
 
   (* Collect all function names into one symbol table *)
-  let function_decls = List.fold_left add_func built_in_decls functions
+  let function_decls = List.fold_left add_func elegant_build_in_decls functions
   in
 
   (* Return a function from our symbol table *)
