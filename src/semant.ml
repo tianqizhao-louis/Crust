@@ -58,6 +58,15 @@ let check (globals, functions) =
       body = [];
       body_locals = [] } built_in_decls_1
   in
+  let rec built_in_decls_3 =
+    StringMap.add "awk" {
+      rtyp = String;
+      fname = "awk";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
+      body_locals = [] } built_in_decls_2
+  in
   let rec built_in_decls =
     StringMap.add "string_of_int" {
       rtyp = String;
@@ -65,7 +74,7 @@ let check (globals, functions) =
       formals = [(Int, "x")];
       locals = []; 
       body = [];
-      body_locals = [] } built_in_decls_2
+      body_locals = [] } built_in_decls_3
   in
   (* Add function name to symbol table *)
   let add_func map fd =
