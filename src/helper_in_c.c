@@ -42,4 +42,5 @@ char* string_of_bool_f(int input) {
     } else {
         strcpy(string, "true");
     }
+    return string;
 }
