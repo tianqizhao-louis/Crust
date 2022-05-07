@@ -1,23 +1,16 @@
-# HELPER IN C 
+# How to Install and Run
 
-make all来compile crust.native和helper.c 
-
-用 sh run.sh example.mc 来link helper的object file 跟crust.native一起
-
-# IR GEN
-
-需要opam install llvm 
-
-现在compile用 `ocamlbuild -pkgs llvm crust.native`
-
-运行用 `./microc.native -l example.mc > example.out`
-
--l出LLVM 
-
--a出AST
-
--s出SAST
-
+```
+opam install llvm
+ocamlbuild -pkgs llvm crust.native
+./crust.native -l example.mc > example.out
+make all
+chmod +x run.sh
+echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
+export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+./run.sh example.mc
+```
 
 # Crust
 
