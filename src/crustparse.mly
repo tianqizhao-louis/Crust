@@ -17,6 +17,7 @@
 %token EQ NEQ LT AND OR
 %token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
 %token RETURN COMMA
+%token STRUCT
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
