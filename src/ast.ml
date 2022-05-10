@@ -1,4 +1,4 @@
-(* 
+(*
 
   Crust Abstract Syntax Tree
   ast.ml
@@ -7,7 +7,7 @@
 
 type op = Add | Sub | Equal | Neq | Less | And | Or | Mult | Div | Mod
 
-type typ = Int | Bool | Char | String | Float
+type typ = Int | Bool | Char | String | Float | Array of typ * int
 
 type expr =
     Literal of int
@@ -18,6 +18,7 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Assign of string * expr
+  | ArrayLit of expr list
   (* function call *)
   | Call of string * expr list
 
@@ -33,7 +34,7 @@ type stmt =
 type bind = typ * string
 
 (* 混合双打 *)
-type hybrid_content = 
+type hybrid_content =
     LocalVDecl of bind
   | Statement of stmt
 
@@ -42,11 +43,11 @@ type func_def = {
   rtyp: typ;
   (* function name *)
   fname: string;
-  (* parameters 
+  (* parameters
   a list of bind *)
   formals: bind list;
-  locals: bind list; 
-  body: stmt list; 
+  locals: bind list;
+  body: stmt list;
   body_locals: hybrid_content list;
 }
 
@@ -72,6 +73,7 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | CharLit(c) -> String.make 1 c
   | StringLit(s) -> s
+  | ArrayLit(arr) -> "[" ^ (List.fold_left (fun lst elem -> lst ^ " " ^ string_of_expr elem ^ ",") "" arr) ^ "]"
   | Id(s) -> s
   | Binop(e1, o, e2) ->
     string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
@@ -79,8 +81,8 @@ let rec string_of_expr = function
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
 
-let rec string_of_stmt (x: stmt)  = 
-  match x with 
+let rec string_of_stmt (x: stmt)  =
+  match x with
     Block(stmts) ->
     "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
   | Expr(expr) -> string_of_expr expr ^ ";\n"
@@ -89,18 +91,19 @@ let rec string_of_stmt (x: stmt)  =
                       string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
 
-let string_of_typ = function
+let rec string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
   | Char -> "char"
   | String -> "string"
   | Float -> "float"
+  | Array(t, _) -> (string_of_typ t) ^ "[]"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
 (* 混合双打 *)
-let rec string_of_hybrid (x:hybrid_content) = 
-  match x with 
+let rec string_of_hybrid (x:hybrid_content) =
+  match x with
     LocalVDecl(t, id) -> string_of_vdecl (t, id)
     | Statement(s) -> string_of_stmt s
 

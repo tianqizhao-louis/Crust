@@ -72,6 +72,8 @@ fdecl:
 */
 vdecl:
   typ ID { ($1, $2) }
+  | typ ID LBKT LITERAL RBKT {(Array($1, $4), $2)}
+
 
 /*
   types
@@ -160,9 +162,13 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3)   }
   | ID ASSIGN expr   { Assign($1, $3)         }
   | LPAREN expr RPAREN { $2                   }
+/*  | id expr ASSIGN array_lit  {Assign($1 ,$3)}*/
   /* call */
   | ID LPAREN args_opt RPAREN { Call ($1, $3) }
   | MINUS LITERAL    { Literal( - $2)         }
+
+
+
 
 /*
   args_opt
