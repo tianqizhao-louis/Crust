@@ -4,6 +4,7 @@ int main() {
     int i=0;
     y[0]=5;
     while(i<8){
+      y[i+1]=i;
       i=i+1;
     }
     return 1;
