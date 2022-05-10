@@ -173,11 +173,39 @@ let check (globals, functions) =
           (* if function name == printf, e -> string_of_e e *)
                let (et, e') = check_expr e in
                let err = "illegal argument found " ^ string_of_typ et ^
-                         " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
+                         " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e ^ " " ^ fname
                in (check_assign ft et err, e')
           in
-          let args' = List.map2 check_call fd.formals args
-          in (fd.rtyp, SCall(fname, args'))
+          
+          match fname with 
+            "print" -> (
+              let arg_head = List.hd args in 
+              let (et, e') = check_expr arg_head in
+              match et with 
+                  String -> (
+                    let args' = List.map2 check_call fd.formals args in 
+                    fd.rtyp, SCall(fname, args')
+                  )
+                | Int -> (
+                    let conversion_call = Call("string_of_int", args) in 
+                    let intermedia_scall = check_expr conversion_call in 
+                    fd.rtyp, SCall(fname, [intermedia_scall])
+                  )
+                | Float -> (
+                  let conversion_call = Call("string_of_float", args) in 
+                  let intermedia_scall = check_expr conversion_call in 
+                  fd.rtyp, SCall(fname, [intermedia_scall])
+                )
+                | Bool -> (
+                  let conversion_call = Call("string_of_bool", args) in 
+                  let intermedia_scall = check_expr conversion_call in 
+                  fd.rtyp, SCall(fname, [intermedia_scall])
+                )
+                | _ -> raise(Failure("This shit aint a string and there is no auto conversion implemented for " ^ string_of_typ et))
+              
+            )
+            | _ -> ( let args' = List.map2 check_call fd.formals args
+                        in (fd.rtyp, SCall(fname, args')))
     in
 
     let check_bool_expr e =
