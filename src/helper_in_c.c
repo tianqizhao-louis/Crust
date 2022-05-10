@@ -2,12 +2,15 @@
 #include <stdio.h> 
 #include <string.h>
 
-int is_sub_string(char* text, int text_length, char* substr, int substr_length) {
-    return -1;
+char* str_concat_f(char* first, char* second) {
+    char* res = (char *) malloc(strlen(first) + strlen(second) + 1);
+    strcpy(res, first);
+    strcpy(res + strlen(first), second);
+    return res;
 }
 
 char* awk_f(char* text, char* pattern) {
-    char* res = (char *) malloc(1024);
+    char* res = (char *) malloc(strlen(text) + 1);
     int res_len = 0;
     char *line, *str, *tofree;
     tofree = str = strdup(text);

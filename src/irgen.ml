@@ -56,6 +56,21 @@ in
   let printf_func : L.llvalue =
     L.declare_function "printf" printf_t the_module in
 
+  let strlen_t : L.lltype =
+    L.var_arg_function_type i32_t [| string_t |] in
+  let strlen_func : L.llvalue =
+    L.declare_function "strlen" strlen_t the_module in
+
+  let strcmp_t : L.lltype =
+    L.var_arg_function_type i32_t [| string_t; string_t |] in
+  let strcmp_func : L.llvalue =
+    L.declare_function "strcmp" strcmp_t the_module in
+
+  let str_concat_t : L.lltype = 
+      L.function_type string_t [| string_t; string_t |] in
+  let str_concat_f : L.llvalue =
+      L.declare_function "str_concat_f" str_concat_t the_module in
+
   let string_of_int_t : L.lltype = 
     L.var_arg_function_type string_t [| i32_t |] in 
   let string_of_int_func : L.llvalue = 
@@ -160,10 +175,21 @@ in
           | _         -> (raise (Failure("https://comicsandmemes.com/wp-content/uploads/blank-meme-template-094-we-dont-do-that-here-black-panther.jpg")))
         ) e1' e2' "tmp" builder
 
+      else if (fst e1) = A.String then (match op with 
+          A.Add     -> L.build_call str_concat_f [| e1' ; e2' |] "str_concat_f" builder
+        | _         -> raise (Failure("https://comicsandmemes.com/wp-content/uploads/blank-meme-template-094-we-dont-do-that-here-black-panther.jpg"))
+      ) 
+
         else (raise (Failure("type does not support op")))
       | SCall ("print", [e]) ->
         L.build_call printf_func [| str_format_str ; (build_expr builder e) |]
           "printf" builder
+      | SCall ("strlen", [e]) ->
+        L.build_call strlen_func [| (build_expr builder e) |]
+          "strlen" builder
+      | SCall ("strcmp", [e1;e2]) -> 
+        L.build_call strcmp_func [| (build_expr builder e1) ; (build_expr builder e2) |]
+          "strcmp" builder
       | SCall ("string_of_int", [e]) -> 
         L.build_call string_of_int_func [| (build_expr builder e) |]
           "string_of_int_f" builder
@@ -177,7 +203,7 @@ in
         L.build_call awk_func [| (build_expr builder e1) ; (build_expr builder e2) |]
           "awk_f" builder
       | SCall (f, args) ->
-        let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit")) in
+        let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit " ^ f)) in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
         let result = f ^ "_result" in
         L.build_call fdef (Array.of_list llargs) result builder
