@@ -105,7 +105,6 @@ vdef:
   /* int x = 10;*/
   typ ID ASSIGN expr { ( ($1,$2) , (Expr (Assign($2, $4)) )) }
 
-
 /*
   formals_opt
   function arguments
@@ -162,6 +161,7 @@ expr:
   | expr AND    expr { Binop($1, And,   $3)   }
   | expr OR     expr { Binop($1, Or,    $3)   }
   | ID ASSIGN expr   { Assign($1, $3)         }
+  | ID LBKT LITERAL RBKT ASSIGN expr { Assigna($1,$3,$6) }
   | LPAREN expr RPAREN { $2                   }
 /*  | id expr ASSIGN array_lit  {Assign($1 ,$3)}*/
   /* call */
