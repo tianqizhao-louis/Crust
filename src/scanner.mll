@@ -1,18 +1,18 @@
-(* 
+(*
 
   Crust Scanner scanner.mll
 
-  This is the Scanner file for Crust. 
+  This is the Scanner file for Crust.
   It translates a program into tokens.
 
 *)
 
 (* Open parser file *)
-{ 
-  open Crustparse 
+{
+  open Crustparse
   open Lexing
-  exception SyntaxError of string 
-} 
+  exception SyntaxError of string
+}
 
 (* predefined variables *)
 let digit = ['0'-'9']
@@ -25,7 +25,7 @@ rule token = parse
 
 (* separators *)
   (* Whitespace *)
-  whitespace                              { token lexbuf } 
+  whitespace                              { token lexbuf }
   (* Comments *)
 | "/*"                                    { comment lexbuf }
 | "//"                                    { single_line_comment lexbuf }
@@ -33,6 +33,8 @@ rule token = parse
 | ')'                                     { RPAREN }
 | '{'                                     { LBRACE }
 | '}'                                     { RBRACE }
+| '['                                     { LBKT }
+| ']'                                     { RBKT }
 | ';'                                     { SEMI }
 | ','                                     { COMMA }
 
@@ -63,8 +65,8 @@ rule token = parse
 | "false"                                 { BLIT(false) }
 | "char"                                  { CHAR }
 | "string"                                { STRING }
-| '''                                     { read_char (Buffer.create 1) lexbuf} 
-| '"'                                     { read_string (Buffer.create 256) lexbuf } 
+| '''                                     { read_char (Buffer.create 1) lexbuf}
+| '"'                                     { read_string (Buffer.create 256) lexbuf }
 | digit+ as lem                           { LITERAL(int_of_string lem) }
 | (digit+) (['.'] digit+)? as lem         { FLOAT_LITERAL(float_of_string lem) }
 | letter (digit | letter | '_')* as lem   { ID(lem) }
@@ -87,7 +89,7 @@ and read_char buf =
   | eof { raise (SyntaxError ("Char is not terminated")) }
 
 (* if more than one character *)
-and end_char buf = parse 
+and end_char buf = parse
   ''' { CHAR_LITERAL (String.get (Buffer.contents buf) 0) }
 | _ { raise (SyntaxError ("char with more than one character " ^ Lexing.lexeme lexbuf)) }
 | eof { raise (SyntaxError ("Char is not terminated")) }
