@@ -1,7 +1,7 @@
-/* 
+/*
 
   Crust Ocamlyacc parser
-  crustparse.mly 
+  crustparse.mly
 
 */
 
@@ -12,7 +12,7 @@
 %}
 
 /* Support token */
-%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
+%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN LBKT RBKT
 %token MULT DIV MOD
 %token EQ NEQ LT AND OR
 %token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
@@ -66,8 +66,8 @@ fdecl:
   }
 
 
-/* 
-  Variable declaration 
+/*
+  Variable declaration
   Example: int x = 10
 */
 vdecl:
@@ -103,8 +103,8 @@ vdef:
   typ ID ASSIGN expr { ( ($1,$2) , (Expr (Assign($2, $4)) )) }
 
 
-/* 
-  formals_opt 
+/*
+  formals_opt
   function arguments
 */
 formals_opt:
@@ -164,7 +164,7 @@ expr:
   | ID LPAREN args_opt RPAREN { Call ($1, $3) }
   | MINUS LITERAL    { Literal( - $2)         }
 
-/* 
+/*
   args_opt
 */
 args_opt:
