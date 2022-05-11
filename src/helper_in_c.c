@@ -172,9 +172,13 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     tofree = str = strdup(text);
 
 
+    char *tmp_str [10000];
+    strncpy ( tmp_str, str, sizeof(str) );
+ 
+
     //check there is that many row in the table
-    line = strsep(&str, "\n");
-    char * token = strtok(line, " ");
+    line = strsep(&tmp_str, "\n");
+    char * token = strtok(tmp_str, " ");
     while( token != NULL ) {
         // printf( " %s\n", token ); //printing each token
         token = strtok(NULL, " ");
