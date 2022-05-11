@@ -35,7 +35,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     char *line, *str, *tofree;
     tofree = str = strdup(text);
 
-    if (strcmp(yes, decision)){
+    if (strcmp(no, decision)){
         char buffer[1024];
         while ((line = strsep(&str, "\n"))) {
             if (strstr(line, pattern)) {
