@@ -174,7 +174,7 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     const char * str= strdup(text);
     // printf("%s\n", str);
 
-    char *tmp_line;
+    char tmp_line[10000];
     strcpy(tmp_line, str);
     printf("%s\n", tmp_line);
     
