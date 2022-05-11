@@ -171,7 +171,7 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     tofree = str = strdup(text);
 
     line = strsep(&str, "\n");
-    char str[] = line;
+    char str = line;
     int init_size = strlen(str);
 
     char *ptr = strtok(str, delim);
