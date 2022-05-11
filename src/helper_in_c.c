@@ -23,13 +23,7 @@ char* awk_f(char* text, char* pattern) {
 }
 
 char* awk_line_f(char* text, char* pattern, char* decision) {
-    // char yes[15];
-    // strcpy(yes, "y");
-    // char no[15];
-    // strcpy(no, "n");
-    int count = 1;
-
-    
+    int count = 1;   
     char* res = (char *) malloc(1024);
     int res_len = 0;
     char *line, *str, *tofree;
@@ -58,34 +52,6 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
             }
         }
     }
-    // char buffer[50];
-    // // sprintf(buffer, "i got here")
-    // char yes[1] = "y";
-    // char no[2] = "n";
-    // printf(*yes);
-    // if (strcmp(yes, no)){
-    //     sprintf(buffer, "true");
-    // }
-    // else{
-    //     sprintf(buffer, "false");
-    // }
-    // int row_num = 1;
-    // char text[20]; 
-    // char* res = (char *) malloc(1024);
-    // int res_len = 0;
-    // char *line, *str, *tofree;
-    // tofree = str = strdup(text);
-    // while ((line = strsep(&str, "\n"))) {
-    //     if (strstr(line, pattern)) {
-    //         row_num = row_num + 1;
-    //         sprintf(text, "%d", row_num);
-    //         strcat(line, text)
-    //         strcpy(res+res_len, line);
-    //         res_len += strlen(line);
-    //         res[res_len] = '\n';
-    //         res_len++;
-    //     }
-    // }
      return res;
 }
 

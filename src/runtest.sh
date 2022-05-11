@@ -2,7 +2,7 @@
 git pull
 make clean
 ocamlbuild -pkgs llvm crust.native
-./crust.native -l row_print.mc > row_print.out
+./crust.native -l example.mc > example.out
 make all
 chmod +x run.sh
-./run.sh row_print.mc
+./run.sh example.mc

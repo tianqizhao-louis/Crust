@@ -12,5 +12,8 @@ Sydney Australia English";
     print(res);
     print("---------\n");
     print(awk(body, "Mandarin"));
+    print("---------\n");
+    print(awk_line(body, "Mandarin","y"));
+
     return 0;
 }
