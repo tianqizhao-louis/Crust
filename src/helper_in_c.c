@@ -203,16 +203,18 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
             token = strtok(NULL, " ");
             row_count ++;
         }
-        printf("hiii %s\n", target);
+        // printf("hiii %s\n", target);
 
         // // strncat(res,token, sizeof(token));
         // // strncat(res,"\n", 10);
 
 
         strcpy(res+res_len, target);
-        res_len += strlen(target);
-        res[res_len] = '\n';
-        res_len++;
+        printf("%s", res);
+
+        // res_len += strlen(target);
+        // res[res_len] = '\n';
+        // res_len++;
         
     }
 
