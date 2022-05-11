@@ -25,10 +25,10 @@ char* awk_f(char* text, char* pattern) {
 char* awk_line_f(char* text, char* pattern, char* print_row) {
     char buffer[50];
     // sprintf(buffer, "i got here")
-    char yes = "y";
-    char no = "n";
+    char yes[1] = "y";
+    char no[2] = "n";
 
-    if (strcmp(print_row, *yes)){
+    if (strcmp(yes, no)){
         sprintf(buffer, "true");
     }
     else{
