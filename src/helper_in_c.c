@@ -210,11 +210,9 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
 
 
         strcpy(res+res_len, target);
-        printf("%s", res);
-
-        // res_len += strlen(target);
-        // res[res_len] = '\n';
-        // res_len++;
+        res_len += strlen(target);
+        res[res_len] = '\n';
+        res_len++;
         
     }
 
