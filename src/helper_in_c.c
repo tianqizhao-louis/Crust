@@ -173,20 +173,20 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
 
     char buffer[10000];
     strcpy(buffer, strdup(text));
-    printf(buffer);
 
 
 
 
 
-    // tmp_line = strsep(&tmp, "\n");
-    // char * token = strtok(tmp_line, " ");
-    // // loop through the string to extract all other tokens
-    // while( token != NULL ) {
-    //     // printf( " %s\n", token ); //printing each token
-    //     token = strtok(NULL, " ");
-    //     col_count++;
-    // }
+
+    tmp_line = strsep(&buffer, "\n");
+    char * token = strtok(tmp_line, " ");
+    // loop through the string to extract all other tokens
+    while( token != NULL ) {
+        printf( " %s\n", token ); //printing each token
+        token = strtok(NULL, " ");
+        col_count++;
+    }
 
 
     // if (col_count < col_num) {
