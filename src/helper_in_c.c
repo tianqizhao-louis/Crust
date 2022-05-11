@@ -190,17 +190,21 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     }
 
     while ((line = strsep(&str, "\n"))) {
-
+        int row_count = 1;
         char * token = strtok(line, " ");
         // loop through the string to extract all other tokens
         while( token != NULL ) {
-            printf( " %s\n", token ); //printing each token
+            // printf( " %s\n", token ); //printing each token
             token = strtok(NULL, " ");
+            if (row_count == col_num){
+                strcpy(res+res_len, token);
+                res_len += strlen(token);
+                res[res_len] = '\n';
+                res_len++;
+            }
+            row_count++;
         }
-        strcpy(res+res_len, line);
-        res_len += strlen(line);
-        res[res_len] = '\n';
-        res_len++;
+
         
     }
 
