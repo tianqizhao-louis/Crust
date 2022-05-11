@@ -22,6 +22,27 @@ char* awk_f(char* text, char* pattern) {
     return res;
 }
 
+char* awk_line_f(char* text, char* pattern, bool* line) {
+    int row_num = 1;
+    char text[20]; 
+    char* res = (char *) malloc(1024);
+    int res_len = 0;
+    char *line, *str, *tofree;
+    tofree = str = strdup(text);
+    while ((line = strsep(&str, "\n"))) {
+        if (strstr(line, pattern)) {
+            row_num = row_num + 1;
+            sprintf(text, "%d", row_num);
+            strcat(line, text)
+            strcpy(res+res_len, line);
+            res_len += strlen(line);
+            res[res_len] = '\n';
+            res_len++;
+        }
+    }
+    return res;
+}
+
 char* string_of_int_f(int input) {
     char* string = (char *) malloc(33);
     sprintf(string,"%d", input);
