@@ -13,8 +13,7 @@ Nanjing China Mandarin";
     print(res);
     print("------------------");
     awk_col(body, pattern,1);
-    awk_col(body, pattern,2);
-    awk_col(body, pattern,4);
+
 
     return 0;
 }
