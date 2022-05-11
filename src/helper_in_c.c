@@ -91,7 +91,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
 }
 
 char* awk_line_range_f(char* text, char* pattern, int* start) {
-    printf("hi!!!");
+    printf("%d", &start);
 
     return 0;
     // int count = 1;   
