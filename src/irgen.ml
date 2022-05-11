@@ -51,26 +51,33 @@ in
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
-  let printf_t : L.lltype =
+  let one_string_in_one_int_out_t : L.lltype =
     L.var_arg_function_type i32_t [| string_t |] in
   let printf_func : L.llvalue =
-    L.declare_function "printf" printf_t the_module in
-
-  let strlen_t : L.lltype =
-    L.var_arg_function_type i32_t [| string_t |] in
+    L.declare_function "printf" one_string_in_one_int_out_t the_module in
   let strlen_func : L.llvalue =
-    L.declare_function "strlen" strlen_t the_module in
+    L.declare_function "strlen" one_string_in_one_int_out_t the_module in
 
   let strcmp_t : L.lltype =
     L.var_arg_function_type i32_t [| string_t; string_t |] in
   let strcmp_func : L.llvalue =
     L.declare_function "strcmp" strcmp_t the_module in
 
-  let str_concat_t : L.lltype = 
-      L.function_type string_t [| string_t; string_t |] in
+  let two_strings_in_one_string_out_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t |] in 
+  let awk_func : L.llvalue = 
+    L.declare_function "awk_f" two_strings_in_one_string_out_t the_module in 
   let str_concat_f : L.llvalue =
-      L.declare_function "str_concat_f" str_concat_t the_module in
+    L.declare_function "str_concat_f" two_strings_in_one_string_out_t the_module in
 
+  let two_strings_in_one_bool_out_t : L.lltype =   
+    L.function_type i1_t [| string_t; string_t |] in
+  let str_eq_f : L.llvalue =
+    L.declare_function "str_eq_f" two_strings_in_one_bool_out_t the_module in
+  let str_neq_f : L.llvalue =
+    L.declare_function "str_neq_f" two_strings_in_one_bool_out_t the_module in
+
+    (* conversions *)
   let string_of_int_t : L.lltype = 
     L.var_arg_function_type string_t [| i32_t |] in 
   let string_of_int_func : L.llvalue = 
@@ -85,11 +92,6 @@ in
     L.var_arg_function_type string_t [| i1_t |] in 
   let string_of_bool_func : L.llvalue = 
     L.declare_function "string_of_bool_f" string_of_bool_t the_module in 
-
-  let awk_t : L.lltype = 
-    L.var_arg_function_type string_t [| string_t; string_t |] in 
-  let awk_func : L.llvalue = 
-    L.declare_function "awk_f" awk_t the_module in 
     
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
@@ -177,6 +179,8 @@ in
 
       else if (fst e1) = A.String then (match op with 
           A.Add     -> L.build_call str_concat_f [| e1' ; e2' |] "str_concat_f" builder
+        | A.Equal   -> L.build_call str_eq_f [| e1' ; e2' |] "str_eq_f" builder
+        | A.Neq     -> L.build_call str_neq_f [| e1' ; e2' |] "str_neq_f" builder
         | _         -> raise (Failure("https://comicsandmemes.com/wp-content/uploads/blank-meme-template-094-we-dont-do-that-here-black-panther.jpg"))
       ) 
 

@@ -2,6 +2,17 @@
 #include <stdio.h> 
 #include <string.h>
 
+
+int str_neq_f(char* first, char* second) {
+    return (strcmp(first, second) != 0);
+}
+
+
+
+int str_eq_f(char* first, char* second) {
+    return (strcmp(first, second) == 0);
+}
+
 char* str_concat_f(char* first, char* second) {
     char* res = (char *) malloc(strlen(first) + strlen(second) + 1);
     strcpy(res, first);

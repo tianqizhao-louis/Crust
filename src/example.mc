@@ -7,4 +7,10 @@ int main() {
 
     print(strcmp("aaa", "aab"));
     print("\n");
+
+    print("abc" == "abc");
+    print("\n");
+
+    print("abc" != "abc");
+    print("\n");
 }

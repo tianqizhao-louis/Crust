@@ -80,6 +80,20 @@ let check (globals, functions) =
       formals = [(String, "x"); (String, "y")];
       locals = []; 
       body = [];
+      body_locals = [] });
+    ("str_eq", {
+      rtyp = Int;
+      fname = "str_eq";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("str_neq", {
+      rtyp = Int;
+      fname = "str_neq";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
       body_locals = [] })] 
     in 
   let add_func_to_map the_map func_thingy = 
@@ -171,6 +185,7 @@ let check (globals, functions) =
               Add | Sub | Mult | Div | Mod when t1 = Int -> Int
             | Add | Sub | Mult | Div when t1 = Float -> Float
             | Add when t1 = String -> String
+            | Equal | Neq when t1 = String -> Bool
             | Equal | Neq -> Bool
             | Less when t1 = Int -> Bool
             | And | Or when t1 = Bool -> Bool
