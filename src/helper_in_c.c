@@ -196,7 +196,7 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
         // loop through the string to extract all other tokens
         while( token != NULL ) {
             
-            // printf( " %s,%d\n", token,row_count ); //printing each token
+            printf( " %s,%d\n", token,row_count ); //printing each token
             if (row_count == col_num){
                 strcpy(target, token);
             }
@@ -204,14 +204,14 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
             row_count ++;
         }
 
-        // strncat(res,token, sizeof(token));
-        // strncat(res,"\n", 10);
+        // // strncat(res,token, sizeof(token));
+        // // strncat(res,"\n", 10);
 
 
-        strcpy(res+res_len, line);
-        res_len += strlen(line);
-        res[res_len] = '\n';
-        res_len++;
+        // strcpy(res+res_len, line);
+        // res_len += strlen(line);
+        // res[res_len] = '\n';
+        // res_len++;
         
     }
 
@@ -234,7 +234,7 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     //     res[res_len] = '\n';
     //     res_len++;
     // }
-    return res;
+    return 0;
 }
 
 
