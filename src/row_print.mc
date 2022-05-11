@@ -10,5 +10,9 @@ Sydney Australia English";
     string pattern = "China";
     string decision = "y";
     print(awk_line(body, pattern, decision));
+
+    print("---------\n");
+    decision = "n";
+    print(awk(body, "Mandarin", decision));
     return 0;
 }
