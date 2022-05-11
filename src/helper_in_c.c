@@ -114,7 +114,7 @@ char* awk_line_range_f(char* text, char* pattern, int start, int end) {
         }
         count++;
     }
-    return 0;
+    return res;
     // int count = 1;   
     // char* res = (char *) malloc(1024);
     // int res_len = 0;
