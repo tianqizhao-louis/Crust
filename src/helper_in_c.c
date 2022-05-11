@@ -168,21 +168,20 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     int col_count = 0;
     char* res = (char *) malloc(1024);
     int res_len = 0;
-    char *line, *str, *tofree, *tmp;
+    char *line, *str, *tofree, *tmp, *tmp_line;
     tofree = str = tmp = strdup(text);
 
 
 
 
-    line = strsep(&tmp, "\n");
-    char * token = strtok(line, " ");
+    tmp_line = strsep(&tmp, "\n");
+    char * token = strtok(tmp_line, " ");
+    // loop through the string to extract all other tokens
     while( token != NULL ) {
-        // printf( " %s\n", token ); //printing each token
+        printf( " %s\n", token ); //printing each token
         token = strtok(NULL, " ");
-        col_count++;
     }
 
-    printf("%d", col_count);
 
     // if (col_count < col_num) {
     //     printf("Invalid column number");
@@ -207,7 +206,7 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     //     res_len++;
     // }
     // return res;
-    // return 0;
+    return 0;
 }
 
 
