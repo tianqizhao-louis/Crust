@@ -23,10 +23,10 @@ char* awk_f(char* text, char* pattern) {
 }
 
 char* awk_line_f(char* text, char* pattern, char* decision) {
-    char yes[15];
-    strcpy(yes, "y");
-    char no[15];
-    strcpy(no, "n");
+    // char yes[15];
+    // strcpy(yes, "y");
+    // char no[15];
+    // strcpy(no, "n");
     int count = 1;
 
     
@@ -35,7 +35,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     char *line, *str, *tofree;
     tofree = str = strdup(text);
 
-    if ((strcmp(yes, decision)) == 0){
+    if ((strcmp("y", decision)) == 0){
         char buffer[1024];
         while ((line = strsep(&str, "\n"))) {
             if (strstr(line, pattern)) {
