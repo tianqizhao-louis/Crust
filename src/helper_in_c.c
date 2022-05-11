@@ -171,45 +171,45 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     char *line, *str, *tofree;
     tofree = str = strdup(text);
 
-    printf("%s\n", str);
+    // printf("%s\n", str);
 
     char *tmp_line;
     strcpy(tmp_line, str);
-    // printf("%s\n", tmp_line);
+    printf("%s\n", tmp_line);
     
-    // //check there is that many row in the table
-    line = strsep(&tmp_line, "\n");
-    char * token = strtok(line, " ");
-    while( token != NULL ) {
-        // printf( " %s\n", token ); //printing each token
-        token = strtok(NULL, " ");
-        col_count++;
-    }
+    // // //check there is that many row in the table
+    // line = strsep(&tmp_line, "\n");
+    // char * token = strtok(line, " ");
+    // while( token != NULL ) {
+    //     // printf( " %s\n", token ); //printing each token
+    //     token = strtok(NULL, " ");
+    //     col_count++;
+    // }
 
-    if (col_count < col_num) {
-        printf("Invalid column number");
-        exit(0);
-    }
+    // if (col_count < col_num) {
+    //     printf("Invalid column number");
+    //     exit(0);
+    // }
 
-    while ((line = strsep(&str, "\n"))) {
-        printf("%s/n", line);
-        int tmp_col_count = 1;
-        line = strsep(&str, "\n");
-        char * token = strtok(line, " ");
-        while( token != NULL ) {
-            if (tmp_col_count == col_num) {
-                line = token;
-            }
-            token = strtok(NULL, " ");
-            tmp_col_count++;
-        }
-        strcpy(res+res_len, line);
-        res_len += strlen(line);
-        res[res_len] = '\n';
-        res_len++;
-    }
+    // while ((line = strsep(&str, "\n"))) {
+    //     printf("%s/n", line);
+    //     int tmp_col_count = 1;
+    //     line = strsep(&str, "\n");
+    //     char * token = strtok(line, " ");
+    //     while( token != NULL ) {
+    //         if (tmp_col_count == col_num) {
+    //             line = token;
+    //         }
+    //         token = strtok(NULL, " ");
+    //         tmp_col_count++;
+    //     }
+    //     strcpy(res+res_len, line);
+    //     res_len += strlen(line);
+    //     res[res_len] = '\n';
+    //     res_len++;
+    // }
     // // return res;
-    return res;
+    return 0;
 }
 
 
