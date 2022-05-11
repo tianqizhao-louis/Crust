@@ -189,27 +189,29 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
         exit(0);
     }
 
-    while ((line = strsep(&str, "\n"))) {
+    printf("%s", str);
 
-        printf("%s\n",line);
-        // int tmp_col_count = 1;
+    // while ((line = strsep(&str, "\n"))) {
 
-        // line = strsep(&line, "\n");
-        // char * token = strtok(line, " ");
-        // // loop through the string to extract all other tokens
-        // while( token != NULL ) {
-        //     printf( " %s\n", token ); //printing each token
-        //     token = strtok(NULL, " ");
-        //     // col_count++;
-        // }
+    //     printf("%s\n",line);
+    //     // int tmp_col_count = 1;
 
-        // if (strstr(line, pattern)) {
-        //     strcpy(res+res_len, line);
-        //     res_len += strlen(line);
-        //     res[res_len] = '\n';
-        //     res_len++;
-        // }
-    }
+    //     // line = strsep(&line, "\n");
+    //     // char * token = strtok(line, " ");
+    //     // // loop through the string to extract all other tokens
+    //     // while( token != NULL ) {
+    //     //     printf( " %s\n", token ); //printing each token
+    //     //     token = strtok(NULL, " ");
+    //     //     // col_count++;
+    //     // }
+
+    //     // if (strstr(line, pattern)) {
+    //     //     strcpy(res+res_len, line);
+    //     //     res_len += strlen(line);
+    //     //     res[res_len] = '\n';
+    //     //     res_len++;
+    //     // }
+    // }
     // while ((line = strsep(&str, "\n"))) {
     //     printf("%s/n", line);
     //     int tmp_col_count = 1;
