@@ -12,7 +12,7 @@ Nanjing China Mandarin";
     string res = awk_line_range_end(body, pattern,2);
     print(res);
     print("------------------");
-    string a = awk_col(body, pattern,3);
+    string a = awk_col(body, pattern,4);
     print(a);
 
 
