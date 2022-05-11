@@ -63,7 +63,7 @@ let check (globals, functions) =
     ("awk_line", {
       rtyp = String;
       fname = "awk_line";
-      formals = [(String, "x"); (String, "y");(String, "y")];
+      formals = [(String, "x"); (String, "y");(String, "z")];
       locals = []; 
       body = [];
       body_locals = [] });
