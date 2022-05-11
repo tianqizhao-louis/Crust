@@ -66,6 +66,34 @@ let check (globals, functions) =
       formals = [(Int, "x")];
       locals = []; 
       body = [];
+      body_locals = [] });
+    ("strlen", {
+      rtyp = Int;
+      fname = "strlen";
+      formals = [(String, "x")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("strcmp", {
+      rtyp = Int;
+      fname = "strcmp";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("str_eq", {
+      rtyp = Int;
+      fname = "str_eq";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("str_neq", {
+      rtyp = Int;
+      fname = "str_neq";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
       body_locals = [] })] 
     in 
   let add_func_to_map the_map func_thingy = 
@@ -156,8 +184,11 @@ let check (globals, functions) =
           let t = match op with
               Add | Sub | Mult | Div | Mod when t1 = Int -> Int
             | Add | Sub | Mult | Div when t1 = Float -> Float
+            | Add when t1 = String -> String
+            | Equal | Neq when t1 = String -> Bool
             | Equal | Neq -> Bool
             | Less when t1 = Int -> Bool
+            | Less when t1 = Float -> Bool
             | And | Or when t1 = Bool -> Bool
             | _ -> raise (Failure err)
           in

@@ -1,8 +1,16 @@
 int main() {
-    print(123);
+    print(strlen("abcd"));
     print("\n");
-    print(true);
+
+    string combined = "first half" + " concatenating with " + "second half\n";
+    print(combined);
+
+    print(strcmp("aaa", "aab"));
     print("\n");
-    print(4321.1234);
+
+    print("abc" == "abc");
+    print("\n");
+
+    print("abc" != "abc");
     print("\n");
 }
