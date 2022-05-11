@@ -8,7 +8,7 @@ London UK English
 Sydney Australia English";
 
     string pattern = "China";
-    string res = awk_line(body, pattern,"y");
+    string res = awk_line(body, pattern, 1);
     print(res);
 
     return 0;
