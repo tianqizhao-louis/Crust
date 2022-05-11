@@ -8,7 +8,7 @@ London UK English
 Sydney Australia English";
 
     string pattern = "China";
-    string decision = "y"
+    string decision = "y";
     awk_line(body, pattern, decision);
     return 0;
 }
