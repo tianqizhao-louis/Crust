@@ -188,6 +188,7 @@ let check (globals, functions) =
             | Equal | Neq when t1 = String -> Bool
             | Equal | Neq -> Bool
             | Less when t1 = Int -> Bool
+            | Less when t1 = Float -> Bool
             | And | Or when t1 = Bool -> Bool
             | _ -> raise (Failure err)
           in
