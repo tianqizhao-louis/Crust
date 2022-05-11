@@ -39,7 +39,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     if (strcmp(yes, "y")){
         while ((line = strsep(&str, "\n"))) {
             if (strstr(line, pattern)) {
-                printf( strcpy(res+res_len, line);)
+                printf( strcpy(res+res_len, line));
                 printf("---------");
 
                 res_len += strlen(line);
