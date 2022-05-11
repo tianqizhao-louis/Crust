@@ -39,14 +39,13 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
         char buffer[1024];
         while ((line = strsep(&str, "\n"))) {
             if (strstr(line, pattern)) {
-                sprintf(buffer, "%d. %c", count, line);
+                sprintf(buffer, "%d. %s", count, line);
                 count++;
-                printf("%s", buffer)
-                printf("---");
-                // strcpy(res+res_len, line);
-                // res_len += strlen(line);
-                // res[res_len] = '\n';
-                // res_len++;
+                line = buffer;
+                strcpy(res+res_len, line);
+                res_len += strlen(line);
+                res[res_len] = '\n';
+                res_len++;
             }
         }
     }else{
