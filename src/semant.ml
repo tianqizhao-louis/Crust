@@ -1,8 +1,8 @@
 (*
 
   Crust Semantics Checking
-  semant.ml 
-  
+  semant.ml
+
 *)
 
 open Ast
@@ -36,44 +36,44 @@ let check (globals, functions) =
       rtyp = Int;
       fname = "print";
       formals = [(String, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("string_of_float", {
       rtyp = String;
       fname = "string_of_float";
       formals = [(Float, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("string_of_bool", {
       rtyp = String;
       fname = "string_of_bool";
       formals = [(Bool, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk", {
       rtyp = String;
       fname = "awk";
       formals = [(String, "x"); (String, "y")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("string_of_int", {
       rtyp = String;
       fname = "string_of_int";
       formals = [(Int, "x")];
-      locals = []; 
+      locals = [];
       body = [];
-      body_locals = [] })] 
-    in 
-  let add_func_to_map the_map func_thingy = 
-    match func_thingy with 
+      body_locals = [] })]
+    in
+  let add_func_to_map the_map func_thingy =
+    match func_thingy with
       (func_name, func_struct) -> StringMap.add func_name func_struct the_map
   in
 
-  let elegant_build_in_decls = List.fold_left add_func_to_map StringMap.empty built_in_decls_list in 
+  let elegant_build_in_decls = List.fold_left add_func_to_map StringMap.empty built_in_decls_list in
 
   (* Add function name to symbol table *)
   let add_func map fd =
@@ -100,8 +100,8 @@ let check (globals, functions) =
   let _ = find_func "main" in (* Ensure "main" is defined *)
 
   let locals_table = Hashtbl.create 420 in
-  
-  let check_func func =    
+
+  let check_func func =
     (* Make sure no formals or locals are void or duplicates *)
     check_binds "formal" func.formals;
 
@@ -142,6 +142,14 @@ let check (globals, functions) =
                   string_of_typ rt ^ " in " ^ string_of_expr ex
         in
         (check_assign lt rt err, SAssign(var, (rt, e')))
+
+      | Assigna(v,p,e) as ex ->
+        let lt =type_of_identifier v
+        and (rt,e')=check_expr e in
+        let err = "illegal array value assignment " ^ string_of_typ lt ^ "[" ^ string_of_expr p ^ "]" ^
+                  " = " ^ string_of_typ rt ^ " in " ^ string_of_expr ex
+        in
+        (check_assign lt rt err, SAssigna(v, (check_expr p), (rt, e')))
 
       | Binop(e1, op, e2) as e ->
         let (t1, e1') = check_expr e1
@@ -209,35 +217,35 @@ let check (globals, functions) =
             Failure ("return gives " ^ string_of_typ t ^ " expected " ^
                      string_of_typ func.rtyp ^ " in " ^ string_of_expr e))
     in (* body of check_func *)
-  
+
 
     (* 如果是declaration，查hashtable，然后加入locals symbol table
       如果是statement，转换成sstmt for sast
     *)
-    let rec check_hybrid_list content = 
-      match content with 
+    let rec check_hybrid_list content =
+      match content with
       [] -> []
       | head :: tail -> (
-        match head with 
+        match head with
           LocalVDecl(t, id) -> (
-            match Hashtbl.find_opt locals_table id with 
+            match Hashtbl.find_opt locals_table id with
               None -> (
-                ignore(Hashtbl.add locals_table id t); 
+                ignore(Hashtbl.add locals_table id t);
                 check_hybrid_list tail
               )
               | _ -> raise (Failure ("duplicate local var " ^ id))
           )
         | Statement(s) -> (check_hybrid_list tail @ [check_stmt s])
       )
-    in 
+    in
 
     { srtyp = func.rtyp;
       sfname = func.fname;
       sformals = func.formals;
       slocals  = (Hashtbl.fold (fun k v acc -> (v, k) :: acc) locals_table []);
-      sbody = List.rev (check_hybrid_list (func.body_locals)); 
+      sbody = List.rev (check_hybrid_list (func.body_locals));
       (* 感觉microC是从后往前check，没有rev因为它的不在乎顺序，locals先declare完了。
-        现在混合模式顺序有关系了，所以把倒序改回正序 *)            
+        现在混合模式顺序有关系了，所以把倒序改回正序 *)
     }
   in
   (globals, List.map check_func functions)

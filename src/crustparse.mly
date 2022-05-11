@@ -69,7 +69,7 @@ fdecl:
 
 /*
   Variable declaration
-  Example: int x = 10
+  Example: int x;
 */
 vdecl:
   typ ID { ($1, $2) }
@@ -163,7 +163,6 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3)         }
   | ID LBKT expr RBKT ASSIGN expr { Assigna($1,$3,$6) }
   | LPAREN expr RPAREN { $2                   }
-/*  | id expr ASSIGN array_lit  {Assign($1 ,$3)}*/
   /* call */
   | ID LPAREN args_opt RPAREN { Call ($1, $3) }
   | MINUS LITERAL    { Literal( - $2)         }

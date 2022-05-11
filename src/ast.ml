@@ -19,7 +19,6 @@ type expr =
   | Binop of expr * op * expr
   | Assign of string * expr
   | Assigna of string * expr * expr
-  | ArrayLit of expr list
   (* function call *)
   | Call of string * expr list
 
@@ -74,7 +73,6 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | CharLit(c) -> String.make 1 c
   | StringLit(s) -> s
-  | ArrayLit(arr) -> "[" ^ (List.fold_left (fun lst elem -> lst ^ " " ^ string_of_expr elem ^ ",") "" arr) ^ "]"
   | Id(s) -> s
   | Binop(e1, o, e2) ->
     string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
@@ -99,7 +97,7 @@ let rec string_of_typ = function
   | Char -> "char"
   | String -> "string"
   | Float -> "float"
-  | Array(t, _) -> (string_of_typ t) ^ "[]"
+  | Array(t, s) -> (string_of_typ t) ^ "[" ^ string_of_int s ^ "]"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

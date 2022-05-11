@@ -1,9 +1,9 @@
-(* 
+(*
 
   Crust
   Semantically-checked Abstract Syntax Tree and Functions
   sast.ml
-  
+
 *)
 
 open Ast
@@ -18,6 +18,7 @@ and sx =
   | SId of string
   | SBinop of sexpr * op * sexpr
   | SAssign of string * sexpr
+  | SAssigna of string * sexpr * sexpr
   (* call *)
   | SCall of string * sexpr list
 
@@ -55,12 +56,13 @@ let rec string_of_sexpr (t, e) =
       | SBinop(e1, o, e2) ->
         string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
       | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
+      | SAssigna(v,p,e) -> v ^ "[" ^ string_of_sexpr p ^ "]" ^ " = " ^ string_of_sexpr e
       | SCall(f, el) ->
           f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
     ) ^ ")"
 
 let rec string_of_sstmt (x: sstmt) =
-  match x with 
+  match x with
     SBlock(stmts) ->
     "{\n" ^ String.concat "" (List.map string_of_sstmt stmts) ^ "}\n"
   | SExpr(expr) -> string_of_sexpr expr ^ ";\n"
