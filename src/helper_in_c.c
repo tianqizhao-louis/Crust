@@ -27,7 +27,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     strcpy(yes, "y");
     char no[15];
     strcpy(yes, "n");
-    int count = 0;
+    int count = 1;
 
 
     char* res = (char *) malloc(1024);
@@ -36,16 +36,16 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     tofree = str = strdup(text);
 
     if (strcmp(yes, "y")){
+        char buffer[1024];
         while ((line = strsep(&str, "\n"))) {
             if (strstr(line, pattern)) {
-                printf(line);
-                printf("Destnation %c\n", res+res_len);
-                // printf( strcpy(res+res_len, line));
-                printf("---------");
-
-                res_len += strlen(line);
-                res[res_len] = '\n';
-                res_len++;
+                sprintf(buffer, "%d. %c", count, line);
+                count++;
+                printf("---");
+                // strcpy(res+res_len, line);
+                // res_len += strlen(line);
+                // res[res_len] = '\n';
+                // res_len++;
             }
         }
     }else{
