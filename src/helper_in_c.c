@@ -173,7 +173,7 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
 
 
     char *tmp_str [10000];
-    strncpy ( tmp_str, str, sizeof(str) );
+    strncpy ( &tmp_str, str, sizeof(str) );
  
 
     //check there is that many row in the table
