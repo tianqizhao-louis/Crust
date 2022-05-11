@@ -29,13 +29,13 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     strcpy(no, "n");
     int count = 1;
 
-
+    
     char* res = (char *) malloc(1024);
     int res_len = 0;
     char *line, *str, *tofree;
     tofree = str = strdup(text);
 
-    if (strcmp(decision, "y")){
+    if (strcmp(yes, decision)){
         char buffer[1024];
         while ((line = strsep(&str, "\n"))) {
             if (strstr(line, pattern)) {
