@@ -204,14 +204,14 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
             row_count ++;
         }
 
-        strncat(res,token, sizeof(token));
-        strncat(res,"\n", 10);
+        // strncat(res,token, sizeof(token));
+        // strncat(res,"\n", 10);
 
 
-        // strcpy(res+res_len, target);
-        // res_len += strlen(target);
-        // res[res_len] = '\n';
-        // res_len++;
+        strcpy(res+res_len, line);
+        res_len += strlen(line);
+        res[res_len] = '\n';
+        res_len++;
         
     }
 
