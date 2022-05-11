@@ -208,8 +208,8 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
         // // strncat(res,"\n", 10);
 
 
-        strcpy(res+res_len, token);
-        res_len += strlen(token);
+        strcpy(res+res_len, target);
+        res_len += strlen(target);
         res[res_len] = '\n';
         res_len++;
         
