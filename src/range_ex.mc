@@ -11,6 +11,8 @@ Nanjing China Mandarin";
     string pattern = "China";
     string res = awk_line_range_end(body, pattern,2);
     print(res);
+    print("------------------");
+
 
     return 0;
 }
