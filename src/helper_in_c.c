@@ -99,7 +99,7 @@ char* awk_line_range_f(char* text, char* pattern, int* start, int* end) {
     char buffer[1024];
     while ((line = strsep(&str, "\n"))) {
         if (strstr(line, pattern)) {
-            if ((count>=start) && (count <= end)){
+            if ((count>= *start) && (count <= *end)){
                 sprintf(buffer, "%d. %s", count, line);
                 count++;
                 line = buffer;
