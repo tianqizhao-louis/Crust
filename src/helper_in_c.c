@@ -165,20 +165,27 @@ char* awk_line_range_end_f(char* text, char* pattern, int end) {
 
 char* awk_col_f(char* text, char* pattern, int col_num) {
 
+    int col_count = 0;
     char* res = (char *) malloc(1024);
     int res_len = 0;
     char *line, *str, *tofree;
     tofree = str = strdup(text);
 
+
+    //check there is that many row in the table
     line = strsep(&str, "\n");
-    printf("%s",line);
-    
     char * token = strtok(line, " ");
-    // loop through the string to extract all other tokens
     while( token != NULL ) {
-        printf( " %s\n", token ); //printing each token
+        // printf( " %s\n", token ); //printing each token
         token = strtok(NULL, " ");
+        col_count++;
     }
+
+    if (col_count < col_num) {
+        printf("Invalid column number");
+        exit(0);
+    }
+    printf("pass");
 
     // while ((line = strsep(&str, "\n"))) {
     //     if (strstr(line, pattern)) {
