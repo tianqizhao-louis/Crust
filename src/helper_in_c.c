@@ -196,12 +196,16 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
         // loop through the string to extract all other tokens
         while( token != NULL ) {
             
-            printf( " %s,%d\n", token,row_count ); //printing each token
+            // printf( " %s,%d\n", token,row_count ); //printing each token
+            if (row_count == col_num){
+                strcpy(target, token);
+            }
             token = strtok(NULL, " ");
             row_count ++;
         }
-        strcpy(res+res_len, line);
-        res_len += strlen(line);
+
+        strcpy(res+res_len, target);
+        res_len += strlen(target);
         res[res_len] = '\n';
         res_len++;
         
