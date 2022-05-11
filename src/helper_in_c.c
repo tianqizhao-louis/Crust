@@ -92,7 +92,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
 
 char* awk_line_range_f(char* text, char* pattern, int* start, int* end) {
     int count = 1;   
-    int s = &start;
+    int s = start;
     printf("%d", s);
     // char* res = (char *) malloc(1024);
     // int res_len = 0;
