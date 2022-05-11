@@ -180,13 +180,14 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     while( token != NULL ) {
         printf( " %s\n", token ); //printing each token
         token = strtok(NULL, " ");
+        col_count++;
     }
 
 
-    // if (col_count < col_num) {
-    //     printf("Invalid column number");
-    //     exit(0);
-    // }
+    if (col_count < col_num) {
+        printf("Invalid column number");
+        exit(0);
+    }
 
     // while ((line = strsep(&str, "\n"))) {
     //     printf("%s/n", line);
