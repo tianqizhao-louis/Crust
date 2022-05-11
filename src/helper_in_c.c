@@ -171,25 +171,30 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     char *line, *str, *tofree, *tmp, *tmp_line;
     tofree = str = tmp = strdup(text);
 
+    char buffer[10000];
+    strcpy(buffer, strdup(text));
+    printf(buffer);
 
 
 
-    tmp_line = strsep(&tmp, "\n");
-    char * token = strtok(tmp_line, " ");
-    // loop through the string to extract all other tokens
-    while( token != NULL ) {
-        // printf( " %s\n", token ); //printing each token
-        token = strtok(NULL, " ");
-        col_count++;
-    }
 
 
-    if (col_count < col_num) {
-        printf("Invalid column number");
-        exit(0);
-    }
+    // tmp_line = strsep(&tmp, "\n");
+    // char * token = strtok(tmp_line, " ");
+    // // loop through the string to extract all other tokens
+    // while( token != NULL ) {
+    //     // printf( " %s\n", token ); //printing each token
+    //     token = strtok(NULL, " ");
+    //     col_count++;
+    // }
 
-    printf("%s", str);
+
+    // if (col_count < col_num) {
+    //     printf("Invalid column number");
+    //     exit(0);
+    // }
+
+    // printf("%s", str);
 
     // while ((line = strsep(&str, "\n"))) {
 
