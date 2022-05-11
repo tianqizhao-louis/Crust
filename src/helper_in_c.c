@@ -90,6 +90,41 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
      return res;
 }
 
+char* awk_line_f(char* text, char* pattern, int* start) {
+    printf("%d", start);
+    // int count = 1;   
+    // char* res = (char *) malloc(1024);
+    // int res_len = 0;
+    // char *line, *str, *tofree;
+    // tofree = str = strdup(text);
+
+    // if ((strcmp("y", decision)) == 0){
+    //     char buffer[1024];
+    //     while ((line = strsep(&str, "\n"))) {
+    //         if (strstr(line, pattern)) {
+    //             sprintf(buffer, "%d. %s", count, line);
+    //             count++;
+    //             line = buffer;
+    //             strcpy(res+res_len, line);
+    //             res_len += strlen(line);
+    //             res[res_len] = '\n';
+    //             res_len++;
+    //         }
+    //     }
+    // }else{
+    //     while ((line = strsep(&str, "\n"))) {
+    //         if (strstr(line, pattern)) {
+    //             strcpy(res+res_len, line);
+    //             res_len += strlen(line);
+    //             res[res_len] = '\n';
+    //             res_len++;
+    //         }
+    //     }
+    // }
+    //  return res;
+}
+
+
 char* string_of_int_f(int input) {
     char* string = (char *) malloc(33);
     sprintf(string,"%d", input);
