@@ -13,6 +13,6 @@ Sydney Australia English";
 
     print("---------\n");
     decision = "n";
-    print(awk(body, "Mandarin", decision));
+    print(awk_line(body, "Mandarin", decision));
     return 0;
 }
