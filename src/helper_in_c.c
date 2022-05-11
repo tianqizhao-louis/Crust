@@ -22,8 +22,15 @@ char* awk_f(char* text, char* pattern) {
     return res;
 }
 
-char* awk_line_f(char* text, char* pattern, int* print_row) {
+char* awk_line_f(char* text, char* pattern, char* print_row) {
     print(*print_row)
+    char buffer[50];
+    char yes = "y"
+    char no = "n"
+
+    if (strcmp(print_row, &yes)){
+        sprintf(buffer, "true");
+    }
     // int row_num = 1;
     // char text[20]; 
     // char* res = (char *) malloc(1024);
