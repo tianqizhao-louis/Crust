@@ -168,8 +168,8 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     int col_count = 0;
     char* res = (char *) malloc(1024);
     int res_len = 0;
-    char *line, *tofree;
-    tofree = strdup(text);
+    char *line, *tofree, *new_str;
+    tofree = new_str= strdup(text);
 
     const char * str= strdup(text);
     // printf("%s\n", str);
@@ -193,10 +193,10 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
         exit(0);
     }
 
-    while ((line = strsep(&str, "\n"))) {
+    while ((line = strsep(&new_str, "\n"))) {
         printf("%s/n", line);
         int tmp_col_count = 1;
-        line = strsep(&str, "\n");
+        line = strsep(&new_str, "\n");
         char * token = strtok(line, " ");
         while( token != NULL ) {
             if (tmp_col_count == col_num) {
