@@ -35,11 +35,12 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     char *line, *str, *tofree;
     tofree = str = strdup(text);
 
-    printf("Look, I'm now a string: %s", decision);
     if (strcmp(yes, "y")){
         while ((line = strsep(&str, "\n"))) {
             if (strstr(line, pattern)) {
-                printf( strcpy(res+res_len, line));
+                printf(line);
+                printf("Destnation %c\n", res+res_len);
+                // printf( strcpy(res+res_len, line));
                 printf("---------");
 
                 res_len += strlen(line);
