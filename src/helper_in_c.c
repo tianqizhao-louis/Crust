@@ -92,8 +92,6 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
 
 char* awk_line_range_f(char* text, char* pattern, int start, int end) {
     int count = 1;   
-    // int s = start;
-    // printf("%d", s);
     char* res = (char *) malloc(1024);
     int res_len = 0;
     char *line, *str, *tofree;
@@ -101,9 +99,7 @@ char* awk_line_range_f(char* text, char* pattern, int start, int end) {
     char buffer[1024];
     while ((line = strsep(&str, "\n"))) {
         if (strstr(line, pattern)) {
-            // printf("%d count,%d start,%d end \n", count, start, end);
             if ((count>= start) && (count <= end)){
-                printf("in\n");
                 sprintf(buffer, "%d. %s", count, line);
                 line = buffer;
                 strcpy(res+res_len, line);
@@ -116,36 +112,7 @@ char* awk_line_range_f(char* text, char* pattern, int start, int end) {
         count++;
     }
     return res;
-    // int count = 1;   
-    // char* res = (char *) malloc(1024);
-    // int res_len = 0;
-    // char *line, *str, *tofree;
-    // tofree = str = strdup(text);
 
-    // if ((strcmp("y", decision)) == 0){
-    //     char buffer[1024];
-    //     while ((line = strsep(&str, "\n"))) {
-    //         if (strstr(line, pattern)) {
-    //             sprintf(buffer, "%d. %s", count, line);
-    //             count++;
-    //             line = buffer;
-    //             strcpy(res+res_len, line);
-    //             res_len += strlen(line);
-    //             res[res_len] = '\n';
-    //             res_len++;
-    //         }
-    //     }
-    // }else{
-    //     while ((line = strsep(&str, "\n"))) {
-    //         if (strstr(line, pattern)) {
-    //             strcpy(res+res_len, line);
-    //             res_len += strlen(line);
-    //             res[res_len] = '\n';
-    //             res_len++;
-    //         }
-    //     }
-    // }
-    //  return res;
 }
 
 
