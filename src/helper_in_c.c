@@ -164,37 +164,24 @@ char* awk_line_range_end_f(char* text, char* pattern, int end) {
 
 
 char* awk_col_f(char* text, char* pattern, int col_num) {
-    printf("%d", col_num);
-    // int count = 1;   
-    // char* res = (char *) malloc(1024);
-    // int res_len = 0;
-    // char *line, *str, *tofree;
-    // tofree = str = strdup(text);
 
-    // if ((strcmp("y", decision)) == 0){
-    //     char buffer[1024];
-    //     while ((line = strsep(&str, "\n"))) {
-    //         if (strstr(line, pattern)) {
-    //             sprintf(buffer, "%d. %s", count, line);
-    //             line = buffer;
-    //             strcpy(res+res_len, line);
-    //             res_len += strlen(line);
-    //             res[res_len] = '\n';
-    //             res_len++;
-    //         }
-    //         count++;
-    //     }
-    // }else{
-    //     while ((line = strsep(&str, "\n"))) {
-    //         if (strstr(line, pattern)) {
-    //             strcpy(res+res_len, line);
-    //             res_len += strlen(line);
-    //             res[res_len] = '\n';
-    //             res_len++;
-    //         }
+    char* res = (char *) malloc(1024);
+    int res_len = 0;
+    char *line, *str, *tofree;
+    tofree = str = strdup(text);
+
+    line = strsep(&str, "\n");
+    printf("%s",line);
+    // while ((line = strsep(&str, "\n"))) {
+    //     if (strstr(line, pattern)) {
+    //         strcpy(res+res_len, line);
+    //         res_len += strlen(line);
+    //         res[res_len] = '\n';
+    //         res_len++;
     //     }
     // }
-    //  return res;
+
+    // return res;
     return 0;
 }
 
