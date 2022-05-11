@@ -23,8 +23,13 @@ char* awk_f(char* text, char* pattern) {
 }
 
 char* awk_line_f(char* text, char* pattern, char* decision) {
+    char yes[15];
+    strcpy(yes, "y");
+    char no[15];
+    strcpy(yes, "n");
+
     printf("Look, I'm now a string: %s", decision);
-    if (strcmp(decision, "y")){
+    if (strcmp(yes, "y")){
         printf("true");
     }else{
         printf("false");
