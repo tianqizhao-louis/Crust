@@ -27,7 +27,7 @@ char* awk_line_f(char* text, char* pattern, char* print_row) {
     // sprintf(buffer, "i got here")
     char yes[1] = "y";
     char no[2] = "n";
-
+    printf(*yes);
     if (strcmp(yes, no)){
         sprintf(buffer, "true");
     }
