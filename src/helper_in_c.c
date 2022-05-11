@@ -27,12 +27,35 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     strcpy(yes, "y");
     char no[15];
     strcpy(yes, "n");
+    int count = 0;
+
+
+    char* res = (char *) malloc(1024);
+    int res_len = 0;
+    char *line, *str, *tofree;
+    tofree = str = strdup(text);
 
     printf("Look, I'm now a string: %s", decision);
     if (strcmp(yes, "y")){
-        printf("true");
+        while ((line = strsep(&str, "\n"))) {
+            if (strstr(line, pattern)) {
+                printf( strcpy(res+res_len, line);)
+                printf("---------");
+
+                res_len += strlen(line);
+                res[res_len] = '\n';
+                res_len++;
+            }
+        }
     }else{
-        printf("false");
+        while ((line = strsep(&str, "\n"))) {
+            if (strstr(line, pattern)) {
+                strcpy(res+res_len, line);
+                res_len += strlen(line);
+                res[res_len] = '\n';
+                res_len++;
+            }
+        }
     }
     // char buffer[50];
     // // sprintf(buffer, "i got here")
@@ -62,7 +85,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
     //         res_len++;
     //     }
     // }
-    // return res;
+     return res;
 }
 
 char* string_of_int_f(int input) {
