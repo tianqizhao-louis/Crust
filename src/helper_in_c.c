@@ -173,9 +173,6 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
 
     char buffer[10000];
     strcpy(buffer, strdup(text));
-
-
-
     char * buff_pointer;
     buff_pointer = buffer;
 
@@ -183,57 +180,36 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     char * token = strtok(tmp_line, " ");
     // loop through the string to extract all other tokens
     while( token != NULL ) {
-        printf( " %s\n", token ); //printing each token
+        // printf( " %s\n", token ); //printing each token
         token = strtok(NULL, " ");
         col_count++;
     }
 
 
-    // if (col_count < col_num) {
-    //     printf("Invalid column number");
-    //     exit(0);
-    // }
+    if (col_count < col_num) {
+        printf("Invalid column number");
+        exit(0);
+    }
 
     // printf("%s", str);
 
-    // while ((line = strsep(&str, "\n"))) {
-
-    //     printf("%s\n",line);
-    //     // int tmp_col_count = 1;
-
-    //     // line = strsep(&line, "\n");
-    //     // char * token = strtok(line, " ");
-    //     // // loop through the string to extract all other tokens
-    //     // while( token != NULL ) {
-    //     //     printf( " %s\n", token ); //printing each token
-    //     //     token = strtok(NULL, " ");
-    //     //     // col_count++;
-    //     // }
-
-    //     // if (strstr(line, pattern)) {
-    //     //     strcpy(res+res_len, line);
-    //     //     res_len += strlen(line);
-    //     //     res[res_len] = '\n';
-    //     //     res_len++;
-    //     // }
-    // }
-    // while ((line = strsep(&str, "\n"))) {
-    //     printf("%s/n", line);
-    //     int tmp_col_count = 1;
-    //     line = strsep(&str, "\n");
-    //     char * token = strtok(line, " ");
-    //     while( token != NULL ) {
-    //         if (tmp_col_count == col_num) {
-    //             line = token;
-    //         }
-    //         token = strtok(NULL, " ");
-    //         tmp_col_count++;
-    //     }
-    //     strcpy(res+res_len, line);
-    //     res_len += strlen(line);
-    //     res[res_len] = '\n';
-    //     res_len++;
-    // }
+    while ((line = strsep(&str, "\n"))) {
+        printf("%s/n", line);
+        int tmp_col_count = 1;
+        line = strsep(&str, "\n");
+        char * token = strtok(line, " ");
+        while( token != NULL ) {
+            if (tmp_col_count == col_num) {
+                line = token;
+            }
+            token = strtok(NULL, " ");
+            tmp_col_count++;
+        }
+        strcpy(res+res_len, line);
+        res_len += strlen(line);
+        res[res_len] = '\n';
+        res_len++;
+    }
     return res;
 }
 
