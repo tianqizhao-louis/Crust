@@ -22,18 +22,19 @@ char* awk_f(char* text, char* pattern) {
     return res;
 }
 
-char* awk_line_f(char* text, char* pattern, char* print_row) {
-    char buffer[50];
-    // sprintf(buffer, "i got here")
-    char yes[1] = "y";
-    char no[2] = "n";
-    printf(*yes);
-    if (strcmp(yes, no)){
-        sprintf(buffer, "true");
-    }
-    else{
-        sprintf(buffer, "false");
-    }
+char* awk_line_f(char* text, char* pattern, char* decision) {
+    printf("Look, I'm now a string: %s", decision);
+    // char buffer[50];
+    // // sprintf(buffer, "i got here")
+    // char yes[1] = "y";
+    // char no[2] = "n";
+    // printf(*yes);
+    // if (strcmp(yes, no)){
+    //     sprintf(buffer, "true");
+    // }
+    // else{
+    //     sprintf(buffer, "false");
+    // }
     // int row_num = 1;
     // char text[20]; 
     // char* res = (char *) malloc(1024);
