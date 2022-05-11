@@ -121,10 +121,14 @@ let check (globals, functions) =
     let type_of_identifier s =
       (* raise (Failure ("checking identifier " ^ s)) *)
       try StringMap.find s symbols
-      with Not_found -> (
+      with
+        | Not_found -> (
         try Hashtbl.find locals_table s
-        with Not_found -> raise(Failure("undeclared identifier " ^ s))
+        with
+          | Not_found -> raise(Failure("undeclared identifier " ^ s))
+          | _ ->  let t = (Hashtbl.find locals_table s) in if (String.contains (string_of_typ t) 'i') then (print_string (string_of_typ t); Int) else (print_string (string_of_typ t); t)
       )
+        | _ ->  let t = StringMap.find s symbols in if (String.contains (string_of_typ t) 'i') then (print_string (string_of_typ t); Int) else (print_string (string_of_typ t); t)
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
