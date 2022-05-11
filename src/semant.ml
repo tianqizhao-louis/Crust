@@ -70,7 +70,7 @@ let check (globals, functions) =
     ("awk_line_range", {
       rtyp = String;
       fname = "awk_line_range";
-      formals = [(String, "x"); (String, "y");(Int, "z")];
+      formals = [(String, "x"); (String, "y");(Int, "z"); (Int, "w")];
       locals = []; 
       body = [];
       body_locals = [] });
