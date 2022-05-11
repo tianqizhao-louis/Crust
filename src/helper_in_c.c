@@ -172,7 +172,7 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     tofree = str = strdup(text);
 
     char *tmp_line;
-    strncpy (tmp_line, str);
+    strcpy (tmp_line, str);
     printf("%s\n", tmp_line);
 
 
