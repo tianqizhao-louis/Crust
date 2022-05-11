@@ -187,20 +187,21 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     }
 
     while ((line = strsep(&str, "\n"))) {
-        int tmp_col_count = 1;
-        line = strsep(&str, "\n");
-        char * token = strtok(line, " ");
-        while( token != NULL ) {
-            if (tmp_col_count == col_num) {
-                line = token;
-            }
-            token = strtok(NULL, " ");
-            tmp_col_count++;
-        }
-        strcpy(res+res_len, line);
-        res_len += strlen(line);
-        res[res_len] = '\n';
-        res_len++;
+        printf("%d", line);
+        // int tmp_col_count = 1;
+        // line = strsep(&str, "\n");
+        // char * token = strtok(line, " ");
+        // while( token != NULL ) {
+        //     if (tmp_col_count == col_num) {
+        //         line = token;
+        //     }
+        //     token = strtok(NULL, " ");
+        //     tmp_col_count++;
+        // }
+        // strcpy(res+res_len, line);
+        // res_len += strlen(line);
+        // res[res_len] = '\n';
+        // res_len++;
     }
     // return res;
     return res;
