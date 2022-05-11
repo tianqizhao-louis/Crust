@@ -168,9 +168,10 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     int col_count = 0;
     char* res = (char *) malloc(1024);
     int res_len = 0;
-    char *line, *str, *tofree;
-    tofree = str = strdup(text);
+    char *line, *tofree;
+    tofree = strdup(text);
 
+    const char * str= strdup(text);
     // printf("%s\n", str);
 
     char *tmp_line;
