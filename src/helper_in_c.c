@@ -90,7 +90,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
      return res;
 }
 
-char* awk_line_range_f(char* text, char* pattern, int* start, int* end) {
+char* awk_line_range_f(char* text, char* pattern, int start, int end) {
     int count = 1;   
     int s = start;
     printf("%d", s);
