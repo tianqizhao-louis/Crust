@@ -180,7 +180,7 @@ in
         L.build_call awk_func [| (build_expr builder e1) ; (build_expr builder e2) |]
           "awk_f" builder
       | SCall ("awk_line", [e1;e2;e3]) -> 
-        L.build_call awk_line_func [| (build_expr builder e1) ; (build_expr builder e2; (build_expr builder e3)) |]
+        L.build_call awk_line_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)) |]
           "awk_line_f" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit")) in
