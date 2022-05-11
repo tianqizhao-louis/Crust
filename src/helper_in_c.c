@@ -41,6 +41,7 @@ char* awk_line_f(char* text, char* pattern, char* decision) {
             if (strstr(line, pattern)) {
                 sprintf(buffer, "%d. %c", count, line);
                 count++;
+                printf("%s", buffer)
                 printf("---");
                 // strcpy(res+res_len, line);
                 // res_len += strlen(line);
