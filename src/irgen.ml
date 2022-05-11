@@ -74,8 +74,11 @@ in
   let awk_t : L.lltype = 
     L.var_arg_function_type string_t [| string_t; string_t |] in 
   let awk_func : L.llvalue = 
-    L.declare_function "awk_f" awk_t the_module in 
-    
+    L.declare_function "awk_f" awk_t the_module in
+  let awk_line_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; string_t;|] in  
+  let awk_line_func : L.llvalue = 
+    L.declare_function "awk_line_f" awk_line_t the_module in 
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_def) StringMap.t =
@@ -176,6 +179,9 @@ in
       | SCall ("awk", [e1;e2]) -> 
         L.build_call awk_func [| (build_expr builder e1) ; (build_expr builder e2) |]
           "awk_f" builder
+      | SCall ("awk_line", [e1;e2;e3]) -> 
+        L.build_call awk_line_func [| (build_expr builder e1) ; (build_expr builder e2; (build_expr builder e3)) |]
+          "awk_line_f" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit")) in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
