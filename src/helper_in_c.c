@@ -1,24 +1,59 @@
 #include <stdlib.h>
 #include <stdio.h> 
 #include <string.h>
+#include <regex.h> 
 
-int is_sub_string(char* text, int text_length, char* substr, int substr_length) {
-    return -1;
+
+int str_neq_f(char* first, char* second) {
+    return (strcmp(first, second) != 0);
+}
+
+
+
+int str_eq_f(char* first, char* second) {
+    return (strcmp(first, second) == 0);
+}
+
+char* str_concat_f(char* first, char* second) {
+    char* res = (char *) malloc(strlen(first) + strlen(second) + 1);
+    strcpy(res, first);
+    strcpy(res + strlen(first), second);
+    return res;
 }
 
 char* awk_f(char* text, char* pattern) {
-    char* res = (char *) malloc(1024);
+    char* res = (char *) malloc(strlen(text) + 1);
     int res_len = 0;
     char *line, *str, *tofree;
+
     tofree = str = strdup(text);
     while ((line = strsep(&str, "\n"))) {
-        if (strstr(line, pattern)) {
+        regex_t regex;
+        char msgbuf[100];
+        int reti;
+        reti = regcomp(&regex, pattern, REG_EXTENDED);
+        if (reti) {
+            fprintf(stderr, "Could not compile regex\n");
+            exit(1);
+        }
+        reti = regexec(&regex, line, 0, NULL, 0);
+        if (!reti || strstr(line, pattern)) {
             strcpy(res+res_len, line);
             res_len += strlen(line);
             res[res_len] = '\n';
             res_len++;
         }
+        else if (reti != REG_NOMATCH) {
+            regerror(reti, &regex, msgbuf, sizeof(msgbuf));
+            fprintf(stderr, "Regex match failed: %s\n", msgbuf);
+            exit(1);
+        }
+
+        /* Free memory allocated to the pattern buffer by regcomp() */
+        regfree(&regex);
+
     }
+    res[res_len] = '\0';
     return res;
 }
 

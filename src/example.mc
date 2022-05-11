@@ -1,11 +1,6 @@
 int main() {
-    string body = 
-    "Guangzhou China Cantonese
-Beijing China Mandarin
-Hongkong China Cantonese
-Singapore Singapore Mandarin
-London UK English
-Sydney Australia English";
+    print(strlen("abcd"));
+    print("\n");
 
     string pattern = "China";
     string res = awk(body, pattern);
