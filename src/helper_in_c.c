@@ -188,14 +188,20 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
         printf("Invalid column number");
         exit(0);
     }
-    
+
     while ((line = strsep(&str, "\n"))) {
-        if (strstr(line, pattern)) {
-            strcpy(res+res_len, line);
-            res_len += strlen(line);
-            res[res_len] = '\n';
-            res_len++;
+
+        char * token = strtok(line, " ");
+        // loop through the string to extract all other tokens
+        while( token != NULL ) {
+            printf( " %s\n", token ); //printing each token
+            token = strtok(NULL, " ");
         }
+        strcpy(res+res_len, line);
+        res_len += strlen(line);
+        res[res_len] = '\n';
+        res_len++;
+        
     }
 
     // printf("%s", str);
