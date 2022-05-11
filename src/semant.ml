@@ -74,6 +74,20 @@ let check (globals, functions) =
       locals = []; 
       body = [];
       body_locals = [] });
+    ("awk_line_range_start", {
+      rtyp = String;
+      fname = "awk_line_range";
+      formals = [(String, "x"); (String, "y");(Int, "z")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("awk_line_range_end", {
+      rtyp = String;
+      fname = "awk_line_range";
+      formals = [(String, "x"); (String, "y");(Int, "z")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
     ("string_of_int", {
       rtyp = String;
       fname = "string_of_int";

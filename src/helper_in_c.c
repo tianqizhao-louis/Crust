@@ -112,10 +112,55 @@ char* awk_line_range_f(char* text, char* pattern, int start, int end) {
         count++;
     }
     return res;
-
 }
 
+char* awk_line_range_start_f(char* text, char* pattern, int start) {
+    int count = 1;   
+    char* res = (char *) malloc(1024);
+    int res_len = 0;
+    char *line, *str, *tofree;
+    tofree = str = strdup(text);
+    char buffer[1024];
+    while ((line = strsep(&str, "\n"))) {
+        if (strstr(line, pattern)) {
+            if (count>= start){
+                sprintf(buffer, "%d. %s", count, line);
+                line = buffer;
+                strcpy(res+res_len, line);
+                res_len += strlen(line);
+                res[res_len] = '\n';
+                res_len++;
+            }
 
+        }
+        count++;
+    }
+    return res;
+}
+
+char* awk_line_range_end_f(char* text, char* pattern, int end) {
+    int count = 1;   
+    char* res = (char *) malloc(1024);
+    int res_len = 0;
+    char *line, *str, *tofree;
+    tofree = str = strdup(text);
+    char buffer[1024];
+    while ((line = strsep(&str, "\n"))) {
+        if (strstr(line, pattern)) {
+            if (count <= end){
+                sprintf(buffer, "%d. %s", count, line);
+                line = buffer;
+                strcpy(res+res_len, line);
+                res_len += strlen(line);
+                res[res_len] = '\n';
+                res_len++;
+            }
+
+        }
+        count++;
+    }
+    return res;
+}
 char* string_of_int_f(int input) {
     char* string = (char *) malloc(33);
     sprintf(string,"%d", input);
