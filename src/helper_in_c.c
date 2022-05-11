@@ -103,7 +103,7 @@ char* awk_line_range_f(char* text, char* pattern, int start, int end) {
         if (strstr(line, pattern)) {
             printf("%d count,%d start,%d end \n", count, start, end);
             if ((count>= start) && (count <= end)){
-                printf("in");
+                printf("in\n");
 
                 sprintf(buffer, "%d. %s", count, line);
                 count++;
