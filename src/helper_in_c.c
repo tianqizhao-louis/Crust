@@ -235,7 +235,7 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     //     res[res_len] = '\n';
     //     res_len++;
     // }
-    return 0;
+    return res;
 }
 
 
