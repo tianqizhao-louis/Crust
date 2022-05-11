@@ -176,10 +176,10 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
 
 
 
+    char * buff_pointer;
+    buff_pointer = buffer;
 
-
-
-    tmp_line = strsep(&buffer, "\n");
+    tmp_line = strsep(&buff_pointer, "\n");
     char * token = strtok(tmp_line, " ");
     // loop through the string to extract all other tokens
     while( token != NULL ) {
