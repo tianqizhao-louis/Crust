@@ -187,10 +187,10 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
         exit(0);
     }
 
-    while ((line = strsep(&new_str, "\n"))) {
+    while ((line = strsep(&str, "\n"))) {
         printf("%s/n", line);
         int tmp_col_count = 1;
-        line = strsep(&new_str, "\n");
+        line = strsep(&str, "\n");
         char * token = strtok(line, " ");
         while( token != NULL ) {
             if (tmp_col_count == col_num) {
