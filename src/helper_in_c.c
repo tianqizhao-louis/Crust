@@ -168,49 +168,52 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     int col_count = 0;
     char* res = (char *) malloc(1024);
     int res_len = 0;
-    char *line, *tofree, *new_str;
-    tofree = new_str= strdup(text);
+    char *line, *str, *tofree;
+    tofree = str = strdup(text);
 
-    const char * str= strdup(text);
-    // printf("%s\n", str);
+    printf("%s", strdup(text);
+    return 0;
 
-    char tmp_line[10000];
-    strcpy(tmp_line, str);
-    printf("%s\n", tmp_line);
+    // const char * str= strdup(text);
+    // // printf("%s\n", str);
+
+    // char tmp_line[10000];
+    // strcpy(tmp_line, str);
+    // printf("%s\n", tmp_line);
     
-    // // //check there is that many row in the table
-    //char * tmp3=&(tmp_line[0]);
-    //char ** ptmp_line=&tmp3;
-    line = strsep(&(&(tmp_line[0])), "\n");
-    char * token = strtok(line, " ");
-    while( token != NULL ) {
-        // printf( " %s\n", token ); //printing each token
-        token = strtok(NULL, " ");
-        col_count++;
-    }
+    // // // //check there is that many row in the table
+    // //char * tmp3=&(tmp_line[0]);
+    // //char ** ptmp_line=&tmp3;
+    // line = strsep(&(&(tmp_line[0])), "\n");
+    // char * token = strtok(line, " ");
+    // while( token != NULL ) {
+    //     // printf( " %s\n", token ); //printing each token
+    //     token = strtok(NULL, " ");
+    //     col_count++;
+    // }
 
-    if (col_count < col_num) {
-        printf("Invalid column number");
-        exit(0);
-    }
+    // if (col_count < col_num) {
+    //     printf("Invalid column number");
+    //     exit(0);
+    // }
 
-    while ((line = strsep(&new_str, "\n"))) {
-        printf("%s/n", line);
-        int tmp_col_count = 1;
-        line = strsep(&new_str, "\n");
-        char * token = strtok(line, " ");
-        while( token != NULL ) {
-            if (tmp_col_count == col_num) {
-                line = token;
-            }
-            token = strtok(NULL, " ");
-            tmp_col_count++;
-        }
-        strcpy(res+res_len, line);
-        res_len += strlen(line);
-        res[res_len] = '\n';
-        res_len++;
-    }
+    // while ((line = strsep(&new_str, "\n"))) {
+    //     printf("%s/n", line);
+    //     int tmp_col_count = 1;
+    //     line = strsep(&new_str, "\n");
+    //     char * token = strtok(line, " ");
+    //     while( token != NULL ) {
+    //         if (tmp_col_count == col_num) {
+    //             line = token;
+    //         }
+    //         token = strtok(NULL, " ");
+    //         tmp_col_count++;
+    //     }
+    //     strcpy(res+res_len, line);
+    //     res_len += strlen(line);
+    //     res[res_len] = '\n';
+    //     res_len++;
+    // }
     // return res;
     // return 0;
 }
