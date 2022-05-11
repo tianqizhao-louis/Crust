@@ -56,7 +56,7 @@ let check (globals, functions) =
     ("awk", {
       rtyp = String;
       fname = "awk";
-      formals = [(String, "x"); (String, "y");(String, "z")];
+      formals = [(String, "x"); (String, "y")];
       locals = []; 
       body = [];
       body_locals = [] });
