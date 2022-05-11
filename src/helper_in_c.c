@@ -179,9 +179,9 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
     printf("%s\n", tmp_line);
     
     // // //check there is that many row in the table
-    char * tmp3=&(tmp_line[0]);
-    char ** ptmp_line=&tmp3;
-    line = strsep(ptmp_line, "\n");
+    //char * tmp3=&(tmp_line[0]);
+    //char ** ptmp_line=&tmp3;
+    line = strsep(&tmp_line, "\n");
     char * token = strtok(line, " ");
     while( token != NULL ) {
         // printf( " %s\n", token ); //printing each token
