@@ -24,7 +24,7 @@ char* awk_f(char* text, char* pattern) {
 
 char* awk_line_f(char* text, char* pattern, char* decision) {
     printf("Look, I'm now a string: %s", decision);
-    if strcmp(decision, "y"){
+    if (strcmp(decision, "y")){
         printf("true");
     }else{
         printf("false");
