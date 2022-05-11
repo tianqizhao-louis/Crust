@@ -72,7 +72,7 @@ in
     L.declare_function "string_of_bool_f" string_of_bool_t the_module in 
 
   let awk_t : L.lltype = 
-    L.var_arg_function_type string_t [| string_t; string_t |] in 
+    L.var_arg_function_type string_t [| string_t;string_t;string_t; |] in 
   let awk_func : L.llvalue = 
     L.declare_function "awk_f" awk_t the_module in
   let awk_line_t : L.lltype = 
@@ -176,8 +176,8 @@ in
       | SCall ("string_of_bool", [e]) -> 
         L.build_call string_of_bool_func [| (build_expr builder e) |]
           "string_of_bool_f" builder
-      | SCall ("awk", [e1;e2]) -> 
-        L.build_call awk_func [| (build_expr builder e1) ; (build_expr builder e2) |]
+      | SCall ("awk", [e1;e2;e3]) -> 
+        L.build_call awk_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3) |]
           "awk_f" builder
       | SCall ("awk_line", [e1;e2;e3]) -> 
         L.build_call awk_line_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]

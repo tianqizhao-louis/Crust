@@ -6,19 +6,20 @@ int is_sub_string(char* text, int text_length, char* substr, int substr_length) 
     return -1;
 }
 
-char* awk_f(char* text, char* pattern) {
-    char* res = (char *) malloc(1024);
-    int res_len = 0;
-    char *line, *str, *tofree;
-    tofree = str = strdup(text);
-    while ((line = strsep(&str, "\n"))) {
-        if (strstr(line, pattern)) {
-            strcpy(res+res_len, line);
-            res_len += strlen(line);
-            res[res_len] = '\n';
-            res_len++;
-        }
-    }
+char* awk_f(char* text, char* pattern, char* print_row) {
+    printf("%s\n", print_row);
+    // char* res = (char *) malloc(1024);
+    // int res_len = 0;
+    // char *line, *str, *tofree;
+    // tofree = str = strdup(text);
+    // while ((line = strsep(&str, "\n"))) {
+    //     if (strstr(line, pattern)) {
+    //         strcpy(res+res_len, line);
+    //         res_len += strlen(line);
+    //         res[res_len] = '\n';
+    //         res_len++;
+    //     }
+    // }
     return res;
 }
 
