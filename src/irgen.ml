@@ -100,7 +100,22 @@ in
     L.var_arg_function_type string_t [| string_t; string_t; string_t;|] in  
   let awk_line_func : L.llvalue = 
     L.declare_function "awk_line_f" awk_line_t the_module in 
-
+  let awk_line_range_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; i32_t;i32_t;|] in  
+  let awk_line_range_func : L.llvalue = 
+    L.declare_function "awk_line_range_f" awk_line_range_t the_module in 
+  let awk_line_range_start_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; i32_t|] in  
+  let awk_line_range_start_func : L.llvalue = 
+    L.declare_function "awk_line_range_start_f" awk_line_range_start_t the_module in 
+  let awk_line_range_end_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; i32_t|] in  
+  let awk_line_range_end_func : L.llvalue = 
+    L.declare_function "awk_line_range_end_f" awk_line_range_end_t the_module in 
+  let awk_col_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; i32_t|] in  
+  let awk_col_func : L.llvalue = 
+    L.declare_function "awk_col_f" awk_col_t the_module in 
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_def) StringMap.t =
@@ -217,6 +232,18 @@ in
       | SCall ("awk_line", [e1;e2;e3]) -> 
         L.build_call awk_line_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
           "awk_line_f" builder
+      | SCall ("awk_line_range", [e1;e2;e3;e4]) -> 
+        L.build_call awk_line_range_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3); (build_expr builder e4)|]
+          "awk_line_range_f" builder
+      | SCall ("awk_line_range_start", [e1;e2;e3]) -> 
+        L.build_call awk_line_range_start_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
+          "awk_line_range_start_f" builder
+      | SCall ("awk_line_range_end", [e1;e2;e3]) -> 
+        L.build_call awk_line_range_end_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
+          "awk_line_range_end_f" builder
+      | SCall ("awk_col", [e1;e2;e3]) -> 
+        L.build_call awk_col_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
+          "awk_col_f" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit " ^ f)) in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
