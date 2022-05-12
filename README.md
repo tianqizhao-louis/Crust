@@ -2,7 +2,9 @@
 
 Crust :pizza: is a procedural, C-like language that embeds [awk](https://www.baeldung.com/linux/awk-guide) functions. It is specifically designed for efficient string processing.
 
-![](https://img.shields.io/badge/ocaml-v4.12.0-orange) ![](https://img.shields.io/badge/llvm-v13.0.0-blue)
+![](https://img.shields.io/badge/ocaml-v4.12.0-orange) 
+
+![](https://img.shields.io/badge/llvm-v13.0.0-blue)
 
 ## Team Members
 
