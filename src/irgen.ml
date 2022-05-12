@@ -185,7 +185,7 @@ in
 
       | SArrayget(v,idx) ->
         let tp = build_expr builder idx in
-        let idx' =  [|L.const_int i32_t 0; L.const_int i32_t tp|] in
+        let idx' =  [|L.const_int i32_t 0; tp|] in
         let ref = L.build_gep (lookup v) idx' "" builder in
         (L.build_load ref "" builder)
 
