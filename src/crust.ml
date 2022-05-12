@@ -1,6 +1,3 @@
-(* Top-level of the MicroC compiler: scan & parse the input,
-   check the resulting AST and generate an SAST from it, generate LLVM IR,
-   and dump the module *)
 
 type action = Ast | Sast | LLVM_IR
 

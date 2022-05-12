@@ -1,6 +1,34 @@
 #!/bin/sh
 
 make clean
+ocamlbuild scanner_test.native
+printf "\n\n\ntest scanner #1\n"
+./scanner_test.native < ../test/example.crust > ../out/example.out
+cat ../out/example.out
+
+printf "\n\n\ntest scanner #2\n"
+./scanner_test.native < ../test/array_test.crust > ../out/array_test.out
+cat ../out/array_test.out
+
+printf "\n\n\ntest scanner #3\n"
+./scanner_test.native < ../test/awk_test/awk_col.crust > ../out/awk_col.out
+cat ../out/awk_col.out
+
+make clean
+ocamlbuild semant_test.native
+printf "\n\n\ntest semant AST #1\n"
+./semant_test.native < ../test/array_test.crust > ../out/array_test.out
+cat ../out/array_test.out
+
+printf "\n\n\ntest semant #2\n"
+./semant_test.native < ../test/awk_test/awk_line_range.crust > ../out/awk_line_range.out
+cat ../out/awk_line_range.out
+
+printf "\n\n\ntest semant #3\n"
+./semant_test.native < ../test/awk_test/awk_line_range_end.crust > ../out/awk_line_range_end.out
+cat ../out/awk_line_range_end.out
+
+make clean
 ocamlbuild -pkgs llvm crust.native
 
 make all
