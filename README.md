@@ -12,9 +12,9 @@ export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
 ./run.sh example.mc
 ```
 
-# Crust
+# :pizza: Crust
 
-Crust is a procedural computer language based on C that is specifically designed for string processing.
+Crust :pizza: is a procedural computer language based on C that is specifically designed for string processing.
 
 ## Installation 
 

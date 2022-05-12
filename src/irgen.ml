@@ -52,30 +52,78 @@ in
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
-  let printf_t : L.lltype =
+  let one_string_in_one_int_out_t : L.lltype =
     L.var_arg_function_type i32_t [| string_t |] in
   let printf_func : L.llvalue =
-    L.declare_function "printf" printf_t the_module in
+    L.declare_function "printf" one_string_in_one_int_out_t the_module in
+  let strlen_func : L.llvalue =
+    L.declare_function "strlen" one_string_in_one_int_out_t the_module in
 
-  let string_of_int_t : L.lltype =
-    L.var_arg_function_type string_t [| i32_t |] in
-  let string_of_int_func : L.llvalue =
-    L.declare_function "string_of_int_f" string_of_int_t the_module in
+  let strcmp_t : L.lltype =
+    L.var_arg_function_type i32_t [| string_t; string_t |] in
+  let strcmp_func : L.llvalue =
+    L.declare_function "strcmp" strcmp_t the_module in
 
-  let string_of_float_t : L.lltype =
-    L.var_arg_function_type string_t [| float_t |] in
-  let string_of_float_func : L.llvalue =
-    L.declare_function "string_of_float_f" string_of_float_t the_module in
+  let two_strings_in_one_string_out_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t |] in 
 
-  let string_of_bool_t : L.lltype =
-    L.var_arg_function_type string_t [| i1_t |] in
-  let string_of_bool_func : L.llvalue =
-    L.declare_function "string_of_bool_f" string_of_bool_t the_module in
+  let str_concat_f : L.llvalue =
+    L.declare_function "str_concat_f" two_strings_in_one_string_out_t the_module in
 
-  let awk_t : L.lltype =
-    L.var_arg_function_type string_t [| string_t; string_t |] in
-  let awk_func : L.llvalue =
+  let two_strings_in_one_bool_out_t : L.lltype =   
+    L.function_type i1_t [| string_t; string_t |] in
+  let str_eq_f : L.llvalue =
+    L.declare_function "str_eq_f" two_strings_in_one_bool_out_t the_module in
+  let str_neq_f : L.llvalue =
+    L.declare_function "str_neq_f" two_strings_in_one_bool_out_t the_module in
+
+    (* conversions *)
+  let string_of_int_t : L.lltype = 
+    L.var_arg_function_type string_t [| i32_t |] in 
+  let string_of_int_func : L.llvalue = 
+    L.declare_function "string_of_int_f" string_of_int_t the_module in 
+
+  let string_of_float_t : L.lltype = 
+    L.var_arg_function_type string_t [| float_t |] in 
+  let string_of_float_func : L.llvalue = 
+    L.declare_function "string_of_float_f" string_of_float_t the_module in 
+
+  let string_of_bool_t : L.lltype = 
+    L.var_arg_function_type string_t [| i1_t |] in 
+  let string_of_bool_func : L.llvalue = 
+    L.declare_function "string_of_bool_f" string_of_bool_t the_module in 
+  let awk_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t;string_t|] in 
+  let awk_func : L.llvalue = 
     L.declare_function "awk_f" awk_t the_module in
+  let awk_line_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; string_t;|] in  
+  let awk_line_func : L.llvalue = 
+    L.declare_function "awk_line_f" awk_line_t the_module in 
+  let awk_line_range_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; i32_t;i32_t;|] in  
+  let awk_line_range_func : L.llvalue = 
+    L.declare_function "awk_line_range_f" awk_line_range_t the_module in 
+  let awk_line_range_start_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; i32_t|] in  
+  let awk_line_range_start_func : L.llvalue = 
+    L.declare_function "awk_line_range_start_f" awk_line_range_start_t the_module in 
+  let awk_line_range_end_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; string_t; i32_t|] in  
+  let awk_line_range_end_func : L.llvalue = 
+    L.declare_function "awk_line_range_end_f" awk_line_range_end_t the_module in 
+  let awk_col_t : L.lltype = 
+    L.var_arg_function_type string_t [| string_t; i32_t|] in  
+  let awk_col_func : L.llvalue = 
+    L.declare_function "awk_col_f" awk_col_t the_module in 
+  let awk_col_contain_t : L.lltype = 
+    L.var_arg_function_type i32_t [| string_t; string_t; i32_t|] in  
+  let awk_col_contain_func : L.llvalue = 
+    L.declare_function "awk_col_contain_f" awk_col_contain_t the_module in 
+  let awk_max_length_t : L.lltype = 
+    L.var_arg_function_type i32_t [| string_t|] in  
+  let awk_max_length_func : L.llvalue = 
+    L.declare_function "awk_max_length_f" awk_max_length_t the_module in 
 
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
@@ -161,11 +209,24 @@ in
           | _         -> (raise (Failure("https://comicsandmemes.com/wp-content/uploads/blank-meme-template-094-we-dont-do-that-here-black-panther.jpg")))
         ) e1' e2' "tmp" builder
 
+      else if (fst e1) = A.String then (match op with 
+          A.Add     -> L.build_call str_concat_f [| e1' ; e2' |] "str_concat_f" builder
+        | A.Equal   -> L.build_call str_eq_f [| e1' ; e2' |] "str_eq_f" builder
+        | A.Neq     -> L.build_call str_neq_f [| e1' ; e2' |] "str_neq_f" builder
+        | _         -> raise (Failure("https://comicsandmemes.com/wp-content/uploads/blank-meme-template-094-we-dont-do-that-here-black-panther.jpg"))
+      ) 
+
         else (raise (Failure("type does not support op")))
       | SCall ("print", [e]) ->
         L.build_call printf_func [| str_format_str ; (build_expr builder e) |]
           "printf" builder
-      | SCall ("string_of_int", [e]) ->
+      | SCall ("strlen", [e]) ->
+        L.build_call strlen_func [| (build_expr builder e) |]
+          "strlen" builder
+      | SCall ("strcmp", [e1;e2]) -> 
+        L.build_call strcmp_func [| (build_expr builder e1) ; (build_expr builder e2) |]
+          "strcmp" builder
+      | SCall ("string_of_int", [e]) -> 
         L.build_call string_of_int_func [| (build_expr builder e) |]
           "string_of_int_f" builder
       | SCall ("string_of_float", [e]) ->
@@ -174,11 +235,32 @@ in
       | SCall ("string_of_bool", [e]) ->
         L.build_call string_of_bool_func [| (build_expr builder e) |]
           "string_of_bool_f" builder
-      | SCall ("awk", [e1;e2]) ->
-        L.build_call awk_func [| (build_expr builder e1) ; (build_expr builder e2) |]
+      | SCall ("awk", [e1;e2]) -> 
+        L.build_call awk_func [| (build_expr builder e1) ; (build_expr builder e2)|]
           "awk_f" builder
+      | SCall ("awk_line", [e1;e2;e3]) -> 
+        L.build_call awk_line_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
+          "awk_line_f" builder
+      | SCall ("awk_line_range", [e1;e2;e3;e4]) -> 
+        L.build_call awk_line_range_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3); (build_expr builder e4)|]
+          "awk_line_range_f" builder
+      | SCall ("awk_line_range_start", [e1;e2;e3]) -> 
+        L.build_call awk_line_range_start_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
+          "awk_line_range_start_f" builder
+      | SCall ("awk_line_range_end", [e1;e2;e3]) -> 
+        L.build_call awk_line_range_end_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
+          "awk_line_range_end_f" builder
+      | SCall ("awk_col", [e1;e2]) -> 
+        L.build_call awk_col_func [| (build_expr builder e1) ; (build_expr builder e2)|]
+          "awk_col_f" builder
+      | SCall ("awk_col_contain", [e1;e2;e3]) -> 
+        L.build_call awk_col_contain_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
+          "awk_col_contain_f" builder
+      | SCall ("awk_max_length", [e1]) -> 
+        L.build_call awk_max_length_func [| (build_expr builder e1)|]
+          "awk_max_length_f" builder
       | SCall (f, args) ->
-        let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit")) in
+        let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit " ^ f)) in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
         let result = f ^ "_result" in
         L.build_call fdef (Array.of_list llargs) result builder

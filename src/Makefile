@@ -12,7 +12,7 @@ all : crust.native helper_in_c.o
 # See https://github.com/ocaml/ocamlbuild/blob/master/manual/manual.adoc
 
 crust.native :
-	opam config exec -- \
+	opam exec -- \
 	rm -f *.o
 	ocamlbuild -use-ocamlfind -pkgs llvm crust.native
 	gcc -c helper_in_c.c

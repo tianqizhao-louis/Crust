@@ -60,16 +60,93 @@ let check (globals, functions) =
       locals = [];
       body = [];
       body_locals = [] });
+    ("awk_line", {
+      rtyp = String;
+      fname = "awk_line";
+      formals = [(String, "x"); (String, "y");(String, "z")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("awk_line_range", {
+      rtyp = String;
+      fname = "awk_line_range";
+      formals = [(String, "x"); (String, "y");(Int, "z"); (Int, "w")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("awk_line_range_start", {
+      rtyp = String;
+      fname = "awk_line_range";
+      formals = [(String, "x"); (String, "y");(Int, "z")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("awk_line_range_end", {
+      rtyp = String;
+      fname = "awk_line_range";
+      formals = [(String, "x"); (String, "y");(Int, "z")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("awk_col", {
+      rtyp = String;
+      fname = "awk_col";
+      formals = [(String, "x"); (Int, "z")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("awk_col_contain", {
+      rtyp = Int;
+      fname = "awk_col_contain";
+      formals = [(String, "x"); (String, "y"); (Int, "z")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("awk_max_length", {
+      rtyp = Int;
+      fname = "awk_max_length";
+      formals = [(String, "x")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
     ("string_of_int", {
       rtyp = String;
       fname = "string_of_int";
       formals = [(Int, "x")];
       locals = [];
       body = [];
-      body_locals = [] })]
-    in
-  let add_func_to_map the_map func_thingy =
-    match func_thingy with
+      body_locals = [] });
+    ("strlen", {
+      rtyp = Int;
+      fname = "strlen";
+      formals = [(String, "x")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("strcmp", {
+      rtyp = Int;
+      fname = "strcmp";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("str_eq", {
+      rtyp = Int;
+      fname = "str_eq";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
+    ("str_neq", {
+      rtyp = Int;
+      fname = "str_neq";
+      formals = [(String, "x"); (String, "y")];
+      locals = []; 
+      body = [];
+      body_locals = [] })] 
+    in 
+  let add_func_to_map the_map func_thingy = 
+    match func_thingy with 
       (func_name, func_struct) -> StringMap.add func_name func_struct the_map
   in
 
@@ -197,8 +274,11 @@ let check (globals, functions) =
           let t = match op with
               Add | Sub | Mult | Div | Mod when t1 = Int -> Int
             | Add | Sub | Mult | Div when t1 = Float -> Float
+            | Add when t1 = String -> String
+            | Equal | Neq when t1 = String -> Bool
             | Equal | Neq -> Bool
             | Less when t1 = Int -> Bool
+            | Less when t1 = Float -> Bool
             | And | Or when t1 = Bool -> Bool
             | _ -> raise (Failure err)
           in
@@ -214,11 +294,39 @@ let check (globals, functions) =
           (* if function name == printf, e -> string_of_e e *)
                let (et, e') = check_expr e in
                let err = "illegal argument found " ^ string_of_typ et ^
-                         " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
+                         " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e ^ " " ^ fname
                in (check_assign ft et err, e')
           in
-          let args' = List.map2 check_call fd.formals args
-          in (fd.rtyp, SCall(fname, args'))
+          
+          match fname with 
+            "print" -> (
+              let arg_head = List.hd args in 
+              let (et, e') = check_expr arg_head in
+              match et with 
+                  String -> (
+                    let args' = List.map2 check_call fd.formals args in 
+                    fd.rtyp, SCall(fname, args')
+                  )
+                | Int -> (
+                    let conversion_call = Call("string_of_int", args) in 
+                    let intermedia_scall = check_expr conversion_call in 
+                    fd.rtyp, SCall(fname, [intermedia_scall])
+                  )
+                | Float -> (
+                  let conversion_call = Call("string_of_float", args) in 
+                  let intermedia_scall = check_expr conversion_call in 
+                  fd.rtyp, SCall(fname, [intermedia_scall])
+                )
+                | Bool -> (
+                  let conversion_call = Call("string_of_bool", args) in 
+                  let intermedia_scall = check_expr conversion_call in 
+                  fd.rtyp, SCall(fname, [intermedia_scall])
+                )
+                | _ -> raise(Failure("This shit aint a string and there is no auto conversion implemented for " ^ string_of_typ et))
+              
+            )
+            | _ -> ( let args' = List.map2 check_call fd.formals args
+                        in (fd.rtyp, SCall(fname, args')))
     in
 
     let check_bool_expr e =
