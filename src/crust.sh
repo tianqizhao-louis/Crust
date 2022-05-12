@@ -1,6 +1,5 @@
 #!/bin/sh
 
-git pull
 make clean
 ocamlbuild -pkgs llvm crust.native
 
