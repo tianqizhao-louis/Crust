@@ -27,22 +27,22 @@ make all
 ## Essential Project Structure
 
     .
-    ├── LRM.md
+    ├── LRM.md >>> Our LRM (first draft)
     ├── README.md
     ├── push.sh
     ├── src
     │   ├── Makefile
-    │   ├── ast.ml
-    │   ├── crust.ml
-    │   ├── crust.sh
-    │   ├── crustparse.mly
-    │   ├── helper_in_c.c
-    │   ├── irgen.ml
-    │   ├── make.sh
-    │   ├── sast.ml
-    │   ├── scanner.mll
-    │   ├── semant.ml
-    └── test
+    │   ├── ast.ml                              # Abstract Syntax Tree
+    │   ├── crust.ml                            # Crust's executable
+    │   ├── crust.sh                            # shell file to run tests
+    │   ├── crustparse.mly                      # Parser
+    │   ├── helper_in_c.c                       # C library
+    │   ├── irgen.ml                            # LLVM
+    │   ├── make.sh 
+    │   ├── sast.ml                             # Semantic checks AST
+    │   ├── scanner.mll                         # Scanner
+    │   ├── semant.ml                           # Semantic checker
+    └── test                                    # test suites
         ├── array_test.crust
         └── awk_test
             ├── awk_col.crust
