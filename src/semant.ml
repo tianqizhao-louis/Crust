@@ -64,49 +64,49 @@ let check (globals, functions) =
       rtyp = String;
       fname = "awk_line";
       formals = [(String, "x"); (String, "y");(String, "z")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk_line_range", {
       rtyp = String;
       fname = "awk_line_range";
       formals = [(String, "x"); (String, "y");(Int, "z"); (Int, "w")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk_line_range_start", {
       rtyp = String;
       fname = "awk_line_range";
       formals = [(String, "x"); (String, "y");(Int, "z")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk_line_range_end", {
       rtyp = String;
       fname = "awk_line_range";
       formals = [(String, "x"); (String, "y");(Int, "z")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk_col", {
       rtyp = String;
       fname = "awk_col";
       formals = [(String, "x"); (Int, "z")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk_col_contain", {
       rtyp = Int;
       fname = "awk_col_contain";
       formals = [(String, "x"); (String, "y"); (Int, "z")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk_max_length", {
       rtyp = Int;
       fname = "awk_max_length";
       formals = [(String, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("string_of_int", {
@@ -120,33 +120,33 @@ let check (globals, functions) =
       rtyp = Int;
       fname = "strlen";
       formals = [(String, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("strcmp", {
       rtyp = Int;
       fname = "strcmp";
       formals = [(String, "x"); (String, "y")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("str_eq", {
       rtyp = Int;
       fname = "str_eq";
       formals = [(String, "x"); (String, "y")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("str_neq", {
       rtyp = Int;
       fname = "str_neq";
       formals = [(String, "x"); (String, "y")];
-      locals = []; 
+      locals = [];
       body = [];
-      body_locals = [] })] 
-    in 
-  let add_func_to_map the_map func_thingy = 
-    match func_thingy with 
+      body_locals = [] })]
+    in
+  let add_func_to_map the_map func_thingy =
+    match func_thingy with
       (func_name, func_struct) -> StringMap.add func_name func_struct the_map
   in
 
@@ -254,22 +254,29 @@ let check (globals, functions) =
                   (typ_e, SAssigna(v, (typp, sexprp), (typE,sexprE)))
 
       | Arraysize(v) -> (*Get array size *)
-           let typ_v = type_of_identifier v in 
-           let typ_e = match typ_v with 
+           let typ_v = type_of_identifier v in
+           let typ_e = match typ_v with
                        | Array(t,l) -> Int
                        | _ -> raise(Failure("Can only call Length on an array type."))
            in
            (typ_e, SArraysize(v))
 
 
-      | ArrayLit(vs) ->
+      | ArrayLit(vs,n) ->
                       let ar = List.map (check_expr) vs in
                       let (body_typ ,_) = List.hd ar in
-                        let iterate_array es = 
+                        let iterate_array es =
                                 let es' = fst es in
                                         if es' != body_typ then raise(Failure("Inconsistent array.")) else ()
                                 in
-                        (ignore (List.map iterate_array ar); (Array(body_typ, List.length vs), SArrayLit(body_typ, List.map snd ar)))
+                                let typ_v = type_of_identifier n in
+                                  let _ = match typ_v with
+                                              | Array(t,l) -> if t != body_typ then raise(Failure("Assignment type and array type do not match."))
+                                                              else if l != List.length vs then raise(Failure("Length of array assignment unmatch."))
+                                                                      else t
+                                              | _ -> raise(Failure("Not an array variable."))
+                                              in
+                        (ignore (List.map iterate_array ar); (Array(body_typ, List.length vs), SArrayLit(body_typ, List.map snd ar, n)))
 
 
 
@@ -310,33 +317,33 @@ let check (globals, functions) =
                          " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e ^ " " ^ fname
                in (check_assign ft et err, e')
           in
-          
-          match fname with 
+
+          match fname with
             "print" -> (
-              let arg_head = List.hd args in 
+              let arg_head = List.hd args in
               let (et, e') = check_expr arg_head in
-              match et with 
+              match et with
                   String -> (
-                    let args' = List.map2 check_call fd.formals args in 
+                    let args' = List.map2 check_call fd.formals args in
                     fd.rtyp, SCall(fname, args')
                   )
                 | Int -> (
-                    let conversion_call = Call("string_of_int", args) in 
-                    let intermedia_scall = check_expr conversion_call in 
+                    let conversion_call = Call("string_of_int", args) in
+                    let intermedia_scall = check_expr conversion_call in
                     fd.rtyp, SCall(fname, [intermedia_scall])
                   )
                 | Float -> (
-                  let conversion_call = Call("string_of_float", args) in 
-                  let intermedia_scall = check_expr conversion_call in 
+                  let conversion_call = Call("string_of_float", args) in
+                  let intermedia_scall = check_expr conversion_call in
                   fd.rtyp, SCall(fname, [intermedia_scall])
                 )
                 | Bool -> (
-                  let conversion_call = Call("string_of_bool", args) in 
-                  let intermedia_scall = check_expr conversion_call in 
+                  let conversion_call = Call("string_of_bool", args) in
+                  let intermedia_scall = check_expr conversion_call in
                   fd.rtyp, SCall(fname, [intermedia_scall])
                 )
                 | _ -> raise(Failure("This shit aint a string and there is no auto conversion implemented for " ^ string_of_typ et))
-              
+
             )
             | _ -> ( let args' = List.map2 check_call fd.formals args
                         in (fd.rtyp, SCall(fname, args')))

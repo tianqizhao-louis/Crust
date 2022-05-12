@@ -17,7 +17,7 @@ and sx =
   | SStringLit of string
   | SId of string
   | SBinop of sexpr * op * sexpr
-  | SArrayLit of typ * sx list
+  | SArrayLit of typ * sx list * string
   | SAssign of string * sexpr
   | SArrayget of string * sexpr
   | SAssigna of string * sexpr * sexpr
@@ -58,7 +58,7 @@ let rec string_of_sexpr (t, e) =
       | SId(s) -> s
       | SBinop(e1, o, e2) ->
         string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
-      | SArrayLit(t,vs) -> "{" ^ (List.fold_left (^) "" (List.map (fun x -> x ^ ", ") (List.map string_of_sexpr (List.map (fun x -> (t,x)) vs) ) ) )  ^ "}"
+      | SArrayLit(t,vs,n) -> n ^ "=" ^ "{" ^ (List.fold_left (^) "" (List.map (fun x -> x ^ ", ") (List.map string_of_sexpr (List.map (fun x -> (t,x)) vs) ) ) )  ^ "}"
       | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
       | SArrayget(v,p) -> v ^ "[" ^ string_of_sexpr p ^ "]"
       | SArraysize(v) -> v ^ ".length"
