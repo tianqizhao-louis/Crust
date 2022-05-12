@@ -65,8 +65,7 @@ in
 
   let two_strings_in_one_string_out_t : L.lltype = 
     L.var_arg_function_type string_t [| string_t; string_t |] in 
-  let awk_func : L.llvalue = 
-    L.declare_function "awk_f" two_strings_in_one_string_out_t the_module in 
+
   let str_concat_f : L.llvalue =
     L.declare_function "str_concat_f" two_strings_in_one_string_out_t the_module in
 
