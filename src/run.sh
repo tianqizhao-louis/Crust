@@ -9,7 +9,7 @@ if [ -z "$1" ]
     exit 1
 fi
 f=$1
-n=${f%.mc*}
+n=${f%.crust*}
 cat $f | ./crust.native > "$n.ll"
 llc -relocation-model=pic "$n.ll"
 cc -o "$n" "$n.s" "helper_in_c.o" "-lm"
