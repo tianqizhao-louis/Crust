@@ -9,19 +9,14 @@ Sydney Australia English
 Nanjing China Mandarin";
 
     string pattern = "China";
-    string res = awk_line_range_end(body, pattern,2);
-    print(res);
-    print("------------------");
-    string a = awk_col(body, 3);
-    print(a);
+    string res1 = awk_line(body, pattern, "y");
+    print(res1);
 
-    print("------------------");
-    int b = awk_col_contain(body, pattern,2);
-    print(string_of_int(b));
-    print("------------------");
-    int c = awk_max_length(body);
-    print(string_of_int(c));
+    print("---------\n");
 
+    string res2 = awk_line(body, "Mandarin", "n");
+    print(res2);
 
+    
     return 0;
 }
