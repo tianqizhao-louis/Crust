@@ -27,7 +27,7 @@ make all
 ## Essential Project Structure
 
     .
-    ├── LRM.md >>> Our LRM (first draft)
+    ├── LRM.md                                  # Our LRM (first draft)
     ├── README.md
     ├── push.sh
     ├── src
