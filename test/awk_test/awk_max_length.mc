@@ -9,7 +9,7 @@ Sydney Australia English
 Nanjing China Mandarin";
 
 
-    int res1 = awk_col(body);
+    int res1 = awk_max_length(body);
     print(string_of_int(res1));
 
     return 0;

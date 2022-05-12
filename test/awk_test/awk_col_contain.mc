@@ -11,7 +11,7 @@ Nanjing China Mandarin";
     string pattern = "China";
     int res1 = awk_col_contain(body, pattern, 2);
     print(string_of_int(res1));
-    print("--------------------");
+    print("\n");
     int res2 = awk_col_contain(body, pattern, 3);
     print(string_of_int(res2));
 
