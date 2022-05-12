@@ -37,6 +37,7 @@ rule token = parse
 | ']'                                     { RBKT }
 | ';'                                     { SEMI }
 | ','                                     { COMMA }
+| '.'                                     { DOT }
 
 (* operators *)
 | '+'                                     { PLUS }
@@ -66,6 +67,7 @@ rule token = parse
 | "char"                                  { CHAR }
 | "string"                                { STRING }
 | "array"                                 { ARRAY }
+| "length"                                { LENGTH }
 | '''                                     { read_char (Buffer.create 1) lexbuf}
 | '"'                                     { read_string (Buffer.create 256) lexbuf }
 | digit+ as lem                           { LITERAL(int_of_string lem) }

@@ -20,6 +20,7 @@ and sx =
   | SAssign of string * sexpr
   | SArrayget of string * sexpr
   | SAssigna of string * sexpr * sexpr
+  | SArraysize of string
   (* call *)
   | SCall of string * sexpr list
 
@@ -58,6 +59,7 @@ let rec string_of_sexpr (t, e) =
         string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
       | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
       | SArrayget(v,p) -> v ^ "[" ^ string_of_sexpr p ^ "]"
+      | SArraysize(v) -> v ^ ".length"
       | SAssigna(v,p,e) -> v ^ "[" ^ string_of_sexpr p ^ "]" ^ " = " ^ string_of_sexpr e
       | SCall(f, el) ->
           f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"

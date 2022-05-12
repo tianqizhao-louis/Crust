@@ -13,5 +13,8 @@ int main() {
     }
     print(string_of_int(y[0]));	
     print("\n");
+    print("Size of array x is ");
+    print(string_of_int(x.length));
+    print("\n");
     return 0;
 }

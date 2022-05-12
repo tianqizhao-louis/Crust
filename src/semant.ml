@@ -176,6 +176,13 @@ let check (globals, functions) =
                   in
                   (typ_e, SAssigna(v, (typp, sexprp), (typE,sexprE)))
 
+      | Arraysize(v) -> (*Get array size *)
+           let typ_v = type_of_identifier v in 
+           let typ_e = match typ_v with 
+                       | Array(t,l) -> Int
+                       | _ -> raise(Failure("Can only call Length on an array type."))
+           in
+           (typ_e, SArraysize(v))
 
       | Binop(e1, op, e2) as e ->
         let (t1, e1') = check_expr e1

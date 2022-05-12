@@ -12,12 +12,12 @@
 %}
 
 /* Support token */
-%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN LBKT RBKT
+%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN LBKT RBKT DOT
 %token MULT DIV MOD
 %token EQ NEQ LT AND OR
 %token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
 %token RETURN COMMA
-%token ARRAY
+%token ARRAY LENGTH
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
@@ -163,6 +163,7 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3)         }
   | ID LBKT expr RBKT { Arrayget($1,$3) }
   | ID LBKT expr RBKT ASSIGN expr {Assigna($1,$3,$6)}
+  | ID DOT LENGTH       {Arraysize($1)}
   | LPAREN expr RPAREN { $2                   }
   /* call */
   | ID LPAREN args_opt RPAREN { Call ($1, $3) }

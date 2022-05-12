@@ -20,6 +20,7 @@ type expr =
   | Assign of string * expr
   | Arrayget of string * expr
   | Assigna of string * expr * expr
+  | Arraysize of string
   (* function call *)
   | Call of string * expr list
 
@@ -80,6 +81,7 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Arrayget(v,p) -> v ^ "["^ string_of_expr p ^"]"
   | Assigna(v,p,e)->v ^ "[" ^ string_of_expr p ^ "]" ^ " = " ^ string_of_expr e
+  | Arraysize(v) -> v ^".length"
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
 
