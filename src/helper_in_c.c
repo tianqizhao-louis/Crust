@@ -264,7 +264,7 @@ char* awk_col_contain_f(char* text, char* pattern, int col_num) {
         // res_len++;
         
     }
-    return 0;
+    return res;
 }
 
 char* string_of_int_f(int input) {
