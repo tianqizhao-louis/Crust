@@ -250,7 +250,7 @@ char* awk_col_contain_f(char* text, char* pattern, int col_num) {
         while( token != NULL ) {
 
             if (row_count == col_num){
-                if (strcmp(pattern, token == 0)){
+                if (strcmp(pattern, token) == 0){
                     res = 0;
                 }
             }
