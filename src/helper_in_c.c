@@ -197,6 +197,7 @@ char* awk_col_f(char* text, int col_num) {
         while( token != NULL ) {
             
             // printf( " %s,%d\n", token,row_count ); //printing each token
+            //hi
             if (row_count == col_num){
                 strcpy(target, token);
             }
