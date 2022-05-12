@@ -162,7 +162,6 @@ char* awk_line_range_end_f(char* text, char* pattern, int end) {
     return res;
 }
 
-
 char* awk_col_f(char* text, int col_num) {
 
     int col_count = 0;
@@ -270,11 +269,6 @@ int awk_max_length_f(char* text) {
         if (strlen(line) > max_len){
             max_len = strlen(line);
         }
-
-        // strcpy(res+res_len, line);
-        // res_len += strlen(line);
-        // res[res_len] = '\n';
-        // res_len++;
     }
     return max_len;
 }

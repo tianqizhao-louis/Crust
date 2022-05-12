@@ -2,7 +2,7 @@
 git pull
 make clean
 ocamlbuild -pkgs llvm crust.native
-./crust.native -l range_ex.mc > range_ex.out
+./crust.native -l ../test/awk_test/range_ex.mc > ../test/awk_test/range_ex.out
 make all
 chmod +x run.sh
-./run.sh range_ex.mc
+./run.sh ../test/awk_test/range_ex.mc
