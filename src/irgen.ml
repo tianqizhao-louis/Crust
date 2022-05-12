@@ -35,7 +35,7 @@ let translate (globals, functions) =
   (* and arr_t = L.array_type (L.i8_type context) *)
 in
 
-  (* Return the LLVM type for a MicroC type *)
+  (* Return the LLVM type for a Crust type *)
   let rec ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
@@ -52,7 +52,15 @@ in
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
+<<<<<<< HEAD
+  let global_arrays: A.typ  StringMap.t =
+          let global_array a (t',n') = StringMap.add n' t' a in
+          List.fold_left global_array StringMap.empty globals in
+
+  let printf_t : L.lltype =
+=======
   let one_string_in_one_int_out_t : L.lltype =
+>>>>>>> a04af4d9e65ef5ad90141c1d432a7583dd68661a
     L.var_arg_function_type i32_t [| string_t |] in
   let printf_func : L.llvalue =
     L.declare_function "printf" one_string_in_one_int_out_t the_module in
@@ -161,9 +169,21 @@ in
         in StringMap.add n local_var m
       in
 
+      
       let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
           (Array.to_list (L.params the_function)) in
       List.fold_left add_local formals fdecl.slocals
+    in
+     
+    let local_arrays=
+            let add_formal m (t,n) p=
+                   StringMap.add n t m
+           and add_local m (t,n) =
+                   StringMap.add n t m
+            in
+            let arrays = List.fold_left2 add_formal StringMap.empty fdecl.sformals
+                (Array.to_list (L.params the_function)) in 
+            List.fold_left add_local arrays fdecl.slocals
     in
 
     (* Return the value for a variable or formal argument.
@@ -171,6 +191,11 @@ in
     let lookup n = try StringMap.find n local_vars
       with Not_found -> try StringMap.find n global_vars with Not_found -> raise(Failure("here"))
     in
+
+    let lookupA n = try StringMap.find n local_arrays
+      with Not_found -> try StringMap.find n global_arrays with Not_found -> raise(Failure("Not found here."))
+    in
+
 
     (* Construct code for an expression; return its value *)
     let rec build_expr builder ((_, e) : sexpr) = match e with
@@ -270,6 +295,13 @@ in
         let idx' =  [|L.const_int i32_t 0; tp|] in
         let ref = L.build_gep (lookup v) idx' "" builder in
         (L.build_load ref "" builder)
+
+      | SArraysize(v) ->
+        let  ll = (lookupA v) in 
+               ( match ll with 
+        | Array(t,l) -> (L.const_int i32_t l)
+        | _ -> raise(Failure("Not an array.")))
+        
 
       | SAssigna(v, idx, e) ->
         let tp = build_expr builder idx in
