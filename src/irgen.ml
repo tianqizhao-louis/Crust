@@ -183,6 +183,12 @@ in
         let result = f ^ "_result" in
         L.build_call fdef (Array.of_list llargs) result builder
 
+      | SArrayget(v,idx) ->
+        let tp = build_expr builder idx in
+        let idx' =  [|L.const_int i32_t 0; L.const_int i32_t tp|] in
+        let ref = L.build_gep (lookup v) idx' "" builder in
+        (L.build_load ref "" builder)
+
       | SAssigna(v, idx, e) ->
         let tp = build_expr builder idx in
         let exp = build_expr builder e in
