@@ -259,7 +259,7 @@ int awk_col_contain_f(char* text, char* pattern, int col_num) {
 }
 
 int awk_max_length_f(char* text) {
-    printf("hi")
+    printf("hi");
     // int count = 1;   
     // char* res = (char *) malloc(1024);
     // int res_len = 0;
