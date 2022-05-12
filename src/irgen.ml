@@ -184,7 +184,8 @@ in
         L.build_call fdef (Array.of_list llargs) result builder
 
       | SAssigna(v, idx, e) ->
-        let idx' = L.const_int i32_t idx in
+        let tp = build_expr builder idx in
+        let idx' = L.const_int i32_t tp in
         let exp = build_expr builder e in
         let idx'' = [|L.const_int i32_t 0; idx'|] in
         let ref = L.build_gep (lookup v) idx'' "" builder in
