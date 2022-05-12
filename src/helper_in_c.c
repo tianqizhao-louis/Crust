@@ -259,37 +259,24 @@ int awk_col_contain_f(char* text, char* pattern, int col_num) {
 }
 
 int awk_max_length_f(char* text) {
-    printf("hi");
-    // int count = 1;   
-    // char* res = (char *) malloc(1024);
-    // int res_len = 0;
-    // char *line, *str, *tofree;
-    // tofree = str = strdup(text);
+    int max_len = 0;
+    int count = 1;   
+    char* res = (char *) malloc(1024);
+    int res_len = 0;
+    char *line, *str, *tofree;
+    tofree = str = strdup(text);
+    while ((line = strsep(&str, "\n"))) {
+        printf("%d\n", strlen(line));
+        if (strlen(line) > max_len){
+            max_len = strlen(line);
+        }
 
-    // if ((strcmp("y", decision)) == 0){
-    //     char buffer[1024];
-    //     while ((line = strsep(&str, "\n"))) {
-    //         if (strstr(line, pattern)) {
-    //             sprintf(buffer, "%d. %s", count, line);
-    //             line = buffer;
-    //             strcpy(res+res_len, line);
-    //             res_len += strlen(line);
-    //             res[res_len] = '\n';
-    //             res_len++;
-    //         }
-    //         count++;
-    //     }
-    // }else{
-    //     while ((line = strsep(&str, "\n"))) {
-    //         if (strstr(line, pattern)) {
-    //             strcpy(res+res_len, line);
-    //             res_len += strlen(line);
-    //             res[res_len] = '\n';
-    //             res_len++;
-    //         }
-    //     }
-    // }
-     return 0;
+        // strcpy(res+res_len, line);
+        // res_len += strlen(line);
+        // res[res_len] = '\n';
+        // res_len++;
+    }
+    return max_len;
 }
 
 
