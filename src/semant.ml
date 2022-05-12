@@ -144,6 +144,20 @@ let check (globals, functions) =
         in
         (check_assign lt rt err, SAssign(var, (rt, e')))
 
+      | Arrayget(v,p) -> (*check array get element*)
+          let (typp,sexprp)=check_expr p in
+            if typp != Int then raise(Failure("Non integer input for index."))
+            else
+              let typ_v = type_of_identifier v in
+              let typ_e = match typ_v with
+                | Array(t,l) -> (match p with
+                              | Literal idx -> if (idx >= l || idx < 0) then raise(Failure("Array index out of bound."))
+                                        else t
+                              | _ -> t)
+                | _ -> raise(Failure("Array matching error."))
+                in
+                (typ_e, SArrayget(v, (typp, sexprp)))
+
       | Assigna(v, p, e) -> (* check assignment for arrays *)
           let (typp, sexprp) = check_expr p in
             if typp != Int then raise(Failure("Non integer input for index."))
