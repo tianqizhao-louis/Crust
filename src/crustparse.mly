@@ -161,6 +161,7 @@ expr:
   | expr AND    expr { Binop($1, And,   $3)   }
   | expr OR     expr { Binop($1, Or,    $3)   }
   | ID ASSIGN expr   { Assign($1, $3)         }
+  | ID LBKT expr RBKT { Arrayget($1,$3) }
   | ID LBKT expr RBKT ASSIGN expr {Assigna($1,$3,$6)}
   | LPAREN expr RPAREN { $2                   }
   /* call */

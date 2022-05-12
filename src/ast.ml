@@ -18,6 +18,7 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Assign of string * expr
+  | Arrayget of string * expr
   | Assigna of string * expr * expr
   (* function call *)
   | Call of string * expr list
@@ -77,6 +78,7 @@ let rec string_of_expr = function
   | Binop(e1, o, e2) ->
     string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
+  | Arrayget(v,p) -> v ^ "["^ string_of_expr p ^"]"
   | Assigna(v,p,e)->v ^ "[" ^ string_of_expr p ^ "]" ^ " = " ^ string_of_expr e
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"

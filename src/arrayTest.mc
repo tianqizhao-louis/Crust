@@ -10,6 +10,7 @@ int main() {
       i=i+1;
     }
 
+    string_of_int(y[0]);
 
     return 0;
 }
