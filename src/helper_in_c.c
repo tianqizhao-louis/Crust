@@ -265,7 +265,7 @@ int awk_max_length_f(char* text) {
     char *line, *str, *tofree;
     tofree = str = strdup(text);
     while ((line = strsep(&str, "\n"))) {
-        printf("%d\n", strlen(line));
+        // printf("%d\n", strlen(line));
         if (strlen(line) > max_len){
             max_len = strlen(line);
         }
