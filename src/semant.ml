@@ -102,6 +102,13 @@ let check (globals, functions) =
       locals = []; 
       body = [];
       body_locals = [] });
+    ("awk_max_length", {
+      rtyp = Int;
+      fname = "awk_max_length";
+      formals = [(String, "x")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
     ("string_of_int", {
       rtyp = String;
       fname = "string_of_int";

@@ -214,8 +214,6 @@ char* awk_col_f(char* text, int col_num) {
     return res;
 }
 
-
-
 int awk_col_contain_f(char* text, char* pattern, int col_num) {
 
     int col_count = 0;
@@ -259,6 +257,28 @@ int awk_col_contain_f(char* text, char* pattern, int col_num) {
     }
     return res;
 }
+
+int awk_max_length_f(char* text) {
+    int max_len = 0;
+    int count = 1;   
+    char* res = (char *) malloc(1024);
+    int res_len = 0;
+    char *line, *str, *tofree;
+    tofree = str = strdup(text);
+    while ((line = strsep(&str, "\n"))) {
+        printf("%d\n", strlen(line));
+        if (strlen(line) > max_len){
+            max_len = strlen(line);
+        }
+
+        // strcpy(res+res_len, line);
+        // res_len += strlen(line);
+        // res[res_len] = '\n';
+        // res_len++;
+    }
+    return max_len;
+}
+
 
 char* string_of_int_f(int input) {
     char* string = (char *) malloc(33);

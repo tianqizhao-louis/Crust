@@ -119,6 +119,10 @@ in
     L.var_arg_function_type i32_t [| string_t; string_t; i32_t|] in  
   let awk_col_contain_func : L.llvalue = 
     L.declare_function "awk_col_contain_f" awk_col_contain_t the_module in 
+  let awk_max_length_t : L.lltype = 
+    L.var_arg_function_type i32_t [| string_t|] in  
+  let awk_max_length_func : L.llvalue = 
+    L.declare_function "awk_max_length_f" awk_max_length_t the_module in 
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_def) StringMap.t =
@@ -250,6 +254,9 @@ in
       | SCall ("awk_col_contain", [e1;e2;e3]) -> 
         L.build_call awk_col_contain_func [| (build_expr builder e1) ; (build_expr builder e2); (build_expr builder e3)|]
           "awk_col_contain_f" builder
+      | SCall ("awk_max_length", [e1]) -> 
+        L.build_call awk_max_length_func [| (build_expr builder e1)|]
+          "awk_max_length_f" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise(Failure("shit " ^ f)) in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
