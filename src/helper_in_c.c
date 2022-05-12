@@ -233,7 +233,6 @@ int awk_col_contain_f(char* text, char* pattern, int col_num) {
     char * token = strtok(tmp_line, " ");
     // loop through the string to extract all other tokens
     while( token != NULL ) {
-        // printf( " %s\n", token ); //printing each token
         token = strtok(NULL, " ");
         col_count++;
     }
@@ -248,7 +247,6 @@ int awk_col_contain_f(char* text, char* pattern, int col_num) {
         char target[10000];
         // loop through the string to extract all other tokens
         while( token != NULL ) {
-
             if (row_count == col_num){
                 if (strcmp(pattern, token) == 0){
                     res = 0;
@@ -257,11 +255,6 @@ int awk_col_contain_f(char* text, char* pattern, int col_num) {
             token = strtok(NULL, " ");
             row_count ++;
         }
-
-        // strcpy(res+res_len, target);
-        // res_len += strlen(target);
-        // res[res_len] = '\n';
-        // res_len++;
         
     }
     return res;
