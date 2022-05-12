@@ -1,7 +1,7 @@
-/* 
+/*
 
   Crust Ocamlyacc parser
-  crustparse.mly 
+  crustparse.mly
 
 */
 
@@ -12,11 +12,12 @@
 %}
 
 /* Support token */
-%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
+%token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN LBKT RBKT DOT
 %token MULT DIV MOD
 %token EQ NEQ LT AND OR
 %token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
 %token RETURN COMMA
+%token ARRAY LENGTH
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
@@ -66,12 +67,13 @@ fdecl:
   }
 
 
-/* 
-  Variable declaration 
-  Example: int x = 10
+/*
+  Variable declaration
+  Example: int x;
 */
 vdecl:
   typ ID { ($1, $2) }
+
 
 /*
   types
@@ -82,6 +84,7 @@ typ:
   | CHAR    { Char }
   | STRING  { String }
   | FLOAT   { Float }
+  | ARRAY typ LBKT LITERAL RBKT {Array($2,$4)}
 
 /*
   Variable or statement;
@@ -102,9 +105,8 @@ vdef:
   /* int x = 10;*/
   typ ID ASSIGN expr { ( ($1,$2) , (Expr (Assign($2, $4)) )) }
 
-
-/* 
-  formals_opt 
+/*
+  formals_opt
   function arguments
 */
 formals_opt:
@@ -159,12 +161,18 @@ expr:
   | expr AND    expr { Binop($1, And,   $3)   }
   | expr OR     expr { Binop($1, Or,    $3)   }
   | ID ASSIGN expr   { Assign($1, $3)         }
+  | ID LBKT expr RBKT { Arrayget($1,$3) }
+  | ID LBKT expr RBKT ASSIGN expr {Assigna($1,$3,$6)}
+  | ID DOT LENGTH       {Arraysize($1)}
   | LPAREN expr RPAREN { $2                   }
   /* call */
   | ID LPAREN args_opt RPAREN { Call ($1, $3) }
   | MINUS LITERAL    { Literal( - $2)         }
 
-/* 
+
+
+
+/*
   args_opt
 */
 args_opt:

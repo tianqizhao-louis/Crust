@@ -29,19 +29,20 @@ let translate (globals, functions) =
   (* Get types from the context *)
   let i32_t      = L.i32_type    context
   and i8_t       = L.i8_type     context
-  and i1_t       = L.i1_type     context 
+  and i1_t       = L.i1_type     context
   and float_t    = L.double_type  context
   and string_t   = L.pointer_type (L.i8_type context)
   (* and arr_t = L.array_type (L.i8_type context) *)
 in
 
   (* Return the LLVM type for a MicroC type *)
-  let ltype_of_typ = function
+  let rec ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
     | A.Float -> float_t
     | A.Char  -> i8_t
     | A.String -> string_t
+    | A.Array(t,s) -> L.array_type (ltype_of_typ t) s
   in
 
   (* Create a map of global variables after creating each *)
@@ -123,6 +124,7 @@ in
     L.var_arg_function_type i32_t [| string_t|] in  
   let awk_max_length_func : L.llvalue = 
     L.declare_function "awk_max_length_f" awk_max_length_t the_module in 
+
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_def) StringMap.t =
@@ -140,7 +142,7 @@ in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
     let str_format_str = L.build_global_stringptr "%s" "str" builder in
-  
+
 
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -195,8 +197,8 @@ in
          | A.Neq     -> L.build_icmp L.Icmp.Ne
          | A.Less    -> L.build_icmp L.Icmp.Slt
         ) e1' e2' "tmp" builder
-        
-        else if (fst e1) = A.Float then (match op with 
+
+        else if (fst e1) = A.Float then (match op with
             A.Add     -> L.build_fadd
           | A.Sub     -> L.build_fsub
           | A.Mult    -> L.build_fmul
@@ -227,10 +229,10 @@ in
       | SCall ("string_of_int", [e]) -> 
         L.build_call string_of_int_func [| (build_expr builder e) |]
           "string_of_int_f" builder
-      | SCall ("string_of_float", [e]) -> 
+      | SCall ("string_of_float", [e]) ->
         L.build_call string_of_float_func [| (build_expr builder e) |]
           "string_of_float_f" builder
-      | SCall ("string_of_bool", [e]) -> 
+      | SCall ("string_of_bool", [e]) ->
         L.build_call string_of_bool_func [| (build_expr builder e) |]
           "string_of_bool_f" builder
       | SCall ("awk", [e1;e2]) -> 
@@ -262,6 +264,19 @@ in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
         let result = f ^ "_result" in
         L.build_call fdef (Array.of_list llargs) result builder
+
+      | SArrayget(v,idx) ->
+        let tp = build_expr builder idx in
+        let idx' =  [|L.const_int i32_t 0; tp|] in
+        let ref = L.build_gep (lookup v) idx' "" builder in
+        (L.build_load ref "" builder)
+
+      | SAssigna(v, idx, e) ->
+        let tp = build_expr builder idx in
+        let exp = build_expr builder e in
+        let idx'' = [|L.const_int i32_t 0; tp|] in
+        let ref = L.build_gep (lookup v) idx'' "" builder in
+        ignore(L.build_store exp ref builder); exp
     in
 
     (* LLVM insists each basic block end with exactly one "terminator"

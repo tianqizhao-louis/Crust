@@ -1,8 +1,8 @@
 (*
 
   Crust Semantics Checking
-  semant.ml 
-  
+  semant.ml
+
 *)
 
 open Ast
@@ -36,28 +36,28 @@ let check (globals, functions) =
       rtyp = Int;
       fname = "print";
       formals = [(String, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("string_of_float", {
       rtyp = String;
       fname = "string_of_float";
       formals = [(Float, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("string_of_bool", {
       rtyp = String;
       fname = "string_of_bool";
       formals = [(Bool, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk", {
       rtyp = String;
       fname = "awk";
       formals = [(String, "x"); (String, "y")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("awk_line", {
@@ -113,7 +113,7 @@ let check (globals, functions) =
       rtyp = String;
       fname = "string_of_int";
       formals = [(Int, "x")];
-      locals = []; 
+      locals = [];
       body = [];
       body_locals = [] });
     ("strlen", {
@@ -150,7 +150,7 @@ let check (globals, functions) =
       (func_name, func_struct) -> StringMap.add func_name func_struct the_map
   in
 
-  let elegant_build_in_decls = List.fold_left add_func_to_map StringMap.empty built_in_decls_list in 
+  let elegant_build_in_decls = List.fold_left add_func_to_map StringMap.empty built_in_decls_list in
 
   (* Add function name to symbol table *)
   let add_func map fd =
@@ -177,8 +177,8 @@ let check (globals, functions) =
   let _ = find_func "main" in (* Ensure "main" is defined *)
 
   let locals_table = Hashtbl.create 420 in
-  
-  let check_func func =    
+
+  let check_func func =
     (* Make sure no formals or locals are void or duplicates *)
     check_binds "formal" func.formals;
 
@@ -198,10 +198,11 @@ let check (globals, functions) =
     let type_of_identifier s =
       (* raise (Failure ("checking identifier " ^ s)) *)
       try StringMap.find s symbols
-      with Not_found -> (
+      with
+        | Not_found -> (
         try Hashtbl.find locals_table s
-        with Not_found -> raise(Failure("undeclared identifier " ^ s))
-      )
+        with
+          | Not_found -> raise(Failure("undeclared identifier " ^ s)))
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
@@ -219,6 +220,46 @@ let check (globals, functions) =
                   string_of_typ rt ^ " in " ^ string_of_expr ex
         in
         (check_assign lt rt err, SAssign(var, (rt, e')))
+
+      | Arrayget(v,p) -> (*check array get element*)
+          let (typp,sexprp)=check_expr p in
+            if typp != Int then raise(Failure("Non integer input for index."))
+            else
+              let typ_v = type_of_identifier v in
+              let typ_e = match typ_v with
+                | Array(t,l) -> (match p with
+                              | Literal idx -> if (idx >= l || idx < 0) then raise(Failure("Array index out of bound."))
+                                        else t
+                              | _ -> t)
+                | _ -> raise(Failure("Array matching error."))
+                in
+                (typ_e, SArrayget(v, (typp, sexprp)))
+
+      | Assigna(v, p, e) -> (* check assignment for arrays *)
+          let (typp, sexprp) = check_expr p in
+            if typp != Int then raise(Failure("Non integer input for index."))
+            else
+              let typ_v = type_of_identifier v in
+              let (typE,sexprE) = check_expr e in
+              let typ_e = match typ_v with
+                  | Array(t,l) -> (match p with
+                                  | Literal idx -> if (idx >= l || idx < 0) then raise(Failure("Array index out of bound."))
+                                            else
+                                                    if (t != typE ) then raise(Failure("Wrong type of variable in array access"))
+                                                    else t
+                                  | _ -> if (t != typE ) then raise(Failure("Wrong type of variable in array access"))
+                                        else t)
+                  | _ -> raise(Failure("Array matching error."))
+                  in
+                  (typ_e, SAssigna(v, (typp, sexprp), (typE,sexprE)))
+
+      | Arraysize(v) -> (*Get array size *)
+           let typ_v = type_of_identifier v in 
+           let typ_e = match typ_v with 
+                       | Array(t,l) -> Int
+                       | _ -> raise(Failure("Can only call Length on an array type."))
+           in
+           (typ_e, SArraysize(v))
 
       | Binop(e1, op, e2) as e ->
         let (t1, e1') = check_expr e1
@@ -317,35 +358,35 @@ let check (globals, functions) =
             Failure ("return gives " ^ string_of_typ t ^ " expected " ^
                      string_of_typ func.rtyp ^ " in " ^ string_of_expr e))
     in (* body of check_func *)
-  
+
 
     (* 如果是declaration，查hashtable，然后加入locals symbol table
       如果是statement，转换成sstmt for sast
     *)
-    let rec check_hybrid_list content = 
-      match content with 
+    let rec check_hybrid_list content =
+      match content with
       [] -> []
       | head :: tail -> (
-        match head with 
+        match head with
           LocalVDecl(t, id) -> (
-            match Hashtbl.find_opt locals_table id with 
+            match Hashtbl.find_opt locals_table id with
               None -> (
-                ignore(Hashtbl.add locals_table id t); 
+                ignore(Hashtbl.add locals_table id t);
                 check_hybrid_list tail
               )
               | _ -> raise (Failure ("duplicate local var " ^ id))
           )
         | Statement(s) -> (check_hybrid_list tail @ [check_stmt s])
       )
-    in 
+    in
 
     { srtyp = func.rtyp;
       sfname = func.fname;
       sformals = func.formals;
       slocals  = (Hashtbl.fold (fun k v acc -> (v, k) :: acc) locals_table []);
-      sbody = List.rev (check_hybrid_list (func.body_locals)); 
+      sbody = List.rev (check_hybrid_list (func.body_locals));
       (* 感觉microC是从后往前check，没有rev因为它的不在乎顺序，locals先declare完了。
-        现在混合模式顺序有关系了，所以把倒序改回正序 *)            
+        现在混合模式顺序有关系了，所以把倒序改回正序 *)
     }
   in
   (globals, List.map check_func functions)
