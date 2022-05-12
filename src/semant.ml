@@ -125,10 +125,7 @@ let check (globals, functions) =
         | Not_found -> (
         try Hashtbl.find locals_table s
         with
-          | Not_found -> raise(Failure("undeclared identifier " ^ s))
-          | _ ->  let t = (Hashtbl.find locals_table s) in if (String.contains (string_of_typ t) 'i') then (print_string (string_of_typ t); Int) else (print_string (string_of_typ t); t)
-      )
-        | _ ->  let t = StringMap.find s symbols in if (String.contains (string_of_typ t) 'i') then (print_string (string_of_typ t); Int) else (print_string (string_of_typ t); t)
+          | Not_found -> raise(Failure("undeclared identifier " ^ s)))
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
@@ -147,13 +144,23 @@ let check (globals, functions) =
         in
         (check_assign lt rt err, SAssign(var, (rt, e')))
 
-      | Assigna(v,p,e) as ex ->
-        let lt =type_of_identifier v
-        and (rt,e')=check_expr e in
-        let err = "illegal array value assignment " ^ string_of_typ lt ^ "[" ^ string_of_expr p ^ "]" ^
-                  " = " ^ string_of_typ rt ^ " in " ^ string_of_expr ex
-        in
-        (check_assign lt rt err, SAssigna(v, (check_expr p), (rt, e')))
+      | Assigna(v, p, e) -> (* check assignment for arrays *)
+          let (typp, sexprp) = check_expr p in
+            if typp != Int then raise(Failure("Non integer input for index."))
+            else
+              let typ_v = type_of_identifier v in
+              let (typE,sexprE) = check_expr e in
+              let typ_e = match typ_v with
+                  | Array(t,l) -> (match p with
+                                  | Literal idx -> if (idx >= l || idx < 0) then raise(Failure("Array index out of bound."))
+                                            else
+                                                    if (t != typE ) then raise(Failure("Wrong type of variable in array access"))
+                                                    else t
+                                  | _ -> t)
+                  | _ -> raise(Failure("Wrong type of variable in array access"))
+                  in
+                  (typ_e, SAssigna(v, (typp, sexprp), (typE,sexprE)))
+
 
       | Binop(e1, op, e2) as e ->
         let (t1, e1') = check_expr e1

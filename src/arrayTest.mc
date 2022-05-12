@@ -1,15 +1,15 @@
 int main() {
-    char x[7];
-    int y[20];
+    array char [7] x;
+    array int [10] y;
     int i=0;
 
-    //y[0]=5;
-/*
+    y[5]=10;
+    x[0]='a';
     while(i<8){
       y[i+1]=i;
       i=i+1;
     }
-*/
+
 
     return 0;
 }

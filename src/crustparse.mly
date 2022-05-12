@@ -17,7 +17,7 @@
 %token EQ NEQ LT AND OR
 %token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
 %token RETURN COMMA
-%token STRUCT
+%token ARRAY
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> ID
@@ -73,7 +73,6 @@ fdecl:
 */
 vdecl:
   typ ID { ($1, $2) }
-  | typ ID LBKT LITERAL RBKT {(Array($1, $4), $2)}
 
 
 /*
@@ -85,6 +84,7 @@ typ:
   | CHAR    { Char }
   | STRING  { String }
   | FLOAT   { Float }
+  | ARRAY typ LBKT LITERAL RBKT {Array($2,$4)}
 
 /*
   Variable or statement;
@@ -161,7 +161,7 @@ expr:
   | expr AND    expr { Binop($1, And,   $3)   }
   | expr OR     expr { Binop($1, Or,    $3)   }
   | ID ASSIGN expr   { Assign($1, $3)         }
-  | ID LBKT expr RBKT ASSIGN expr { Assigna($1,$3,$6) }
+  | ID LBKT expr RBKT ASSIGN expr {Assigna($1,$3,$6)}
   | LPAREN expr RPAREN { $2                   }
   /* call */
   | ID LPAREN args_opt RPAREN { Call ($1, $3) }

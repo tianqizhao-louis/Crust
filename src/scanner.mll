@@ -65,7 +65,7 @@ rule token = parse
 | "false"                                 { BLIT(false) }
 | "char"                                  { CHAR }
 | "string"                                { STRING }
-| "struct"                                { STRUCT }
+| "array"                                 { ARRAY }
 | '''                                     { read_char (Buffer.create 1) lexbuf}
 | '"'                                     { read_string (Buffer.create 256) lexbuf }
 | digit+ as lem                           { LITERAL(int_of_string lem) }
