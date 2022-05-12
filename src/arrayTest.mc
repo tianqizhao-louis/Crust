@@ -9,7 +9,6 @@ int main() {
       y[i+1]=i;
       i=i+1;
     }
-
     string_of_int(y[0]);
 
     return 0;

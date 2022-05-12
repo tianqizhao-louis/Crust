@@ -170,7 +170,8 @@ let check (globals, functions) =
                                             else
                                                     if (t != typE ) then raise(Failure("Wrong type of variable in array access"))
                                                     else t
-                                  | _ -> t)
+                                  | _ -> if (t != typE ) then raise(Failure("Wrong type of variable in array access"))
+                                        else t)
                   | _ -> raise(Failure("Array matching error."))
                   in
                   (typ_e, SAssigna(v, (typp, sexprp), (typE,sexprE)))
