@@ -95,6 +95,13 @@ let check (globals, functions) =
       locals = []; 
       body = [];
       body_locals = [] });
+    ("awk_col_contain", {
+      rtyp = Int;
+      fname = "awk_col_contain";
+      formals = [(String, "x"); (String, "y"); (Int, "z")];
+      locals = []; 
+      body = [];
+      body_locals = [] });
     ("string_of_int", {
       rtyp = String;
       fname = "string_of_int";

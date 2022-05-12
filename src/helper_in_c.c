@@ -215,6 +215,57 @@ char* awk_col_f(char* text, int col_num) {
 }
 
 
+
+char* awk_col_contain_f(char* text, char* pattern, int col_num) {
+    printf("hi!!");
+
+    // int col_count = 0;
+    // char* res = (char *) malloc(1024);
+    // int res_len = 0;
+    // char *line, *str, *tofree, *tmp, *tmp_line;
+    // tofree = str = tmp = strdup(text);
+
+    // char buffer[10000];
+    // strcpy(buffer, strdup(text));
+    // char * buff_pointer;
+    // buff_pointer = buffer;
+
+    // tmp_line = strsep(&buff_pointer, "\n");
+    // char * token = strtok(tmp_line, " ");
+    // // loop through the string to extract all other tokens
+    // while( token != NULL ) {
+    //     // printf( " %s\n", token ); //printing each token
+    //     token = strtok(NULL, " ");
+    //     col_count++;
+    // }
+    // if (col_count < col_num) {
+    //     printf("Invalid column number");
+    //     exit(0);
+    // }
+
+    // while ((line = strsep(&str, "\n"))) {
+    //     int row_count = 1;
+    //     char * token = strtok(line, " ");
+    //     char target[10000];
+    //     // loop through the string to extract all other tokens
+    //     while( token != NULL ) {
+
+    //         if (row_count == col_num){
+    //             strcpy(target, token);
+    //         }
+    //         token = strtok(NULL, " ");
+    //         row_count ++;
+    //     }
+
+    //     strcpy(res+res_len, target);
+    //     res_len += strlen(target);
+    //     res[res_len] = '\n';
+    //     res_len++;
+        
+    // }
+    return 0;
+}
+
 char* string_of_int_f(int input) {
     char* string = (char *) malloc(33);
     sprintf(string,"%d", input);
