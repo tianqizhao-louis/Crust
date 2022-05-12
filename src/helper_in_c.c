@@ -216,7 +216,7 @@ char* awk_col_f(char* text, int col_num) {
 
 
 
-char* awk_col_contain_f(char* text, char* pattern, int col_num) {
+int awk_col_contain_f(char* text, char* pattern, int col_num) {
 
     int col_count = 0;
     int res = 1;
