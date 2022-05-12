@@ -28,29 +28,33 @@ chmod +x crust.sh
 ## Essential Project Structure
 
     .
-    ├── LRM.md                                  # Our LRM (first draft)
     ├── README.md
-    ├── push.sh
+    ├── proj                                    # Anything related to the project submission
+    │   ├── Crust Final Presentation.pdf
+    │   └── LRM.md
     ├── src
-    │   ├── Makefile
-    │   ├── ast.ml                              # Abstract Syntax Tree
-    │   ├── crust.ml                            # Crust's executable
-    │   ├── crust.sh                            # shell file to run tests
-    │   ├── crustparse.mly                      # Parser
-    │   ├── helper_in_c.c                       # C library
-    │   ├── irgen.ml                            # LLVM
-    │   ├── make.sh 
-    │   ├── sast.ml                             # Semantic checks AST
-    │   ├── scanner.mll                         # Scanner
-    │   ├── semant.ml                           # Semantic checker
-    └── test                                    # test suites
+    │   ├── Makefile                            # makefile
+    │   ├── ast.ml                              # AST
+    │   ├── crust.ml                            # Used to generate OCaml executable
+    │   ├── crust.sh                            # shell scripts to run test suite
+    │   ├── crustparse.mly                      # Parser
+    │   ├── helper_in_c.c                       # C library
+    │   ├── irgen.ml                            # LLVM
+    │   ├── run.sh
+    │   ├── sast.ml                             # type check AST
+    │   ├── scanner.mll                         # Scanner
+    │   ├── scanner_test.ml                     # Used to test scanner
+    │   ├── semant.ml                           # Type checking
+    │   └── semant_test.ml                      # Used to check semant
+    └── test                                    # Test Suite
         ├── array_test.crust
-        └── awk_test
-            ├── awk_col.crust
-            ├── awk_col_contain.crust
-            ├── awk_line.crust
-            ├── awk_line_range.crust
-            ├── awk_line_range_end.crust
-            ├── awk_line_range_start.crust
-            ├── awk_max_length.crust
-            └── range_ex.crust
+        ├── awk_test
+        │   ├── awk_col.crust
+        │   ├── awk_col_contain.crust
+        │   ├── awk_line.crust
+        │   ├── awk_line_range.crust
+        │   ├── awk_line_range_end.crust
+        │   ├── awk_line_range_start.crust
+        │   ├── awk_max_length.crust
+        │   └── range_ex.crust
+        └── example.crust
