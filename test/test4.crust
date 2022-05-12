@@ -1,8 +1,0 @@
-/*
-    Test Case 4 for Crust
-*/
-
-int main() {
-    string a;
-    a = "abc";
-}

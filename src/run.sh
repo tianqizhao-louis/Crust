@@ -5,7 +5,7 @@ set -e
 
 if [ -z "$1" ]
   then
-    echo "Usage: ./run.sh <name_of_file.mc>"
+    echo "Usage: ./run.sh <name_of_file.crust>"
     exit 1
 fi
 f=$1
