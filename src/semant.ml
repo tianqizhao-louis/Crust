@@ -91,7 +91,7 @@ let check (globals, functions) =
     ("awk_col", {
       rtyp = String;
       fname = "awk_col";
-      formals = [(String, "x"); (String, "y");(Int, "z")];
+      formals = [(String, "x"); (Int, "z")];
       locals = []; 
       body = [];
       body_locals = [] });

@@ -163,7 +163,7 @@ char* awk_line_range_end_f(char* text, char* pattern, int end) {
 }
 
 
-char* awk_col_f(char* text, char* pattern, int col_num) {
+char* awk_col_f(char* text, int col_num) {
 
     int col_count = 0;
     char* res = (char *) malloc(1024);
@@ -203,11 +203,6 @@ char* awk_col_f(char* text, char* pattern, int col_num) {
             token = strtok(NULL, " ");
             row_count ++;
         }
-        // printf("hiii %s\n", target);
-
-        // // strncat(res,token, sizeof(token));
-        // // strncat(res,"\n", 10);
-
 
         strcpy(res+res_len, target);
         res_len += strlen(target);
