@@ -48,3 +48,4 @@ test/awk_test/awk_line_range
 test/awk_test/awk_line_range_end
 test/awk_test/awk_line_range_start
 test/awk_test/awk_max_length
+test/array_test
