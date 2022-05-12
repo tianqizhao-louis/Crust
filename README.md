@@ -21,6 +21,7 @@ Crust :pizza: is a procedural, C-like language that embeds [awk](https://www.bae
 cd src
 ocamlbuild -pkgs llvm crust.native
 make all
+chmod +x crust.sh
 ./crust.sh
 ```
 
