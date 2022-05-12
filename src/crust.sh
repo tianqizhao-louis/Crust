@@ -1,4 +1,5 @@
 #!/bin/sh
+
 git pull
 make clean
 ocamlbuild -pkgs llvm crust.native
@@ -33,3 +34,7 @@ printf "\n\n\ntest awk_col_contain\n"
 printf "\n\n\ntest awk_max_length\n"
 ./crust.native -l ../test/awk_test/awk_max_length.mc > ../test/awk_test/awk_max_length.out
 ./run.sh ../test/awk_test/awk_max_length.mc
+
+printf "\n\n\ntest array functionality\n"
+./crust.native -l ../test/arrayTest.mc > ../test/arrayTest.out
+./run.sh ../test/arrayTest.mc
