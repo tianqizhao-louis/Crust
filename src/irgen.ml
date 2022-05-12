@@ -36,7 +36,7 @@ let translate (globals, functions) =
 in
 
   (* Return the LLVM type for a MicroC type *)
-  let ltype_of_typ = function
+  let rec ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
     | A.Float -> float_t
