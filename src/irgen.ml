@@ -185,9 +185,8 @@ in
 
       | SAssigna(v, idx, e) ->
         let tp = build_expr builder idx in
-        let idx' = L.const_int i32_t tp in
         let exp = build_expr builder e in
-        let idx'' = [|L.const_int i32_t 0; idx'|] in
+        let idx'' = [|L.const_int i32_t 0; tp|] in
         let ref = L.build_gep (lookup v) idx'' "" builder in
         ignore(L.build_store exp ref builder); exp
     in
