@@ -261,6 +261,19 @@ let check (globals, functions) =
            in
            (typ_e, SArraysize(v))
 
+
+      | ArrayLit(vs) ->
+                      let ar = List.map (check_expr) vs in
+                      let (body_typ ,_) = List.hd ar in
+                        let iterate_array es = 
+                                let es' = fst es in
+                                        if es' != body_typ then raise(Failure("Inconsistent array.")) else ()
+                                in
+                        (ignore (List.map iterate_array ar); (Array(body_typ, List.length vs), SArrayLit(body_typ, List.map snd ar)))
+
+
+
+
       | Binop(e1, op, e2) as e ->
         let (t1, e1') = check_expr e1
         and (t2, e2') = check_expr e2 in

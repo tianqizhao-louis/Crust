@@ -18,6 +18,7 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Assign of string * expr
+  | ArrayLit of expr list
   | Arrayget of string * expr
   | Assigna of string * expr * expr
   | Arraysize of string
@@ -81,6 +82,7 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Arrayget(v,p) -> v ^ "["^ string_of_expr p ^"]"
   | Assigna(v,p,e)->v ^ "[" ^ string_of_expr p ^ "]" ^ " = " ^ string_of_expr e
+  | ArrayLit(vs) -> "{" ^ (List.fold_left (^) "" (List.map (fun x-> x ^", ") (List.map string_of_expr vs)) ) ^ "}"
   | Arraysize(v) -> v ^".length"
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"

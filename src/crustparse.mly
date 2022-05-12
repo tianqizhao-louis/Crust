@@ -161,6 +161,7 @@ expr:
   | expr AND    expr { Binop($1, And,   $3)   }
   | expr OR     expr { Binop($1, Or,    $3)   }
   | ID ASSIGN expr   { Assign($1, $3)         }
+  | LBRACE vlist RBRACE {ArrayLit($2)}
   | ID LBKT expr RBKT { Arrayget($1,$3) }
   | ID LBKT expr RBKT ASSIGN expr {Assigna($1,$3,$6)}
   | ID DOT LENGTH       {Arraysize($1)}
@@ -169,7 +170,10 @@ expr:
   | ID LPAREN args_opt RPAREN { Call ($1, $3) }
   | MINUS LITERAL    { Literal( - $2)         }
 
-
+  vlist:
+          {[]}
+|vlist COMMA expr {$1 @ [$3]}
+|expr     { [$1] }
 
 
 /*

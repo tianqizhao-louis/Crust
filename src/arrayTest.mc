@@ -2,7 +2,8 @@ int main() {
     array char [7] x;
     array int [10] y;
     int i=0;
-
+	
+    array int [5] z={1,2,3,4,5};
     y[0]=10;
     x[0]='a';
     while(i<8){
