@@ -1,31 +1,53 @@
-# How to Install and Run
-
-```
-opam install llvm
-ocamlbuild -pkgs llvm crust.native
-./crust.native -l example.mc > example.out
-make all
-chmod +x run.sh
-echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
-export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
-./run.sh example.mc
-```
-
 # :pizza: Crust
 
-Crust :pizza: is a procedural computer language based on C that is specifically designed for string processing.
+Crust :pizza: is a procedural, C-like language that embeds [awk](https://www.baeldung.com/linux/awk-guide) functions. It is specifically designed for efficient string processing.
 
-## Installation 
+![](https://img.shields.io/badge/ocaml-v4.12.0-orange) ![](https://img.shields.io/badge/llvm-v13.0.0-blue)
 
-You need to have ocaml installed.
+## Team Members
 
-## Run the Test Helloworld program
+| | Role      | Name |
+| :---: | :---: | :---: |
+| 👨‍💼  | Manager      | Tianqi Zhao |
+| 🧑‍🔬 | Language Guru   | Ruiyang Hu |
+| 👨‍💻 | System Architect | Shaun Luo |
+| 🕵️‍♂️ | Tester | Frank Zhang |
+
+## Run the Project 
 
 ```bash
-mkdir out
 cd src
-ocamlbuild crust.native
-./crust.native < ../test/helloworld.crust > ../out/helloworld.out
-cat ../out/helloworld.out
+ocamlbuild -pkgs llvm crust.native
+make all
+./crust.sh
 ```
+
+## Essential Project Structure
+
+    .
+    ├── LRM.md
+    ├── README.md
+    ├── push.sh
+    ├── src
+    │   ├── Makefile
+    │   ├── ast.ml
+    │   ├── crust.ml
+    │   ├── crust.sh
+    │   ├── crustparse.mly
+    │   ├── helper_in_c.c
+    │   ├── irgen.ml
+    │   ├── make.sh
+    │   ├── sast.ml
+    │   ├── scanner.mll
+    │   ├── semant.ml
+    └── test
+        ├── array_test.crust
+        └── awk_test
+            ├── awk_col.crust
+            ├── awk_col_contain.crust
+            ├── awk_line.crust
+            ├── awk_line_range.crust
+            ├── awk_line_range_end.crust
+            ├── awk_line_range_start.crust
+            ├── awk_max_length.crust
+            └── range_ex.crust

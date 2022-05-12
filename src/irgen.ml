@@ -52,15 +52,11 @@ in
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
-<<<<<<< HEAD
   let global_arrays: A.typ  StringMap.t =
           let global_array a (t',n') = StringMap.add n' t' a in
           List.fold_left global_array StringMap.empty globals in
-
-  let printf_t : L.lltype =
-=======
+          
   let one_string_in_one_int_out_t : L.lltype =
->>>>>>> a04af4d9e65ef5ad90141c1d432a7583dd68661a
     L.var_arg_function_type i32_t [| string_t |] in
   let printf_func : L.llvalue =
     L.declare_function "printf" one_string_in_one_int_out_t the_module in
