@@ -354,6 +354,9 @@ in
         ignore(L.build_cond_br bool_val body_bb end_bb while_builder);
         L.builder_at_end context end_bb
 
+     | SFor(initial_val, pred, delta,body) -> 
+        build_stmt builder (SBlock [SExpr initial_val; SWhile(pred , SBlock[body; SExpr delta])])
+
     in
     (* Build the code for each statement in the function *)
     let func_builder = build_stmt builder (SBlock fdecl.sbody) in
