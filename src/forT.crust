@@ -4,7 +4,11 @@ int main(){
   int x=0;
   int i;
   for (i=0; i<10; i=i+1){
+      print(string_of_int(x));
+      print("\n");
       x=x+1;
   }
+  print(string_of_int(x));
+  print("\n");
   return x;
 }
