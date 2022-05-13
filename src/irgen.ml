@@ -1,17 +1,3 @@
-(* IR generation: translate takes a semantically checked AST and
-   produces LLVM IR
-
-   LLVM tutorial: Make sure to read the OCaml version of the tutorial
-
-   http://llvm.org/docs/tutorial/index.html
-
-   Detailed documentation on the OCaml LLVM library:
-
-   http://llvm.moe/
-   http://llvm.moe/ocaml/
-
-*)
-
 module L = Llvm
 module A = Ast
 open Sast
@@ -55,7 +41,6 @@ in
   let global_arrays: A.typ  StringMap.t =
           let global_array a (t',n') = StringMap.add n' t' a in
           List.fold_left global_array StringMap.empty globals in
-
   let one_string_in_one_int_out_t : L.lltype =
     L.var_arg_function_type i32_t [| string_t |] in
   let printf_func : L.llvalue =

@@ -9,7 +9,7 @@ Sydney Australia English
 Nanjing China Mandarin";
 
     string pattern = "China";
-    string res = awk_line_range_end(body, pattern,2);
+    string res = awk_line_range(body, pattern,);
     print(res);
     print("------------------");
     string a = awk_col(body, 3);

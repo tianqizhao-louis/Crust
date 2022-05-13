@@ -35,3 +35,17 @@ _opam/
 .vscode/
 
 out/
+
+src/arrayTest
+src/example.ll 
+src/range_ex
+test/awk_test/awk_col_contain
+test/arrayTest
+*.ll
+test/awk_test/awk_col 
+test/awk_test/awk_line 
+test/awk_test/awk_line_range 
+test/awk_test/awk_line_range_end
+test/awk_test/awk_line_range_start
+test/awk_test/awk_max_length
+test/array_test
