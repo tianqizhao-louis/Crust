@@ -18,6 +18,7 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Assign of string * expr
+  | ArrayLit of expr list * string
   | Arrayget of string * expr
   | Assigna of string * expr * expr
   | Arraysize of string
@@ -81,6 +82,7 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Arrayget(v,p) -> v ^ "["^ string_of_expr p ^"]"
   | Assigna(v,p,e)->v ^ "[" ^ string_of_expr p ^ "]" ^ " = " ^ string_of_expr e
+  | ArrayLit(vs,n) -> n ^ "=" ^  "{" ^ (List.fold_left (^) "" (List.map (fun x-> x ^", ") (List.map string_of_expr vs)) ) ^ "}"
   | Arraysize(v) -> v ^".length"
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
@@ -124,7 +126,7 @@ let string_of_program (vars, funcs) =
   String.concat "\n" (List.map string_of_fdecl funcs)
 
 
-(* 
+(*
   (*
 
   Crust Abstract Syntax Tree
@@ -241,7 +243,7 @@ let rec string_of_typ = function
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
-(* let string_of_struct_id = function 
+(* let string_of_struct_id = function
  STURCTBODY(id, s) -> "Member(" ^ string_of_struct_id id ^ ", " ^ s ^ ")" *)
 
 (* 混合双打 *)
@@ -257,7 +259,7 @@ let string_of_fdecl fdecl =
   String.concat "" (List.map string_of_hybrid fdecl.body_locals) ^
   "}\n"
 
-let string_of_struct_decl st = 
+let string_of_struct_decl st =
   st.sname ^ " {" ^
   String.concat "" (List.map string_of_vdecl st.members) ^ "}\n"
 

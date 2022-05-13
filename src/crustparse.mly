@@ -161,6 +161,7 @@ expr:
   | expr AND    expr { Binop($1, And,   $3)   }
   | expr OR     expr { Binop($1, Or,    $3)   }
   | ID ASSIGN expr   { Assign($1, $3)         }
+  | ID ASSIGN LBRACE vlist RBRACE {ArrayLit($4,$1)}
   | ID LBKT expr RBKT { Arrayget($1,$3) }
   | ID LBKT expr RBKT ASSIGN expr {Assigna($1,$3,$6)}
   | ID DOT LENGTH       {Arraysize($1)}
@@ -169,7 +170,10 @@ expr:
   | ID LPAREN args_opt RPAREN { Call ($1, $3) }
   | MINUS LITERAL    { Literal( - $2)         }
 
-
+  vlist:
+          {[]}
+|vlist COMMA expr {$1 @ [$3]}
+|expr     { [$1] }
 
 
 /*
@@ -245,13 +249,13 @@ args:
 //  | fdecl decls        { (fst $2, ($1 :: snd $2)) }
 
 
-// sdecls: 
+// sdecls:
 //   /* nothing */ { [] }
 //   | sdecls struct_body { $2 :: $1 }
 
 
 // struct_body:
-//   STRUCT ID LBRACE vdec_list_only_for_struct RBRACE      
+//   STRUCT ID LBRACE vdec_list_only_for_struct RBRACE
 //   { { sname = $2;
 // 	 members = List.rev $4 } }
 
