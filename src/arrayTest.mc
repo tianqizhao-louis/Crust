@@ -3,8 +3,8 @@ int main() {
     array int [10] y;
     int i=0;
 
-    array char [5] z;
-    z={1,2,3,4,5};
+    array int [5] z;
+    z={1,-482848242,110,19,91};
     y[0]=10;
     x[0]='a';
     while(i<8){
@@ -18,5 +18,7 @@ int main() {
     print("Size of array x is ");
     print(string_of_int(x.length));
     print("\n");
+	print(string_of_int(z[1]));
+print("\n");
     return 0;
 }

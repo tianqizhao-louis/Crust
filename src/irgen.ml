@@ -296,7 +296,8 @@ in
         let  ll = (lookupA v) in
                ( match ll with
         | Array(t,l) -> (L.const_int i32_t l)
-        | _ -> raise(Failure("Not an array.")))
+        | _ -> raise(Failure("Not an array.")))    
+
 
 
       | SAssigna(v, idx, e) ->
@@ -305,7 +306,21 @@ in
         let idx'' = [|L.const_int i32_t 0; tp|] in
         let ref = L.build_gep (lookup v) idx'' "" builder in
         ignore(L.build_store exp ref builder); exp
+
+
+      | SArrayLit(t,vs,n) ->
+        let tp =0 in
+        let vs_sexpr = List.map (fun a-> (t, a)) vs in
+        let store_iter (arr,idx) li=
+                let tmp_idx =[|L.const_int i32_t 0; L.const_int i32_t idx|] in
+                        let ref = L.build_gep (lookup arr) tmp_idx "" builder in
+                        let (_,act)=li in
+                        ignore(L.build_store (build_expr builder act) ref builder);
+                        (arr, idx+1)
+                        in ignore(List.fold_left store_iter (n, tp) (List.map (fun a ->(t,a)) vs_sexpr)); (L.const_int i32_t 1) 
     in
+
+
 
     (* LLVM insists each basic block end with exactly one "terminator"
        instruction that transfers control.  This function runs "instr builder"
