@@ -65,3 +65,8 @@ printf "\n\n\ntest awk_max_length\n"
 printf "\n\n\ntest array functionality\n"
 ./crust.native -l ../test/array_test.crust > ../test/array_test.out
 ./run.sh ../test/array_test.crust
+
+
+printf "\n\n\ntest For Loop functionality test\n"
+./crust.native -l ../test/forT.crust > ../test/forT.out
+./run.sh ../test/forT.crust
