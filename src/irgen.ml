@@ -10,7 +10,7 @@ let translate (globals, functions) =
 
   (* Create the LLVM compilation module into which
      we will generate code *)
-  let the_module = L.create_module context "MicroC" in
+  let the_module = L.create_module context "Crust" in
 
   (* Get types from the context *)
   let i32_t      = L.i32_type    context
