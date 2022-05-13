@@ -15,7 +15,7 @@
 %token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN LBKT RBKT DOT
 %token MULT DIV MOD
 %token EQ NEQ LT AND OR
-%token IF ELSE WHILE INT BOOL CHAR STRING FLOAT
+%token IF ELSE WHILE INT BOOL CHAR STRING FLOAT FOR
 %token RETURN COMMA
 %token ARRAY LENGTH
 %token <int> LITERAL
@@ -135,6 +135,8 @@ stmt:
   /* if (condition) { block1} else {block2} */
   /* if (condition) stmt else stmt */
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
+  | FOR LPAREN expr SEMI expr SEMI expr RPAREN  stmt
+                                            { For($3, $5, $7, $9)  }
   | WHILE LPAREN expr RPAREN stmt           { While ($3, $5)  }
   /* return */
   | RETURN expr SEMI                        { Return $2      }

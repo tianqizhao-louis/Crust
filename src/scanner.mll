@@ -56,6 +56,7 @@ rule token = parse
 | "if"                                    { IF }
 | "else"                                  { ELSE }
 | "while"                                 { WHILE }
+| "for"                                   { FOR }
 | "return"                                { RETURN }
 
 (* types *)
@@ -123,7 +124,7 @@ and single_line_comment = parse
   end_of_line                             { token lexbuf }
 | _                                       { single_line_comment lexbuf}
 
-(* 
+(*
 (*
 
   Crust Scanner scanner.mll
@@ -171,7 +172,7 @@ rule token = parse
 | '/'                                     { DIV }
 | '%'                                     { MOD }
 | '='                                     { ASSIGN }
-| ":="                                    { STRUCTASSIGN }          
+| ":="                                    { STRUCTASSIGN }
 | "=="                                    { EQ }
 | "!="                                    { NEQ }
 | '<'                                     { LT }
